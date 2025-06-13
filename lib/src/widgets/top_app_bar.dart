@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/app_icons.dart';
 
 /// A reusable, design-centered top app bar for Flex Gym Inventory screens.
 /// - Background: AppTheme.lightAppBar
@@ -29,8 +30,6 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-
     return AppBar(
       backgroundColor: AppTheme.lightAppBar,
       elevation: 0,
@@ -38,24 +37,33 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 70,
       leading: showBackArrow
           ? IconButton(
-              icon: Icon(
-                isIOS ? CupertinoIcons.arrow_left : Icons.arrow_back,
-                color: AppTheme.darkTextPrimary,
+              icon: SizedBox(
+                width: 32,
+                height: 32,
+                child: Image.asset(
+                  AppIcons.back,
+                  color: AppTheme.darkTextPrimary,
+                ),
               ),
               onPressed: onBack ?? () => Navigator.of(context).maybePop(),
               tooltip: 'Back',
             )
           : null,
-      actions: rightButtonText != null
+      actions: rightButtonText == 'Edit'
           ? [
-              TextButton(
-                onPressed: onRightButtonPressed,
-                child: Text(
-                  rightButtonText!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.darkTextPrimary,
-                        fontWeight: FontWeight.normal,
-                      ),
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: IconButton(
+                  icon: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Image.asset(
+                      AppIcons.edit,
+                      color: AppTheme.darkTextPrimary,
+                    ),
+                  ),
+                  onPressed: onRightButtonPressed,
+                  tooltip: 'Edit',
                 ),
               ),
             ]
@@ -71,35 +79,82 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+/// OnboardingLogoAppBar: For onboarding/auth screens with centered logo only
+class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final double topSpacing;
+  final double bottomSpacing;
+  final double logoHeight;
+  final double logoWidth;
+
+  const OnboardingLogoAppBar({
+    super.key,
+    this.topSpacing = 70,
+    this.bottomSpacing = 10,
+    this.logoHeight = 50.9,
+    this.logoWidth = 200,
+  });
+
+  @override
+  Size get preferredSize => Size.fromHeight(topSpacing + logoHeight + bottomSpacing);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppTheme.lightBackground,
+      child: SizedBox(
+        height: topSpacing + logoHeight + bottomSpacing,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: topSpacing),
+            Center(
+              child: SizedBox(
+                height: logoHeight,
+                width: logoWidth,
+                child: SvgPicture.asset(
+                  'lib/assets/images/fgi_logo.svg',
+                  package: null,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            SizedBox(height: bottomSpacing),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Usage examples:
 
-/* Useage title only
+/* Title only
 appBar: const TopAppBar(
-  title: 'Dashboard'
-  ),
-*/ 
+  title: 'Dashboard',
+),
+*/
 
-/* Useage with back button
-TopAppBar(
+/* With back button
+appBar: TopAppBar(
   title: 'Details',
   showBackArrow: true,
   onBack: () => Navigator.of(context).pop(),
-  ),
-*/ 
-
-/* Usage with right button text
-TopAppBar(
-  title: 'Details',
-  rightButtonText: 'Edit',
-  onRightButtonPressed: () { /* handle edit */},
-  ),
+),
 */
 
-/* Usage with both back button and right button text
- TopAppBar(
+/* With right icon button (Edit)
+appBar: TopAppBar(
+  title: 'Details',
+  rightButtonText: 'Edit',
+  onRightButtonPressed: () { /* handle edit */ },
+),
+*/
+
+/* With back button and right text button (Save)
+appBar: TopAppBar(
   title: 'Edit Gym',
   showBackArrow: true,
   rightButtonText: 'Save',
   onRightButtonPressed: () { /* handle save */ },
-  ),
+),
 */

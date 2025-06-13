@@ -22,6 +22,11 @@ class AppTheme {
   static const Color darkAppBar = Color(0xFF023246);
   static const Color darkBottomNavBar = Color(0xFF010D1B);
 
+  // Warning and Disabled colors
+  static const Color warningColor = Color(0xFFFF3B30);
+  static const Color disabledColor = Color(0xFFB9C3C7);
+
+
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: lightBackground,
@@ -30,7 +35,7 @@ class AppTheme {
     fontFamily: _fontFamily,
     appBarTheme: const AppBarTheme(
       backgroundColor: lightAppBar,
-      foregroundColor: Colors.white,
+      foregroundColor: lightBackground,
     ),
     textTheme: const TextTheme(
       displayLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: lightTextPrimary),
@@ -46,7 +51,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: lightPrimary,
-        foregroundColor: Colors.white,
+        foregroundColor: lightBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: lightPrimary, width: 1),

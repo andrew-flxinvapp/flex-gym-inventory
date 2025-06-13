@@ -1,16 +1,10 @@
-import 'package:hive/hive.dart';
-part 'app_enums.g.dart';
-
 // lib/enum/app_enums.dart 
-// Enum definitions used acrosss the Flex Gym Inventory app.
+// Enum definitions used across the Flex Gym Inventory app.
 
-@HiveType(typeId: 1)
+// Upgrade priorities for planned upgrades
 enum UpgradePriority {
-  @HiveField(0)
   low,
-  @HiveField(1)
   medium,
-  @HiveField(2)
   high,
 }
 
@@ -27,51 +21,29 @@ extension UpgradePriorityLabel on UpgradePriority {
   }
 }
 
-@HiveType(typeId: 2)
+// Equipment categories for gym inventory
 enum EquipmentCategory {
-  @HiveField(0)
   barbell,
-  @HiveField(1)
   dumbbell,
-  @HiveField(2)
   machine,
-  @HiveField(3)
   cardio,
-  @HiveField(4)
   accessory,
-  @HiveField(5)
   plate,
-  @HiveField(6)
   storage,
-  @HiveField(7)
   support,
-  @HiveField(8)
   kettlebell,
-  @HiveField(9)
   sandbag,
-  @HiveField(10)
   log,
-  @HiveField(11)
   yolk,
-  @HiveField(12)
   sled,
-  @HiveField(13)
   stone,
-  @HiveField(14)
   rack,
-  @HiveField(15)
   bench,
-  @HiveField(16)
   platform,
-  @HiveField(17)
   plyoBox,
-  @HiveField(18)
   mobility,
-  @HiveField(19)
   flooring,
-  @HiveField(20)
   safety,
-  @HiveField(21)
   tracking,
 }
 
@@ -177,25 +149,16 @@ extension EquipmentCategoryID on EquipmentCategory {
   }
 }
 
-@HiveType(typeId: 3)
+// Training styles for gym users
 enum TrainingStyle {
-  @HiveField(0)
   general,
-  @HiveField(1)
   olympicWeightlifting,
-  @HiveField(2)
   powerlifting,
-  @HiveField(3)
   strongman,
-  @HiveField(4)
   bodybuilding,
-  @HiveField(5)
   crossfit,
-  @HiveField(6)
   calisthenics,
-  @HiveField(7)
   hiit,
-  @HiveField(8)
   circuit,
 }
 
@@ -224,19 +187,13 @@ extension TrainingStyleLabel on TrainingStyle {
   }
 }
 
-@HiveType(typeId: 4)
+// Equipment condition states
 enum EquipmentCondition {
-  @HiveField(0)
   brandNew,
-  @HiveField(1)
   excellent,
-  @HiveField(2)
   good,
-  @HiveField(3)
   fair,
-  @HiveField(4)
   damaged,
-  @HiveField(5)
   retired,
 }
 
@@ -259,14 +216,11 @@ extension EquipmentConditionLabel on EquipmentCondition {
   }
 }
 
-@HiveType(typeId: 5)
+// File types for export/import
 enum FileType {
-  @HiveField(0)
   simplePDF,
-  @HiveField(1)
   csv,
-  @HiveField(2)
-  fullPDF
+  fullPDF,
 }
 
 extension FileTypeLabel on FileType {
@@ -282,11 +236,9 @@ extension FileTypeLabel on FileType {
   }
 }
 
-@HiveType(typeId: 6)
+// Upgrade types for planned upgrades
 enum UpgradeType {
-  @HiveField(0)
   newItem,
-  @HiveField(1)
   replacement,
 }
 

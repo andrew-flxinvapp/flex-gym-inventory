@@ -40,17 +40,14 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   foundation: ^0.0.5
-  flutter_svg: ^2.0.10
+  flutter_svg: ^2.1.0
   fl_chart: ^1.0.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   build_runner: ^2.4.15
-  hive_generator: ^2.0.1
   flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
@@ -65,14 +62,47 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/images/db_logo.png
-    - lib/assets/images/empty_upgrade.png
     - lib/assets/images/fgi_logo_white.png
     - lib/assets/images/fgi_logo.png
     - lib/assets/images/fgi_logo_white.svg
     - lib/assets/images/fgi_logo.svg
-    - lib/assets/images/empty_upgrade.svg
     - lib/assets/images/db_logo.svg
     - lib/assets/app_icon/fgi_app_icon.png
+   # Icons
+    - lib/assets/icons/add.png
+    - lib/assets/icons/add_filled.png
+    - lib/assets/icons/arrow_small_left.png
+    - lib/assets/icons/circle_xmark.png
+    - lib/assets/icons/crown.png
+    - lib/assets/icons/dumbbell_fitness.png
+    - lib/assets/icons/file_export_filled.png
+    - lib/assets/icons/file_export.png
+    - lib/assets/icons/home_filled.png
+    - lib/assets/icons/home.png
+    - lib/assets/icons/infinite_cycle.png
+    - lib/assets/icons/pencil.png
+    - lib/assets/icons/settings_filled.png
+    - lib/assets/icons/settings.png
+    - lib/assets/icons/sparkles_filled.png
+    - lib/assets/icons/sparkles.png
+    - lib/assets/icons/user_headset.png
+    # Illustrations
+    - lib/assets/images/celebrate.svg
+    - lib/assets/images/confused.svg
+    - lib/assets/images/biometrics.svg
+    - lib/assets/images/check_email.svg
+    - lib/assets/images/hello_behind.svg
+    - lib/assets/images/hello.svg
+    - lib/assets/images/notifications.svg
+    - lib/assets/images/support.svg
+    - lib/assets/images/upgrades.svg
+    - lib/assets/images/waiting.svg
+    - lib/assets/images/waiting.png
+    - lib/assets/images/biometrics.png
+    - lib/assets/images/check_email.png
+    - lib/assets/images/hello_behind.png
+    - lib/assets/images/hello.png
+    - lib/assets/images/notifications.png
     
 flutter_icons:
     android: true

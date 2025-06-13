@@ -18,7 +18,7 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     blockWidth = screenWidth / 100;
     blockHeight = screenHeight / 100;
-    textScaleFactor = _mediaQueryData.textScaleFactor;
+    textScaleFactor = _mediaQueryData.textScaler.scale(1.0);
   }
 
   /// Returns a width value proportional to the screen width

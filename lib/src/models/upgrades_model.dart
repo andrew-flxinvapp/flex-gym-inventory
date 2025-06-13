@@ -1,29 +1,12 @@
-import 'package:hive/hive.dart';
 import '../../enum/app_enums.dart';
 
-part 'upgrades_model.g.dart';
-
-@HiveType(typeId: 9)
-class Upgrades extends HiveObject {
-  @HiveField(0)
+class Upgrades {
   final String name;
-
-  @HiveField(1)
   final UpgradeType upgradeType;
-
-  @HiveField(2)
   final EquipmentCategory category;
-
-  @HiveField(3)
   final String brand;
-
-  @HiveField(4)
   final UpgradePriority priority;
-
-  @HiveField(5)
   final String? productUrl;
-
-  @HiveField(6)
   final String? upgradeNotes;
 
   Upgrades({
@@ -35,4 +18,28 @@ class Upgrades extends HiveObject {
     this.productUrl,
     this.upgradeNotes,
   });
+
+  factory Upgrades.fromMap(Map<String, dynamic> map) {
+    return Upgrades(
+      name: map['name'],
+      upgradeType: UpgradeType.values.firstWhere((e) => e.toString() == 'UpgradeType.' + map['upgradeType']),
+      category: EquipmentCategory.values.firstWhere((e) => e.toString() == 'EquipmentCategory.' + map['category']),
+      brand: map['brand'],
+      priority: UpgradePriority.values.firstWhere((e) => e.toString() == 'UpgradePriority.' + map['priority']),
+      productUrl: map['productUrl'],
+      upgradeNotes: map['upgradeNotes'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'upgradeType': upgradeType.name,
+      'category': category.name,
+      'brand': brand,
+      'priority': priority.name,
+      'productUrl': productUrl,
+      'upgradeNotes': upgradeNotes,
+    };
+  }
 }

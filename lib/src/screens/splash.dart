@@ -1,5 +1,6 @@
 //import 'package:flex_gym_inventory/src/screens/app_details.dart';
 import 'package:flex_gym_inventory/src/screens/login.dart';
+//import 'package:flex_gym_inventory/src/screens/component_gallery.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';

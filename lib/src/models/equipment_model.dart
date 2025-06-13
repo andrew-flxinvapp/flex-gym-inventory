@@ -1,71 +1,76 @@
-import 'dart:ffi';
 
-import 'package:hive/hive.dart';
+class Equipment {
+  final String gymId;
+  final String name;
+  final String category;
+  final String brand;
+  final String model;
+  final String trainingStyle;
+  final int quantity;
+  final bool? isPair;
+  final String condition;
+  final DateTime? purchaseDate;
+  final double? value;
+  final bool? isEstimate;
+  final String? serialNumber;
+  final String? maintenanceNotes;
+  final String equipmentId;
 
-part 'equipment_model.g.dart';
+  Equipment({
+    required this.gymId,
+    required this.name,
+    required this.category,
+    required this.brand,
+    required this.model,
+    required this.trainingStyle,
+    required this.quantity,
+    this.isPair,
+    required this.condition,
+    this.purchaseDate,
+    this.value,
+    this.isEstimate,
+    this.serialNumber,
+    this.maintenanceNotes,
+    required this.equipmentId,
+  });
 
-@HiveType(typeId: 7)
-class Equipment extends HiveObject {
-    @HiveField(0)
-    final String gymId;
+  factory Equipment.fromMap(Map<String, dynamic> map) {
+    return Equipment(
+      gymId: map['gymId'],
+      name: map['name'],
+      category: map['category'],
+      brand: map['brand'],
+      model: map['model'],
+      trainingStyle: map['trainingStyle'],
+      quantity: map['quantity'],
+      isPair: map['isPair'],
+      condition: map['condition'],
+      purchaseDate: map['purchaseDate'] != null ? DateTime.parse(map['purchaseDate']) : null,
+      value: map['value']?.toDouble(),
+      isEstimate: map['isEstimate'],
+      serialNumber: map['serialNumber'],
+      maintenanceNotes: map['maintenanceNotes'],
+      equipmentId: map['equipmentId'],
+    );
+  }
 
-    @HiveField(1)
-    final String name;
-
-    @HiveField(2)
-    final String category;
-
-    @HiveField(3)
-    final String brand;
-
-    @HiveField(4)
-    final String model;
-
-    @HiveField(5)
-    final String trainingStyle;
-
-    @HiveField(6)
-    final Int qyantity;
-
-    @HiveField(7)
-    final Bool? isPair;
-
-    @HiveField(8)
-    final String condition;
-
-    @HiveField(9)
-    final DateTime? purchaseDate;
-
-    @HiveField(10)
-    final Double? value;
-
-    @HiveField(11)
-    final Bool? isEstimate;
-
-    @HiveField(12)
-    final String? serialNumber;
-
-    @HiveField(13)
-    final String? maintenanceNotes;
-    
-    @HiveField(14)
-    final String equipmentId;
-
-    Equipment({
-        required this.gymId,
-        required this.name,
-        required this.category,
-        required this.brand,
-        required this.model,
-        required this.trainingStyle,
-        required this.qyantity,
-        this.isPair,
-        required this.condition,
-        this.purchaseDate,
-        this.value,
-        this.isEstimate,
-        this.serialNumber,
-        this.maintenanceNotes,
-        required this.equipmentId,
-    });
+  Map<String, dynamic> toMap() {
+    return {
+      'gymId': gymId,
+      'name': name,
+      'category': category,
+      'brand': brand,
+      'model': model,
+      'trainingStyle': trainingStyle,
+      'quantity': quantity,
+      'isPair': isPair,
+      'condition': condition,
+      'purchaseDate': purchaseDate?.toIso8601String(),
+      'value': value,
+      'isEstimate': isEstimate,
+      'serialNumber': serialNumber,
+      'maintenanceNotes': maintenanceNotes,
+      'equipmentId': equipmentId,
+    };
+  }
 }
