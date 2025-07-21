@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import '../widgets/top_app_bar.dart';
+import '../widgets/onboarding_topappbar.dart';
+import '../widgets/buttons/primary_button.dart';
 
 // LoginScreen
 // 
@@ -39,7 +40,7 @@ class LoginScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
-                // Mascot image
+                // Flex Rackley Waiting image
                 Center(
                   child: Image.asset(
                     'lib/assets/images/waiting.png',
@@ -92,23 +93,17 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 16
                 ),
                 // Sign In Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2A7592),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, fontFamily: 'Roboto'),
-                    ),
-                  ),
+                PrimaryButton(
+                  label: 'Sign In',
+                  onPressed: () {
+                    // Get the email from the TextField controller
+                    final emailController = TextEditingController();
+                    // Navigate to the VerifyEmailScreen and pass the email
+                    Navigator.of(context).pushNamed(
+                      '/verify-email',
+                      arguments: emailController.text,
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 // Sign Up link

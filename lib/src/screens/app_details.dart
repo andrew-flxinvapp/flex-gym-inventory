@@ -9,11 +9,10 @@ class AppDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      appBar: TopAppBar(
-  title: 'App Details',
-  showBackArrow: true,
-  onBack: () => Navigator.of(context).pop(),
-  ),
+      appBar: const TopAppBar(
+        title: 'App Details',
+        showBackArrow: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

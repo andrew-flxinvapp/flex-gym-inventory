@@ -24,11 +24,11 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.lightPrimary,
+          backgroundColor: AppTheme.lightTextPrimary,
           foregroundColor: AppTheme.lightBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: AppTheme.lightPrimary, width: 1),
+            side: BorderSide(color: AppTheme.lightTextPrimary, width: 1),
           ),
         ),
         child: Text(

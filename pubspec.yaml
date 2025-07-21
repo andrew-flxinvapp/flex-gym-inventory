@@ -33,21 +33,25 @@ dependencies:
   uuid: ^4.3.3
   flutter_slidable: ^4.0.0
   supabase_flutter: ^2.9.0
+  foundation: ^0.0.5
+  flutter_svg: ^2.1.0
+  fl_chart: ^1.0.0
+  isar: ^3.1.0
+  isar_flutter_libs: ^3.1.0
+  path_provider: ^2.1.2
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
-  foundation: ^0.0.5
-  flutter_svg: ^2.1.0
-  fl_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  build_runner: ^2.4.15
+  build_runner: ^2.4.13
+  isar_generator: ^3.1.0
   flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
@@ -61,6 +65,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    # FGI Logo and App Icon
     - lib/assets/images/db_logo.png
     - lib/assets/images/fgi_logo_white.png
     - lib/assets/images/fgi_logo.png
@@ -77,8 +82,6 @@ flutter:
     - lib/assets/icons/dumbbell_fitness.png
     - lib/assets/icons/file_export_filled.png
     - lib/assets/icons/file_export.png
-    - lib/assets/icons/home_filled.png
-    - lib/assets/icons/home.png
     - lib/assets/icons/infinite_cycle.png
     - lib/assets/icons/pencil.png
     - lib/assets/icons/settings_filled.png
@@ -86,23 +89,24 @@ flutter:
     - lib/assets/icons/sparkles_filled.png
     - lib/assets/icons/sparkles.png
     - lib/assets/icons/user_headset.png
+    - lib/assets/icons/dashboard.png
+    - lib/assets/icons/dashboard_filled.png
+    - lib/assets/icons/reset.png
+    - lib/assets/icons/check.png
+    - lib/assets/icons/plus.png
+    - lib/assets/icons/placeholder_rectangle.png
+    - lib/assets/icons/placeholder_round.png
+
     # Illustrations
-    - lib/assets/images/celebrate.svg
-    - lib/assets/images/confused.svg
-    - lib/assets/images/biometrics.svg
-    - lib/assets/images/check_email.svg
-    - lib/assets/images/hello_behind.svg
-    - lib/assets/images/hello.svg
-    - lib/assets/images/notifications.svg
-    - lib/assets/images/support.svg
-    - lib/assets/images/upgrades.svg
-    - lib/assets/images/waiting.svg
     - lib/assets/images/waiting.png
     - lib/assets/images/biometrics.png
     - lib/assets/images/check_email.png
     - lib/assets/images/hello_behind.png
     - lib/assets/images/hello.png
     - lib/assets/images/notifications.png
+    - lib/assets/images/celebrate.png
+    - lib/assets/images/empty_gym.png
+    - lib/assets/images/searching.png
     
 flutter_icons:
     android: true

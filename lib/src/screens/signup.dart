@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/disabled_button.dart';
-import '../widgets/top_app_bar.dart';
+import '../widgets/onboarding_topappbar.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -194,7 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ? PrimaryButton(
                         label: 'Sign Up',
                         onPressed: () {
-                          // TODO: Implement sign up logic
+                          Navigator.of(context).pushNamed('/verify-email');
                         },
                       )
                     : DisabledButton(

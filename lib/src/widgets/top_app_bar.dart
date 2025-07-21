@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 
@@ -12,17 +11,17 @@ import '../../theme/app_icons.dart';
 class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackArrow;
-  final VoidCallback? onBack;
-  final String? rightButtonText;
-  final VoidCallback? onRightButtonPressed;
+  final bool showRightIcon;
+  final String? rightIcon; // asset path for icon
+  final VoidCallback? onRightIconPressed;
 
   const TopAppBar({
     super.key,
     required this.title,
     this.showBackArrow = false,
-    this.onBack,
-    this.rightButtonText,
-    this.onRightButtonPressed,
+    this.showRightIcon = false,
+    this.rightIcon,
+    this.onRightIconPressed,
   });
 
   @override
@@ -33,8 +32,8 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppTheme.lightAppBar,
       elevation: 0,
-      centerTitle: true,
-      toolbarHeight: 70,
+      centerTitle: false,
+      toolbarHeight: 60,
       leading: showBackArrow
           ? IconButton(
               icon: SizedBox(
@@ -45,11 +44,11 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: AppTheme.darkTextPrimary,
                 ),
               ),
-              onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+              onPressed: () => Navigator.of(context).maybePop(),
               tooltip: 'Back',
             )
           : null,
-      actions: rightButtonText == 'Edit'
+      actions: showRightIcon && rightIcon != null
           ? [
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
@@ -58,69 +57,27 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                     width: 24,
                     height: 24,
                     child: Image.asset(
-                      AppIcons.edit,
+                      rightIcon!,
                       color: AppTheme.darkTextPrimary,
                     ),
                   ),
-                  onPressed: onRightButtonPressed,
-                  tooltip: 'Edit',
+                  onPressed: onRightIconPressed,
+                  tooltip: 'Action',
                 ),
               ),
             ]
           : null,
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.displayMedium?.copyWith(
-              color: AppTheme.darkTextPrimary,
-              fontWeight: FontWeight.bold,
-            ),
-      ),
-    );
-  }
-}
-
-/// OnboardingLogoAppBar: For onboarding/auth screens with centered logo only
-class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double topSpacing;
-  final double bottomSpacing;
-  final double logoHeight;
-  final double logoWidth;
-
-  const OnboardingLogoAppBar({
-    super.key,
-    this.topSpacing = 70,
-    this.bottomSpacing = 10,
-    this.logoHeight = 50.9,
-    this.logoWidth = 200,
-  });
-
-  @override
-  Size get preferredSize => Size.fromHeight(topSpacing + logoHeight + bottomSpacing);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.lightBackground,
-      child: SizedBox(
-        height: topSpacing + logoHeight + bottomSpacing,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: topSpacing),
-            Center(
-              child: SizedBox(
-                height: logoHeight,
-                width: logoWidth,
-                child: SvgPicture.asset(
-                  'lib/assets/images/fgi_logo.svg',
-                  package: null,
-                  fit: BoxFit.contain,
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showBackArrow) const SizedBox(width: 8),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  color: AppTheme.darkTextPrimary,
                 ),
-              ),
-            ),
-            SizedBox(height: bottomSpacing),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -128,33 +85,14 @@ class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidge
 
 /// Usage examples:
 
-/* Title only
-appBar: const TopAppBar(
-  title: 'Dashboard',
-),
-*/
-
-/* With back button
+/*
 appBar: TopAppBar(
-  title: 'Details',
-  showBackArrow: true,
-  onBack: () => Navigator.of(context).pop(),
-),
-*/
-
-/* With right icon button (Edit)
-appBar: TopAppBar(
-  title: 'Details',
-  rightButtonText: 'Edit',
-  onRightButtonPressed: () { /* handle edit */ },
-),
-*/
-
-/* With back button and right text button (Save)
-appBar: TopAppBar(
-  title: 'Edit Gym',
-  showBackArrow: true,
-  rightButtonText: 'Save',
-  onRightButtonPressed: () { /* handle save */ },
+  title: 'Your Title',
+  showBackArrow: true, // or false
+  showRightIcon: true, // or false
+  rightIcon: AppIcons.add, // or any icon asset path, or null if not needed
+  onRightIconPressed: () {
+    // handle right icon action
+  }, // or null if not needed
 ),
 */

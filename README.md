@@ -15,6 +15,8 @@ This app is being developed in public to share the process, learn out loud, and 
 Follow along:
 •	Instagram: @flxinv.app
 •	Bluesky: @flxinvapp.bsky.social
+•	Twitter/X: @flxinvapp
+
 
 ## Features
 

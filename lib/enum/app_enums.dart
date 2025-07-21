@@ -23,128 +23,35 @@ extension UpgradePriorityLabel on UpgradePriority {
 
 // Equipment categories for gym inventory
 enum EquipmentCategory {
-  barbell,
-  dumbbell,
+  weight,
+  implement,
   machine,
-  cardio,
-  accessory,
-  plate,
   storage,
+  rig,
   support,
-  kettlebell,
-  sandbag,
-  log,
-  yolk,
-  sled,
-  stone,
-  rack,
-  bench,
-  platform,
-  plyoBox,
-  mobility,
-  flooring,
   safety,
-  tracking,
+  other,
 }
 
 extension EquipmentCategoryLabel on EquipmentCategory {
   String get label {
     switch (this) {
-      case EquipmentCategory.barbell:
-        return 'Barbell';
-      case EquipmentCategory.dumbbell:
-        return 'Dumbbell';
+      case EquipmentCategory.weight:
+        return 'Weight';
+      case EquipmentCategory.implement:
+        return 'Implement';
       case EquipmentCategory.machine:
         return 'Machine';
-      case EquipmentCategory.cardio:
-        return 'Cardio';
-      case EquipmentCategory.accessory:
-        return 'Accessory';
-      case EquipmentCategory.plate:
-        return 'Plate';
       case EquipmentCategory.storage:
         return 'Storage';
+      case EquipmentCategory.rig:
+        return 'Rig';
       case EquipmentCategory.support:
         return 'Support';
-      case EquipmentCategory.kettlebell:
-        return 'Kettlebell';
-      case EquipmentCategory.sandbag:
-        return 'Sandbag';
-      case EquipmentCategory.log:
-        return 'Log';
-      case EquipmentCategory.yolk:
-        return 'Yolk';
-      case EquipmentCategory.sled:
-        return 'Sled';
-      case EquipmentCategory.stone:
-        return 'Stone';
-      case EquipmentCategory.rack:
-        return 'Rack';
-      case EquipmentCategory.bench:
-        return 'Bench';
-      case EquipmentCategory.platform:
-        return 'Platform';
-      case EquipmentCategory.plyoBox:
-        return 'Plyo Box';
-      case EquipmentCategory.mobility:
-        return 'Mobility';
-      case EquipmentCategory.flooring:
-        return 'Flooring';
       case EquipmentCategory.safety:
         return 'Safety';
-      case EquipmentCategory.tracking:
-        return 'Tracking';
-    }
-  }
-}
-
-extension EquipmentCategoryID on EquipmentCategory {
-  String get idPrefix {
-    switch (this) {
-      case EquipmentCategory.barbell:
-        return 'BAR';
-      case EquipmentCategory.dumbbell:
-        return 'DMB';
-      case EquipmentCategory.machine:
-        return 'MAC';
-      case EquipmentCategory.cardio:
-        return 'CARD';
-      case EquipmentCategory.accessory:
-        return 'ACC';
-      case EquipmentCategory.plate:
-        return 'PLT';
-      case EquipmentCategory.storage:
-        return 'STOR';
-      case EquipmentCategory.support:
-        return 'SUP';
-      case EquipmentCategory.kettlebell:
-        return 'KTB';
-      case EquipmentCategory.sandbag:
-        return 'SAND';
-      case EquipmentCategory.log:
-        return 'LOG';
-      case EquipmentCategory.yolk:
-        return 'YLK';
-      case EquipmentCategory.sled:
-        return 'SLD';
-      case EquipmentCategory.stone:
-        return 'STN';
-      case EquipmentCategory.rack:
-        return 'RAC';
-      case EquipmentCategory.bench:
-        return 'BNC';
-      case EquipmentCategory.platform:
-        return 'PLAT';
-      case EquipmentCategory.plyoBox:
-        return 'BOX';
-      case EquipmentCategory.mobility:
-        return 'MOB';
-      case EquipmentCategory.flooring:
-        return 'FLOR';
-      case EquipmentCategory.safety:
-        return 'SAFT';
-      case EquipmentCategory.tracking:
-        return 'TRK';
+      case EquipmentCategory.other:
+        return 'Other';
     }
   }
 }
