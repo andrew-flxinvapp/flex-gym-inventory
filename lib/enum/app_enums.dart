@@ -159,3 +159,10 @@ extension UpgradeTypeLabel on UpgradeType {
     }
   }
 }
+
+/// Menu actions for dashboard pop-out menu
+enum DashboardMenuAction {
+  addGym,
+  addEquipment,
+  addWishlist,
+}

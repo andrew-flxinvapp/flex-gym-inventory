@@ -17,32 +17,84 @@ import '../widgets/dashboard_gym_card.dart';
 /// TODO: Add responsive layout using size_config.dart.
 /// TODO: Add modular widgets for dashboard cards and summaries.
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Sample data for demonstration
     final sampleCategoryCounts = {
-      EquipmentCategory.cardio: 5,
-      EquipmentCategory.barbell: 8,
-      EquipmentCategory.dumbbell: 2,
-      EquipmentCategory.accessory: 3,
+      EquipmentCategory.implement: 5,
+      EquipmentCategory.weight: 8,
+      EquipmentCategory.machine: 2,
+      EquipmentCategory.other: 3,
     };
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: TopAppBar(
         title: 'Dashboard',
         showBackArrow: false,
-        showRightIcon: true,
-        rightIcon: AppIcons.plus,
-        onRightIconPressed: () {
-          // TODO: Add action for plus icon
-        },
+        rightWidget: Builder(
+          builder: (context) => PopupMenuButton<DashboardMenuAction>(
+            icon: SizedBox(
+              width: 24,
+              height: 24,
+              child: Image.asset(
+                AppIcons.plus,
+                color: AppTheme.darkTextPrimary,
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: Colors.white,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: DashboardMenuAction.addGym,
+                child: Text('Add Gym', style: TextStyle(color: AppTheme.lightTextPrimary)),
+              ),
+              PopupMenuItem(
+                value: DashboardMenuAction.addEquipment,
+                child: Text('Add Equipment', style: TextStyle(color: AppTheme.lightTextPrimary)),
+              ),
+              PopupMenuItem(
+                value: DashboardMenuAction.addWishlist,
+                child: Text('Add Wishlist Item', style: TextStyle(color: AppTheme.lightTextPrimary)),
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case DashboardMenuAction.addGym:
+                  Navigator.of(context).pushNamed('/add-gym');
+                  break;
+                case DashboardMenuAction.addEquipment:
+                  Navigator.of(context).pushNamed('/add-equipment');
+                  break;
+                case DashboardMenuAction.addWishlist:
+                  Navigator.of(context).pushNamed('/add-wishlist');
+                  break;
+              }
+            },
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -75,6 +127,13 @@ class DashboardScreen extends StatelessWidget {
                 gymName: 'Flex Home Gym',
                 equipmentCount: 27,
                 lastUpdated: DateTime.now().subtract(const Duration(days: 3)),
+              ),
+              const SizedBox(height: 16),
+              PrimaryButton(
+                label: 'Add Gym',
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/add-gym');
+                },
               ),
               const SizedBox(height: 24),
               PrimaryButton(

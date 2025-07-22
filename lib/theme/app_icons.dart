@@ -16,10 +16,12 @@ class AppIcons {
   static const String check = 'lib/assets/icons/check.png';
   static const String plus = 'lib/assets/icons/plus.png';
 
+
   // Actions
-  static const String close = 'lib/assets/icons/circle_xmark.png';
+  static const String close = 'lib/assets/icons/close.png';
   static const String edit = 'lib/assets/icons/pencil.png';
   static const String back = 'lib/assets/icons/arrow_small_left.png';
+  static const String reset = 'lib/assets/icons/reset.png';
 
   // Upgrade to PRO
   static const String pro = 'lib/assets/icons/crown.png';
@@ -30,4 +32,8 @@ class AppIcons {
   // Other
   static const String rectangle = 'lib/assets/icons/placeholder_rectangle.png';
   static const String round = 'lib/assets/icons/placeholder_round.png';
+  static const String stop = 'lib/assets/icons/stop.png';
+  static const String success = 'lib/assets/icons/success.png';
+  static const String update = 'lib/assets/icons/update.png';
+  static const String warning = 'lib/assets/icons/warning.png';
 }

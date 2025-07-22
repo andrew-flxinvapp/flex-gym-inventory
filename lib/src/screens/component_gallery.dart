@@ -1,3 +1,5 @@
+import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
@@ -8,15 +10,20 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/bottom_navigation.dart';
 import '../widgets/dashboard_piechart.dart';
+import '../widgets/inputs/text_input_field.dart';
+import '../widgets/inputs/multiline_text_input.dart';
+import '../widgets/inputs/date_input.dart';
 import '../widgets/dashboard_gym_card.dart';
 import '../../enum/app_enums.dart';
+import '../widgets/inputs/toggle_input.dart';
+import '../widgets/inputs/gym_id_display_field.dart';
 
 class ComponentGallery extends StatelessWidget {
   const ComponentGallery({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Use the standard Flutter Scaffold
+    UpgradePriority? selectedPriority;
     return Material(
       color: AppTheme.lightBackground,
       child: Scaffold(
@@ -24,9 +31,115 @@ class ComponentGallery extends StatelessWidget {
         appBar: const TopAppBar(title: 'Component Gallery'),
         body: Scrollbar(
           thumbVisibility: true,
-          child: ListView(
-            padding: const EdgeInsets.all(16.0),
-            children: [
+          child: StatefulBuilder(
+            builder: (context, setState) => ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                const Text(
+                  'Snackbars',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                FlexSnackbar(
+                  title: 'Success!',
+                  subtitle: 'Your equipment was added.',
+                  type: SnackbarType.success,
+                  onClose: () {},
+                ),
+                const SizedBox(height: 16),
+                FlexSnackbar(
+                  title: 'Warning!',
+                  subtitle: 'Check your equipment details.',
+                  type: SnackbarType.warning,
+                  onClose: () {},
+                ),
+                const SizedBox(height: 16),
+                FlexSnackbar(
+                  title: 'Update!',
+                  subtitle: 'App features have been updated.',
+                  type: SnackbarType.update,
+                  onClose: () {},
+                ),
+                const SizedBox(height: 16),
+                FlexSnackbar(
+                  title: 'Stop!',
+                  subtitle: 'Action not allowed.',
+                  type: SnackbarType.stop,
+                  onClose: () {},
+                ),
+                const SizedBox(height: 32),
+              const Text(
+                'Form Components',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Custom Text Input Field',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              CustomTextInputField(
+                hintText: 'Field Name Here',
+                showAsterisk: true,
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Gym ID Display Field',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              GymIdDisplayField(gymId: 'GYM-0001'),
+              const SizedBox(height: 24),
+              const Text(
+                'Custom Toggle Input',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              DemoToggleInput(),
+              const SizedBox(height: 24),
+
+              const Text(
+                'Custom Dropdown Field',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              CustomDropdownField<UpgradePriority>(
+                hintText: 'Upgrade Priority',
+                items: UpgradePriority.values,
+                value: selectedPriority,
+                showAsterisk: true,
+                getLabel: (item) => item.label,
+                onChanged: (value) {
+                  setState(() {
+                    selectedPriority = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Custom Multiline Text Input',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              CustomMultilineTextInput(
+                hintText: 'Multiline Field Here',
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Custom Date Input',
+                style: TextStyle(fontFamily: 'Roboto'),
+              ),
+              const SizedBox(height: 8),
+              CustomDateInput(),
+              const SizedBox(height: 32),
               const Text(
                 'Buttons',
                 style: TextStyle(
@@ -162,11 +275,32 @@ class ComponentGallery extends StatelessWidget {
             ],
           ),
         ),
+        ),
         bottomNavigationBar: BottomNavigationBarModern(
           currentIndex: 0,
           onTap: (index) {},
         ),
       ),
+    );
+  }
+}
+
+class DemoToggleInput extends StatefulWidget {
+  @override
+  State<DemoToggleInput> createState() => _DemoToggleInputState();
+}
+
+class _DemoToggleInputState extends State<DemoToggleInput> {
+  bool _value = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ToggleInput(
+      leftPlaceholder: 'Toggle Label',
+      showAsterisk: true,
+      rightLabel: 'Text:',
+      value: _value,
+      onChanged: (val) => setState(() => _value = val),
     );
   }
 }

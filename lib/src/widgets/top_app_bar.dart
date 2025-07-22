@@ -14,6 +14,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showRightIcon;
   final String? rightIcon; // asset path for icon
   final VoidCallback? onRightIconPressed;
+  final Widget? rightWidget;
 
   const TopAppBar({
     super.key,
@@ -22,6 +23,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showRightIcon = false,
     this.rightIcon,
     this.onRightIconPressed,
+    this.rightWidget,
   });
 
   @override
@@ -48,25 +50,32 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
               tooltip: 'Back',
             )
           : null,
-      actions: showRightIcon && rightIcon != null
+      actions: rightWidget != null
           ? [
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
-                child: IconButton(
-                  icon: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: Image.asset(
-                      rightIcon!,
-                      color: AppTheme.darkTextPrimary,
-                    ),
-                  ),
-                  onPressed: onRightIconPressed,
-                  tooltip: 'Action',
-                ),
+                child: rightWidget!,
               ),
             ]
-          : null,
+          : (showRightIcon && rightIcon != null
+              ? [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: IconButton(
+                      icon: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Image.asset(
+                          rightIcon!,
+                          color: AppTheme.darkTextPrimary,
+                        ),
+                      ),
+                      onPressed: onRightIconPressed,
+                      tooltip: 'Action',
+                    ),
+                  ),
+                ]
+              : null),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

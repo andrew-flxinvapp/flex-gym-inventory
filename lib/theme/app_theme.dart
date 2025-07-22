@@ -24,9 +24,11 @@ class AppTheme {
   static const Color darkBottomNavBar = Color(0xFF010D1B);
 
   // Warning and Disabled colors
-  static const Color warningColor = Color(0xFFFF3B30);
+  static const Color stopColor = Color(0xFFFF3B30);
   static const Color successColor = Color(0xFF34C759);
   static const Color disabledColor = Color(0xFFB9C3C7);
+  static const Color warningColor= Color(0xFFFFCC00);
+  static const Color updateColor = Color(0xFF4BB4E9);
 
 
   static final ThemeData lightTheme = ThemeData(

@@ -96,6 +96,14 @@ flutter:
     - lib/assets/icons/plus.png
     - lib/assets/icons/placeholder_rectangle.png
     - lib/assets/icons/placeholder_round.png
+    - lib/assets/icons/close.png
+    - lib/assets/icons/stop.png
+    - lib/assets/icons/success.png
+    - lib/assets/icons/update.png
+    - lib/assets/icons/warning.png
+
+
+
 
     # Illustrations
     - lib/assets/images/waiting.png

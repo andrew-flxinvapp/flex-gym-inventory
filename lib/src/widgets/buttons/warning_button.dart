@@ -24,7 +24,7 @@ class WarningButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.warningColor,
+          backgroundColor: AppTheme.stopColor,
           foregroundColor: AppTheme.lightBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
