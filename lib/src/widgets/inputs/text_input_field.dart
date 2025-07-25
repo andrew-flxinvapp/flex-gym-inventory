@@ -12,7 +12,7 @@ class CustomTextInputField extends StatelessWidget {
   final double height;
 
   const CustomTextInputField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.showAsterisk = false,
     this.controller,
@@ -21,7 +21,7 @@ class CustomTextInputField extends StatelessWidget {
     this.maxLines = 1,
     this.width = 370,
     this.height = 50,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

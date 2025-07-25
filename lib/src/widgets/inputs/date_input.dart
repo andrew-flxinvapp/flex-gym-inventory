@@ -9,13 +9,13 @@ class CustomDateInput extends StatefulWidget {
   final double height;
 
   const CustomDateInput({
-    Key? key,
+    super.key,
     this.hintText = 'Select Date',
     this.initialDate,
     this.onDateChanged,
     this.width = 370,
     this.height = 50,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDateInput> createState() => _CustomDateInputState();

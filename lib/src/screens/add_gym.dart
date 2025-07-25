@@ -12,7 +12,7 @@ import '../widgets/buttons/secondary_button.dart';
 
 
 class AddGymScreen extends StatefulWidget {
-  const AddGymScreen({Key? key}) : super(key: key);
+  const AddGymScreen({super.key});
 
   @override
   State<AddGymScreen> createState() => _AddGymScreenState();

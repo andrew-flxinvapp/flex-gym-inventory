@@ -6,9 +6,9 @@ class GymIdDisplayField extends StatelessWidget {
   final String gymId;
 
   const GymIdDisplayField({
-    Key? key,
+    super.key,
     required this.gymId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

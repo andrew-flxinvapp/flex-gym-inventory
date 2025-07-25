@@ -14,7 +14,7 @@ class ToggleInput extends StatelessWidget {
   final String? initialValue;
 
   const ToggleInput({
-    Key? key,
+    super.key,
     required this.leftPlaceholder,
     this.showAsterisk = false,
     this.rightLabel = 'Text:',
@@ -23,7 +23,7 @@ class ToggleInput extends StatelessWidget {
     this.controller,
     this.onTextChanged,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class ToggleInput extends StatelessWidget {
               CupertinoSwitch(
                 value: value,
                 onChanged: onChanged,
-                activeColor: AppTheme.lightPrimary,
+                activeTrackColor: AppTheme.lightPrimary,
               ),
             ],
           ),

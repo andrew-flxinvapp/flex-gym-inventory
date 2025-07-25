@@ -286,6 +286,8 @@ class ComponentGallery extends StatelessWidget {
 }
 
 class DemoToggleInput extends StatefulWidget {
+  const DemoToggleInput({super.key});
+
   @override
   State<DemoToggleInput> createState() => _DemoToggleInputState();
 }

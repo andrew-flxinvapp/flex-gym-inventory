@@ -3,9 +3,14 @@ import 'theme/app_theme.dart';
 //import 'src/screens/splash.dart';
 import 'config/size_config.dart';
 import 'routes/routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://ihfwdlyewavkqxuqhthu.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZndkbHlld2F2a3F4dXFodGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NTQzMzAsImV4cCI6MjA2OTAzMDMzMH0.PSU08Fhf4mu29wluO7x5lQSgC1YZgTMWkc4lMhjgaJ4',
+  );
   runApp(const MyApp());
 }
 

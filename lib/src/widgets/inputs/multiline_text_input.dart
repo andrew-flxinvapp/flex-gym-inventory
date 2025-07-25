@@ -10,14 +10,14 @@ class CustomMultilineTextInput extends StatelessWidget {
   final int maxLines;
 
   const CustomMultilineTextInput({
-    Key? key,
+    super.key,
     required this.hintText,
     this.controller,
     this.validator,
     this.width = 370,
     this.height = 120,
     this.maxLines = 5,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -11,12 +11,12 @@ class FlexSnackbar extends StatelessWidget {
   final VoidCallback? onClose;
 
   const FlexSnackbar({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     required this.type,
     this.onClose,
-  }) : super(key: key);
+  });
 
   String get _iconAsset {
     switch (type) {

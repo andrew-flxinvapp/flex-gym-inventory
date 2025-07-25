@@ -16,12 +16,12 @@ class FloatingNavScaffold extends StatelessWidget {
   final bool useSafeArea;
 
   const FloatingNavScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.appBar,
     this.backgroundColor,
     this.useSafeArea = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class FloatingNavScaffold extends StatelessWidget {
                     end: Alignment.topCenter,
                     stops: [0, 0.6, 1], // 0-72px solid, then fade
                     colors: [
-                      Color(0xFFF4F4F5), // solid for 72px
+                      AppTheme.lightBackground, // solid for 72px
                       Color(0xFFF4F4F5), // start fade
                       Color(0x00F4F4F5), // fully transparent at top
                     ],
