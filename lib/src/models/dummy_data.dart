@@ -1,19 +1,19 @@
 import 'gym_model.dart';
 import 'equipment_model.dart';
-import 'upgrades_model.dart';
+import 'wishlist_model.dart';
 import 'users_model.dart';
 import '../../enum/app_enums.dart';
 
 final List<Gym> dummyGyms = [
   Gym(
-    id: 'gym1',
+    gymId: 'gym1',
     name: 'Flex Home Gym',
     location: '123 Main St, Hometown',
     gymNotes: 'Main home gym setup.',
     createdDate: DateTime(2023, 1, 10),
   ),
   Gym(
-    id: 'gym2',
+    gymId: 'gym2',
     name: 'Flex Commercial',
     location: '456 Fitness Ave, City',
     gymNotes: 'Small commercial gym.',

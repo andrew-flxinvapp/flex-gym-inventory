@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../src/screens/splash.dart';
 import '../src/screens/component_gallery.dart';
 import '../src/screens/dashboard.dart';
-//import '../src/screens/upgrades_screen.dart';
+//import '../src/screens/wishlist_screen.dart';
 import '../src/screens/add_gym.dart';
 //import '../src/screens/add_equipment_screen.dart';
 //import '../src/screens/settings_screen.dart';
@@ -44,7 +44,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   AppRoutes.dashboard: (context) => const DashboardScreen(),
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
-  //AppRoutes.upgrades: (context) => const UpgradesScreen(),
+  //AppRoutes.wishlist: (context) => const WishlistScreen(),
   AppRoutes.addGym: (context) => const AddGymScreen(),
   //AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
   //AppRoutes.settings: (context) => const SettingsScreen(),
