@@ -4,6 +4,7 @@ import '../src/screens/component_gallery.dart';
 import '../src/screens/dashboard.dart';
 //import '../src/screens/wishlist_screen.dart';
 import '../src/screens/add_gym.dart';
+import '../src/screens/gym_detail.dart';
 //import '../src/screens/add_equipment_screen.dart';
 //import '../src/screens/settings_screen.dart';
 import '../src/screens/signup.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const String componentGallery = '/component-gallery';
   static const String upgrades = '/upgrades';
   static const String addGym = '/add-gym';
+  static const String gymDetail = '/gym-detail';
   static const String addEquipment = '/add-equipment';
   static const String settings = '/settings';
   static const String signup = '/signup';
@@ -46,6 +48,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
   //AppRoutes.wishlist: (context) => const WishlistScreen(),
   AppRoutes.addGym: (context) => const AddGymScreen(),
+  AppRoutes.gymDetail: (context) => const GymDetailScreen(),
   //AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
   //AppRoutes.settings: (context) => const SettingsScreen(),
   AppRoutes.signup: (context) => const SignupScreen(),

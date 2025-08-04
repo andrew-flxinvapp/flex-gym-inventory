@@ -14,6 +14,8 @@ import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
 import '../widgets/dashboard_gym_card.dart';
+import '../widgets/cards/gym_stats_card.dart';
+import '../widgets/cards/equipment_card.dart';
 import '../../enum/app_enums.dart';
 import '../widgets/inputs/toggle_input.dart';
 import '../widgets/inputs/gym_id_display_field.dart';
@@ -181,6 +183,36 @@ class ComponentGallery extends StatelessWidget {
               DisabledButton(
                 label: 'Disabled',
                 onPressed: () {},
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Equipment Card',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              EquipmentCard(
+                itemName: 'Rogue Ohio Bar',
+                quantity: 2,
+                value: 325.00,
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Gym Stats Card',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              GymStatsCard(
+                itemCount: 27,
+                estimatedValue: 4200.00,
+                lastUpdated: DateTime.now().subtract(const Duration(days: 1)),
               ),
               const SizedBox(height: 40),
               const Text(

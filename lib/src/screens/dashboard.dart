@@ -123,10 +123,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              DashboardGymCard(
-                gymName: 'Flex Home Gym',
-                equipmentCount: 27,
-                lastUpdated: DateTime.now().subtract(const Duration(days: 3)),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/gym-detail');
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: DashboardGymCard(
+                  gymName: 'Flex Home Gym',
+                  equipmentCount: 27,
+                  lastUpdated: DateTime.now().subtract(const Duration(days: 3)),
+                ),
               ),
               const SizedBox(height: 16),
               PrimaryButton(
