@@ -302,6 +302,10 @@ class ComponentGallery extends StatelessWidget {
                   EquipmentCategory.support: 2,
                 },
               ),
+              const SizedBox(height: 24),
+              DashboardPieChart(
+                categoryCounts: const {},
+              ),
               const SizedBox(height: 40),
               // Add more components here as you build them!
             ],

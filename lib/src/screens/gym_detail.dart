@@ -18,13 +18,13 @@ class GymDetailScreen extends StatelessWidget {
         showRightIcon: true,
         rightIcon: AppIcons.edit,
         onRightIconPressed: () {
-          // TODO: Implement edit action
+          Navigator.of(context).pushNamed('/edit-gym');
         },
       ),
       body: Builder(
         builder: (context) {
           // TODO: Replace with real itemCount from database
-          final int itemCount = 27; // Change to >0 to test filled state
+          final int itemCount = 0; // Change to >0 to test filled state
           if (itemCount == 0) {
             // Empty State
             return Center(

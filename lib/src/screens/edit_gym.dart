@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
+
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
-import '../widgets/inputs/date_input.dart';
-import '../../theme/app_icons.dart';
+import '../widgets/inputs/date_display_filed.dart';
 import '../widgets/inputs/gym_id_display_field.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
 
-class AddGymScreen extends StatefulWidget {
-  const AddGymScreen({super.key});
+class EditGymScreen extends StatefulWidget {
+  const EditGymScreen({super.key});
 
   @override
-  State<AddGymScreen> createState() => _AddGymScreenState();
+  State<EditGymScreen> createState() => _EditGymScreenState();
 }
 
-class _AddGymScreenState extends State<AddGymScreen> {
+class _EditGymScreenState extends State<EditGymScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -25,13 +25,9 @@ class _AddGymScreenState extends State<AddGymScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: TopAppBar(
-        title: 'Add Gym',
+        title: 'Edit Gym',
         showBackArrow: true,
-        showRightIcon: true,
-        rightIcon: AppIcons.reset,
-        onRightIconPressed: () {
-          _formKey.currentState?.reset();
-        },
+        showRightIcon: false,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -89,12 +85,7 @@ class _AddGymScreenState extends State<AddGymScreen> {
                 hintText: 'Gym Notes',
               ),
               const SizedBox(height: 20),
-              CustomDateInput(
-                hintText: 'Date Created',
-                onDateChanged: (date) {
-                  // Handle selected date if needed
-                },
-              ),
+              DateDisplayField(date: '2025-08-05'),
               const SizedBox(height: 24),
               GymIdDisplayField(gymId: 'GYM-0001'),
               const SizedBox(height: 32),
