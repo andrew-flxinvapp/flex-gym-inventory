@@ -15,6 +15,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? rightIcon; // asset path for icon
   final VoidCallback? onRightIconPressed;
   final Widget? rightWidget;
+  final VoidCallback? onBackArrowPressed; // Add this line
 
   const TopAppBar({
     super.key,
@@ -24,6 +25,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.rightIcon,
     this.onRightIconPressed,
     this.rightWidget,
+    this.onBackArrowPressed, // Add this line
   });
 
   @override
@@ -46,7 +48,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: AppTheme.darkTextPrimary,
                 ),
               ),
-              onPressed: () => Navigator.of(context).maybePop(),
+              onPressed: onBackArrowPressed ?? () => Navigator.of(context).maybePop(),
               tooltip: 'Back',
             )
           : null,

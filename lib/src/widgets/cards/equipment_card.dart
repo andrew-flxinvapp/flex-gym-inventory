@@ -8,11 +8,11 @@ class EquipmentCard extends StatelessWidget {
   final double value;
 
   const EquipmentCard({
-    Key? key,
+    super.key,
     required this.itemName,
     required this.quantity,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,11 +7,11 @@ class GymStatsCard extends StatelessWidget {
   final DateTime lastUpdated;
 
   const GymStatsCard({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.estimatedValue,
     required this.lastUpdated,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,25 @@ class BottomNavigationBarModern extends StatelessWidget {
     required this.onTap,
   });
 
+  void _handleNavigation(BuildContext context, int index) {
+    String? route;
+    switch (index) {
+      case 0:
+        route = '/dashboard';
+        break;
+      case 1:
+        route = '/wishlist';
+        break;
+      case 2:
+        route = '/settings';
+        break;
+    }
+    if (route != null && currentIndex != index) {
+      Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
+    }
+    onTap(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,27 +44,22 @@ class BottomNavigationBarModern extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _NavTab(
-            icon: AppIcons.dashboardSelected,
+            icon: currentIndex == 0 ? AppIcons.dashboardSelected : AppIcons.dashboard,
             label: 'Dashboard',
             selected: currentIndex == 0,
-            onTap: () {
-              if (currentIndex != 0) {
-                Navigator.of(context).pushNamedAndRemoveUntil('/dashboard', (route) => false);
-              }
-              onTap(0);
-            },
+            onTap: () => _handleNavigation(context, 0),
           ),
           _NavTab(
-            icon: AppIcons.upgrades,
+            icon: currentIndex == 1 ? AppIcons.wishlistSelected : AppIcons.wishlist,
             label: 'Wishlist',
             selected: currentIndex == 1,
-            onTap: () => onTap(1),
+            onTap: () => _handleNavigation(context, 1),
           ),
           _NavTab(
-            icon: AppIcons.settings,
+            icon: currentIndex == 2 ? AppIcons.settingsSelected : AppIcons.settings,
             label: 'Settings',
             selected: currentIndex == 2,
-            onTap: () => onTap(2),
+            onTap: () => _handleNavigation(context, 2),
           ),
         ],
       ),

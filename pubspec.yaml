@@ -87,8 +87,6 @@ flutter:
     - lib/assets/icons/pencil.png
     - lib/assets/icons/settings_filled.png
     - lib/assets/icons/settings.png
-    - lib/assets/icons/sparkles_filled.png
-    - lib/assets/icons/sparkles.png
     - lib/assets/icons/user_headset.png
     - lib/assets/icons/dashboard.png
     - lib/assets/icons/dashboard_filled.png
@@ -102,6 +100,9 @@ flutter:
     - lib/assets/icons/success.png
     - lib/assets/icons/update.png
     - lib/assets/icons/warning.png
+    - lib/assets/icons/wishlist.png
+    - lib/assets/icons/wishlist_filled.png
+    - lib/assets/icons/sparkle.png
 
 
 

@@ -20,6 +20,12 @@ class AddGymScreen extends StatefulWidget {
 class _AddGymScreenState extends State<AddGymScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  // Controllers for all input fields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+  DateTime? selectedDate;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -31,6 +37,12 @@ class _AddGymScreenState extends State<AddGymScreen> {
         rightIcon: AppIcons.reset,
         onRightIconPressed: () {
           _formKey.currentState?.reset();
+          setState(() {
+            nameController.clear();
+            locationController.clear();
+            notesController.clear();
+            selectedDate = null;
+          });
         },
       ),
       body: Padding(

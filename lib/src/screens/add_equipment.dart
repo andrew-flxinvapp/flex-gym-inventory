@@ -28,7 +28,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   String? selectedCondition;
   DateTime? selectedPurchaseDate;
   bool isPair = false;
-  bool isCommercialGrade = false;
   bool isEstimateValue = false;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
@@ -54,7 +53,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
             selectedCondition = null;
             selectedPurchaseDate = null;
             isPair = false;
-            isCommercialGrade = false;
             isEstimateValue = false;
             nameController.clear();
             brandController.clear();

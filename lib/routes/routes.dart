@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../src/screens/splash.dart';
 import '../src/screens/component_gallery.dart';
 import '../src/screens/dashboard.dart';
-//import '../src/screens/wishlist_screen.dart';
+import '../src/screens/wishlist.dart';
 import '../src/screens/add_gym.dart';
 import '../src/screens/gym_detail.dart';
 import '../src/screens/edit_gym.dart';
@@ -25,7 +25,7 @@ class AppRoutes {
   static const String splash = '/';
   static const String dashboard = '/dashboard';
   static const String componentGallery = '/component-gallery';
-  static const String upgrades = '/upgrades';
+  static const String wishlist = '/wishlist';
   static const String addGym = '/add-gym';
   static const String gymDetail = '/gym-detail';
   static const String editGym = '/edit-gym';
@@ -48,7 +48,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   AppRoutes.dashboard: (context) => const DashboardScreen(),
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
-  //AppRoutes.wishlist: (context) => const WishlistScreen(),
+  AppRoutes.wishlist: (context) => const WishlistScreen(),
   AppRoutes.addGym: (context) => const AddGymScreen(),
   AppRoutes.gymDetail: (context) => const GymDetailScreen(),
   AppRoutes.editGym: (context) => const EditGymScreen(),

@@ -5,8 +5,8 @@ class AppIcons {
   // Navigation
   static const String dashboard = 'lib/assets/icons/dashboard.png';
   static const String dashboardSelected = 'lib/assets/icons/dashboard_filled.png';
-  static const String upgrades = 'lib/assets/icons/sparkles.png';
-  static const String upgradesSelected = 'lib/assets/icons/sparkles_filled.png';
+  static const String wishlist = 'lib/assets/icons/wishlist.png';
+  static const String wishlistSelected = 'lib/assets/icons/wishlist_filled.png';
   static const String add = 'lib/assets/icons/add.png';
   static const String addSelected = 'lib/assets/icons/add_filled.png';
   static const String export = 'lib/assets/icons/file_export.png';
@@ -15,6 +15,7 @@ class AppIcons {
   static const String settingsSelected = 'lib/assets/icons/settings_filled.png';
   static const String check = 'lib/assets/icons/check.png';
   static const String plus = 'lib/assets/icons/plus.png';
+  static const String sparkle = 'lib/assets/icons/sparkle.png';
 
 
   // Actions

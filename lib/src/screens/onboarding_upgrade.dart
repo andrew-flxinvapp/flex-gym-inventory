@@ -108,7 +108,7 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                       ),
                       const SizedBox(height: 20),
                       _ProFeatureRow(
-                        icon: AppIcons.upgradesSelected,
+                        icon: AppIcons.sparkle,
                         text: 'Early access to new features & updates',
                       ),
                       const SizedBox(height: 40),
