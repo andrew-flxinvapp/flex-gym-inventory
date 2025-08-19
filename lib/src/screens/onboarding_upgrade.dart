@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class OnboardingUpgradeScreen extends StatefulWidget {
   const OnboardingUpgradeScreen({super.key});
@@ -59,7 +60,7 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/complete');
+                              Navigator.of(context).pushNamed(AppRoutes.complete);
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: AppTheme.lightTextPrimary,

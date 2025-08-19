@@ -3,6 +3,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/disabled_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -194,7 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ? PrimaryButton(
                         label: 'Sign Up',
                         onPressed: () {
-                          Navigator.of(context).pushNamed('/verify-email');
+                          Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
                         },
                       )
                     : DisabledButton(
@@ -215,7 +216,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/login');
+                        Navigator.of(context).pushNamed(AppRoutes.login);
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,

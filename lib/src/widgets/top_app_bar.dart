@@ -78,20 +78,14 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ]
               : null),
-      title: Align(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showBackArrow) const SizedBox(width: 8),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: AppTheme.darkTextPrimary,
-                  ),
+      titleSpacing: 0, // <-- Ensures title is close to the leading/back arrow
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: AppTheme.darkTextPrimary,
             ),
-          ],
-        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

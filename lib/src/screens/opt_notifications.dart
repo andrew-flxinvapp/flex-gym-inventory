@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class OptNotificationsScreen extends StatefulWidget {
   const OptNotificationsScreen({super.key});
@@ -78,7 +79,7 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
             PrimaryButton(
               label: 'Continue',
               onPressed: () {
-                Navigator.of(context).pushNamed('/welcome');
+                Navigator.of(context).pushNamed(AppRoutes.welcome);
               },
             ),
           ],

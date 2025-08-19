@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class OnboardingCompleteScreen extends StatefulWidget {
   const OnboardingCompleteScreen({super.key});
@@ -53,7 +54,7 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
             PrimaryButton(
               label: 'To Dashboard',
               onPressed: () {
-                Navigator.of(context).pushNamed('/dashboard');
+                Navigator.of(context).pushNamed(AppRoutes.dashboard);
               },
             ),
           ],

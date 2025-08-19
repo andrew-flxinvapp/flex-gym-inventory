@@ -7,6 +7,11 @@ import '../src/screens/add_gym.dart';
 import '../src/screens/gym_detail.dart';
 import '../src/screens/edit_gym.dart';
 import '../src/screens/add_equipment.dart';
+//import '../src/screens/equipment_detail.dart';
+//import '../src/screens/wishlist_detail.dart';
+import '../src/screens/add_wishlist.dart';
+import '../src/screens/edit_wishlist.dart';
+import '../src/screens/edit_equipment.dart';
 //import '../src/screens/settings_screen.dart';
 import '../src/screens/signup.dart';
 import '../src/screens/login.dart';
@@ -40,6 +45,11 @@ class AppRoutes {
   static const String welcome = '/welcome';
   static const String complete = '/complete';
   static const String onboardingUpgrade = '/onboarding-upgrade';
+  static const String equipmentDetail = '/equipment-detail';
+  static const String wishlistDetail = '/wishlist-detail';
+  static const String addWishlist = '/add-wishlist';
+  static const String editEquipment = '/edit-equipment';
+  static const String editWishlist = '/edit-wishlist';
   // Add more as needed
 }
 
@@ -51,6 +61,11 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.wishlist: (context) => const WishlistScreen(),
   AppRoutes.addGym: (context) => const AddGymScreen(),
   AppRoutes.gymDetail: (context) => const GymDetailScreen(),
+  //AppRoutes.equipmentDetail: (context) => const EquipmentDetailScreen(),
+  //AppRoutes.wishlistDetail: (context) => const WishlistDetailScreen(),
+  AppRoutes.addWishlist: (context) => const AddWishlistScreen(),
+  AppRoutes.editWishlist: (context) => const EditWishlistScreen(),
+  AppRoutes.editEquipment: (context) => const EditEquipmentScreen(),
   AppRoutes.editGym: (context) => const EditGymScreen(),
   AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
   //AppRoutes.settings: (context) => const SettingsScreen(),

@@ -1,64 +1,50 @@
-import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
-import '../widgets/inputs/date_input.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 
 
-class AddEquipmentScreen extends StatefulWidget {
-  const AddEquipmentScreen({super.key});
+class AddWishlistScreen extends StatefulWidget {
+  const AddWishlistScreen({super.key});
 
   @override
-  State<AddEquipmentScreen> createState() => _AddEquipmentScreenState();
+  State<AddWishlistScreen> createState() => _AddWishlistScreenState();
 }
 
-class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
+class _AddWishlistScreenState extends State<AddWishlistScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
-  String? selectedGym;
   String? selectedCategory;
-  String? selectedTrainingStyle;
-  String? selectedCondition;
-  DateTime? selectedPurchaseDate;
-  bool isPair = false;
-  bool isEstimateValue = false;
+  String? selectedItemType;
+  String? selectedPriority;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
-  final TextEditingController modelController = TextEditingController();
-  final TextEditingController serialController = TextEditingController();
-  final TextEditingController maintenanceNotesController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: TopAppBar(
-        title: 'Add Equipment',
+        title: 'Add Item',
         showBackArrow: true,
         showRightIcon: true,
         rightIcon: AppIcons.reset,
         onRightIconPressed: () {
           _formKey.currentState?.reset();
           setState(() {
-            selectedGym = null;
             selectedCategory = null;
-            selectedTrainingStyle = null;
-            selectedCondition = null;
-            selectedPurchaseDate = null;
-            isPair = false;
-            isEstimateValue = false;
+            selectedItemType = null;
+            selectedPriority = null;
             nameController.clear();
             brandController.clear();
-            modelController.clear();
-            serialController.clear();
-            maintenanceNotesController.clear();
+            notesController.clear();
           });
         },
       ),
@@ -72,7 +58,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  'Enter Equipment information below.',
+                  'Enter Wishlist Item information below.',
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: AppTheme.lightTextPrimary,
                     fontWeight: FontWeight.w500,
@@ -98,10 +84,15 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   ],
                 ),
                 // ...existing code...
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+                CustomTextInputField(
+                  hintText: 'Name',
+                  showAsterisk: true,
+                ),
+                const SizedBox(height: 20),
                 CustomDropdownField<String>(
-                  hintText: 'Select Gym',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
+                  hintText: 'Item Type',
+                  items: const ['New Item', 'Replacement'], // TODO: Replace with dynamic gym list
                   value: null,
                   showAsterisk: true,
                   getLabel: (item) => item,
@@ -110,25 +101,20 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Gym selection is required';
+                      return 'Item Type selection is required';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Name',
-                  showAsterisk: true,
-                ),
-                const SizedBox(height: 20),
                 CustomDropdownField<String>(
                   hintText: 'Category',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
+                  items: const ['Weight', 'Implement', 'Machine'], // TODO: Replace with dynamic equipment list
                   value: null,
                   showAsterisk: true,
                   getLabel: (item) => item,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    // TODO: Handle equipment type selection
                   },
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -143,14 +129,9 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Model',
-                  showAsterisk: true,
-                ),
-                const SizedBox(height: 20),
                 CustomDropdownField<String>(
-                  hintText: 'Training Style',
-                  items: const ['Dumbbell', 'Barbell', 'Bench'], // TODO: Replace with dynamic equipment list
+                  hintText: 'Priority',
+                  items: const ['Low', 'Medium', 'High'], // TODO: Replace with dynamic equipment list
                   value: null,
                   showAsterisk: true,
                   getLabel: (item) => item,
@@ -159,63 +140,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Training style selection is required';
+                      return 'Priority selection is required';
                     }
                     return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Quantity',
-                  showAsterisk: true,
-                  rightLabel: 'Pair:',
-                  value: false, // TODO: Connect to state
-                  onChanged: (val) {
-                    // TODO: Handle toggle change
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<String>(
-                  hintText: 'Condition',
-                  items: const ['New', 'Used', 'Refurbished'], // TODO: Replace with dynamic equipment list
-                  value: null,
-                  showAsterisk: true,
-                  getLabel: (item) => item,
-                  onChanged: (value) {
-                    // TODO: Handle equipment type selection
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Condition selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomDateInput(
-                  hintText: 'Purchase Date',
-                  onDateChanged: (date) {
-                    // Handle selected date if needed
-                  },
-                ),
-                const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Value',
-                  showAsterisk: false,
-                  rightLabel: 'Estimate:',
-                  value: false, // TODO: Connect to state
-                  onChanged: (val) {
-                    // TODO: Handle toggle change
                   },
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
-                  hintText: 'Serial Number',
+                  hintText: 'Link (URL)',
                   showAsterisk: false,
                 ),
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
-                  hintText: 'Maintenance Notes',
+                  hintText: 'Notes',
                   maxLines: 3,
                 ),
                 const SizedBox(height: 32),

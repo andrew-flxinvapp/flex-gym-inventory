@@ -11,14 +11,14 @@ import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 
 
-class AddEquipmentScreen extends StatefulWidget {
-  const AddEquipmentScreen({super.key});
+class EditEquipmentScreen extends StatefulWidget {
+  const EditEquipmentScreen({super.key});
 
   @override
-  State<AddEquipmentScreen> createState() => _AddEquipmentScreenState();
+  State<EditEquipmentScreen> createState() => _EditEquipmentScreenState();
 }
 
-class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
+class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
@@ -40,7 +40,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: TopAppBar(
-        title: 'Add Equipment',
+        title: 'Edit Equipment',
         showBackArrow: true,
         showRightIcon: true,
         rightIcon: AppIcons.reset,
@@ -72,7 +72,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  'Enter Equipment information below.',
+                  'Edit Equipment information below.',
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: AppTheme.lightTextPrimary,
                     fontWeight: FontWeight.w500,

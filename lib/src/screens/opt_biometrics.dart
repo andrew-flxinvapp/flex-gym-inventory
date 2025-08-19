@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class OptBiometricsScreen extends StatefulWidget {
   const OptBiometricsScreen({super.key});
@@ -78,7 +79,7 @@ class _OptBiometricsScreenState extends State<OptBiometricsScreen> {
             PrimaryButton(
               label: 'Continue',
               onPressed: () {
-                Navigator.of(context).pushNamed('/opt-notifications');
+                Navigator.of(context).pushNamed(AppRoutes.optNotifications);
               },
             ),
           ],

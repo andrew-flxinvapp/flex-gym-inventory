@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -63,7 +64,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             PrimaryButton(
               label: 'Continue',
               onPressed: () {
-                Navigator.of(context).pushNamed('/onboarding-upgrade');
+                Navigator.of(context).pushNamed(AppRoutes.onboardingUpgrade);
               },
             ),
           ],

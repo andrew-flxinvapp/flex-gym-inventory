@@ -4,6 +4,7 @@ import '../widgets/cards/wishlist_item_card.dart';
 import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/bottom_navigation.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class WishlistScreen extends StatelessWidget {
   const WishlistScreen({super.key});
@@ -19,7 +20,7 @@ class WishlistScreen extends StatelessWidget {
           if (Navigator.of(context).canPop()) {
             Navigator.of(context).maybePop();
           } else {
-            Navigator.of(context).pushReplacementNamed('/dashboard');
+            Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
           }
         },
       ),
@@ -109,13 +110,13 @@ class WishlistScreen extends StatelessWidget {
           // Implement navigation logic here
           switch (index) {
             case 0:
-              Navigator.of(context).pushReplacementNamed('/dashboard');
+              Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
               break;
             case 1:
               // Already on Wishlist
               break;
             case 2:
-              Navigator.of(context).pushReplacementNamed('/upgrades');
+              Navigator.of(context).pushReplacementNamed(AppRoutes.settings);
               break;
             // Add more cases as needed
           }

@@ -13,7 +13,7 @@ import '../widgets/dashboard_piechart.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
-import '../widgets/dashboard_gym_card.dart';
+import '../widgets/cards/dashboard_gym_card.dart';
 import '../widgets/cards/gym_stats_card.dart';
 import '../widgets/cards/equipment_card.dart';
 import '../widgets/cards/wishlist_item_card.dart';

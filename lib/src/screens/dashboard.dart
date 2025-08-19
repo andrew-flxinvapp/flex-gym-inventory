@@ -6,7 +6,8 @@ import '../../src/widgets/bottom_navigation.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/dashboard_piechart.dart';
 import '../../enum/app_enums.dart';
-import '../widgets/dashboard_gym_card.dart';
+import '../widgets/cards/dashboard_gym_card.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 /// DashboardScreen
 /// 
@@ -78,13 +79,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onSelected: (value) {
               switch (value) {
                 case DashboardMenuAction.addGym:
-                  Navigator.of(context).pushNamed('/add-gym');
+                  Navigator.of(context).pushNamed(AppRoutes.addGym);
                   break;
                 case DashboardMenuAction.addEquipment:
-                  Navigator.of(context).pushNamed('/add-equipment');
+                  Navigator.of(context).pushNamed(AppRoutes.addEquipment);
                   break;
                 case DashboardMenuAction.addWishlist:
-                  Navigator.of(context).pushNamed('/add-wishlist');
+                  Navigator.of(context).pushNamed(AppRoutes.addWishlist);
                   break;
               }
             },
@@ -125,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const SizedBox(height: 16),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/gym-detail');
+                  Navigator.of(context).pushNamed(AppRoutes.gymDetail);
                 },
                 borderRadius: BorderRadius.circular(16),
                 child: DashboardGymCard(
@@ -138,14 +139,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               PrimaryButton(
                 label: 'Add Gym',
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/add-gym');
+                  Navigator.of(context).pushNamed(AppRoutes.addGym);
                 },
               ),
               const SizedBox(height: 24),
               PrimaryButton(
                 label: 'Component Gallery',
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/component-gallery');
+                  Navigator.of(context).pushNamed(AppRoutes.componentGallery);
                 },
               ),
             ],

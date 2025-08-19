@@ -5,6 +5,7 @@ import '../widgets/cards/equipment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class GymDetailScreen extends StatelessWidget {
   const GymDetailScreen({super.key});
@@ -18,13 +19,13 @@ class GymDetailScreen extends StatelessWidget {
         showRightIcon: true,
         rightIcon: AppIcons.edit,
         onRightIconPressed: () {
-          Navigator.of(context).pushNamed('/edit-gym');
+          Navigator.of(context).pushNamed(AppRoutes.editGym);
         },
       ),
       body: Builder(
         builder: (context) {
           // TODO: Replace with real itemCount from database
-          final int itemCount = 0; // Change to >0 to test filled state
+          final int itemCount = 27; // Change to >0 to test filled state
           if (itemCount == 0) {
             // Empty State
             return Center(

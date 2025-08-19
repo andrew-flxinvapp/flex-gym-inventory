@@ -3,6 +3,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../widgets/buttons/primary_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 // LoginScreen
 // 
@@ -160,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/signup');
+                        Navigator.of(context).pushNamed(AppRoutes.signup);
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
