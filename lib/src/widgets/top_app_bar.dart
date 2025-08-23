@@ -10,22 +10,24 @@ import '../../theme/app_icons.dart';
 
 class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final Widget? titleWidget;
   final bool showBackArrow;
   final bool showRightIcon;
   final String? rightIcon; // asset path for icon
   final VoidCallback? onRightIconPressed;
   final Widget? rightWidget;
-  final VoidCallback? onBackArrowPressed; // Add this line
+  final VoidCallback? onBackArrowPressed;
 
   const TopAppBar({
     super.key,
     required this.title,
+    this.titleWidget,
     this.showBackArrow = false,
     this.showRightIcon = false,
     this.rightIcon,
     this.onRightIconPressed,
     this.rightWidget,
-    this.onBackArrowPressed, // Add this line
+    this.onBackArrowPressed,
   });
 
   @override
@@ -79,7 +81,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ]
               : null),
       titleSpacing: 0, // <-- Ensures title is close to the leading/back arrow
-      title: Text(
+      title: titleWidget ?? Text(
         title,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppTheme.darkTextPrimary,

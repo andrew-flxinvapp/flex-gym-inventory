@@ -1,3 +1,4 @@
+import '../widgets/cards/settings_item.dart';
 import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -321,6 +322,17 @@ class ComponentGallery extends StatelessWidget {
                 itemName: 'Kabuki Trap Bar HD',
                 brand: 'Kabuki Strength',
               ),
+              const SizedBox(height: 40),
+              const Text(
+                'Settings Item',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              SettingsItem(),
               const SizedBox(height: 40),
               // Add more components here as you build them!
             ],

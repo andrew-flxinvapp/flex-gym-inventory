@@ -5,7 +5,7 @@ import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../theme/app_theme.dart';
 
 class EquipmentDetailScreen extends StatelessWidget {
-  const EquipmentDetailScreen({Key? key}) : super(key: key);
+  const EquipmentDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class DetailRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const DetailRow({required this.label, required this.value, Key? key}) : super(key: key);
+  const DetailRow({required this.label, required this.value, super.key});
 
   @override
   Widget build(BuildContext context) {

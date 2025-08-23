@@ -47,6 +47,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: AppTheme.lightBackground,
       appBar: TopAppBar(
         title: 'Dashboard',
+        titleWidget: const Padding(
+          padding: EdgeInsets.only(left: 16.0),
+          child: Text('Dashboard'),
+        ),
         showBackArrow: false,
         rightWidget: Builder(
           builder: (context) => PopupMenuButton<DashboardMenuAction>(

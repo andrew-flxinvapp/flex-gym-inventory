@@ -38,4 +38,14 @@ class Equipment {
     this.maintenanceNotes,
     required this.equipmentId,
   });
+
+  int? get age {
+    if (purchaseDate == null) return null;
+    final now = DateTime.now();
+    int years = now.year - purchaseDate!.year;
+    if (now.month < purchaseDate!.month || (now.month == purchaseDate!.month && now.day < purchaseDate!.day)) {
+      years--;
+    }
+    return years;
+  }
 }

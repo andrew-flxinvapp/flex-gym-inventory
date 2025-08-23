@@ -3,7 +3,7 @@ import '../../../theme/app_theme.dart';
 
 class DetailsCard extends StatelessWidget {
   final List<MapEntry<String, String>> details;
-  const DetailsCard({Key? key, required this.details}) : super(key: key);
+  const DetailsCard({super.key, required this.details});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class DetailsCard extends StatelessWidget {
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
-  const _DetailRow({required this.label, required this.value, Key? key}) : super(key: key);
+  const _DetailRow({required this.label, required this.value, super.key});
 
   @override
   Widget build(BuildContext context) {

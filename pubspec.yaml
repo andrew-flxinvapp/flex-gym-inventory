@@ -78,6 +78,7 @@ flutter:
     - lib/assets/icons/add.png
     - lib/assets/icons/add_filled.png
     - lib/assets/icons/arrow_small_left.png
+    - lib/assets/icons/arrow_small_right.png
     - lib/assets/icons/circle_xmark.png
     - lib/assets/icons/crown.png
     - lib/assets/icons/dumbbell_fitness.png

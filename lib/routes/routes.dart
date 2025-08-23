@@ -12,7 +12,7 @@ import '../src/screens/add_equipment.dart';
 import '../src/screens/add_wishlist.dart';
 import '../src/screens/edit_wishlist.dart';
 import '../src/screens/edit_equipment.dart';
-//import '../src/screens/settings_screen.dart';
+import '../src/screens/settings.dart';
 import '../src/screens/signup.dart';
 import '../src/screens/login.dart';
 import '../src/screens/app_details.dart';
@@ -68,7 +68,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.editEquipment: (context) => const EditEquipmentScreen(),
   AppRoutes.editGym: (context) => const EditGymScreen(),
   AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
-  //AppRoutes.settings: (context) => const SettingsScreen(),
+  AppRoutes.settings: (context) => const SettingsScreen(),
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.appDetails: (context) => const AppDetailsScreen(),

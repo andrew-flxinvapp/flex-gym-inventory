@@ -22,6 +22,7 @@ class AppIcons {
   static const String close = 'lib/assets/icons/close.png';
   static const String edit = 'lib/assets/icons/pencil.png';
   static const String back = 'lib/assets/icons/arrow_small_left.png';
+  static const String forward = 'lib/assets/icons/arrow_small_right.png';
   static const String reset = 'lib/assets/icons/reset.png';
 
   // Upgrade to PRO

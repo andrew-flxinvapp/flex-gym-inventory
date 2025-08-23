@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -20,9 +21,9 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
-  String? selectedCategory;
-  String? selectedItemType;
-  String? selectedPriority;
+  EquipmentCategory? selectedCategory;
+  UpgradeType? selectedItemType;
+  UpgradePriority? selectedPriority;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
@@ -90,34 +91,38 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<UpgradeType>(
                   hintText: 'Item Type',
-                  items: const ['New Item', 'Replacement'], // TODO: Replace with dynamic gym list
-                  value: null,
+                  items: UpgradeType.values,
+                  value: selectedItemType,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    setState(() {
+                      selectedItemType = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Item Type selection is required';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<EquipmentCategory>(
                   hintText: 'Category',
-                  items: const ['Weight', 'Implement', 'Machine'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: EquipmentCategory.values,
+                  value: selectedCategory,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedCategory = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Category selection is required';
                     }
                     return null;
@@ -129,17 +134,19 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<UpgradePriority>(
                   hintText: 'Priority',
-                  items: const ['Low', 'Medium', 'High'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: UpgradePriority.values,
+                  value: selectedPriority,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedPriority = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Priority selection is required';
                     }
                     return null;

@@ -1,3 +1,4 @@
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
@@ -9,6 +10,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
+
 
 
 class AddEquipmentScreen extends StatefulWidget {
@@ -23,9 +25,9 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
 
   // Controllers for all input fields
   String? selectedGym;
-  String? selectedCategory;
-  String? selectedTrainingStyle;
-  String? selectedCondition;
+  EquipmentCategory? selectedCategory;
+  TrainingStyle? selectedTrainingStyle;
+  EquipmentCondition? selectedCondition;
   DateTime? selectedPurchaseDate;
   bool isPair = false;
   bool isEstimateValue = false;
@@ -102,11 +104,13 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 CustomDropdownField<String>(
                   hintText: 'Select Gym',
                   items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
-                  value: null,
+                  value: selectedGym,
                   showAsterisk: true,
                   getLabel: (item) => item,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    setState(() {
+                      selectedGym = value;
+                    });
                   },
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -121,17 +125,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<EquipmentCategory>(
                   hintText: 'Category',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
-                  value: null,
+                  items: EquipmentCategory.values,
+                  value: selectedCategory,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    setState(() {
+                      selectedCategory = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Category selection is required';
                     }
                     return null;
@@ -148,17 +154,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<TrainingStyle>(
                   hintText: 'Training Style',
-                  items: const ['Dumbbell', 'Barbell', 'Bench'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: TrainingStyle.values,
+                  value: selectedTrainingStyle,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedTrainingStyle = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Training style selection is required';
                     }
                     return null;
@@ -175,17 +183,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<EquipmentCondition>(
                   hintText: 'Condition',
-                  items: const ['New', 'Used', 'Refurbished'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: EquipmentCondition.values,
+                  value: selectedCondition,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedCondition = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Condition selection is required';
                     }
                     return null;
