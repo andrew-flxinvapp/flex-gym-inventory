@@ -8,19 +8,19 @@ class Wishlist {
   Id id = Isar.autoIncrement;
   String name;
   String wishlistType;
-  String? category;
-  String? brand;
+  String category;
+  String brand;
+  String priority;
   String? productUrl;
   String? notes;
-  DateTime createdDate;
 
   Wishlist({
     required this.name,
     required this.wishlistType,
-    this.category,
-    this.brand,
+    required this.category,
+    required this.brand,
+    required this.priority,
     this.productUrl,
     this.notes,
-    required this.createdDate,
   });
 } 

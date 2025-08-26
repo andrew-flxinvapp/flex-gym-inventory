@@ -75,24 +75,24 @@ final List<Equipment> dummyEquipment = [
   ),
 ];
 
-final List<Upgrades> dummyUpgrades = [
-  Upgrades(
+final List<Wishlist> dummyWishlist = [
+  Wishlist(
     name: 'New Power Rack',
-    upgradeType: UpgradeType.newItem,
-    category: EquipmentCategory.rig,
+    wishlistType: WishlistType.newItem.name,
+    category: EquipmentCategory.rig.name,
     brand: 'REP',
-    priority: UpgradePriority.high,
+    priority: WishlistPriority.high.name,
     productUrl: 'https://repfitness.com/products/pr-4000',
-    upgradeNotes: 'Add for more squat/bench options.',
+    notes: 'Add for more squat/bench options.',
   ),
-  Upgrades(
+  Wishlist(
     name: 'Replace Bench',
-    upgradeType: UpgradeType.replacement,
-    category: EquipmentCategory.rig,
+    wishlistType: WishlistType.replacement.name,
+    category: EquipmentCategory.rig.name,
     brand: 'Rogue',
-    priority: UpgradePriority.medium,
+    priority: WishlistPriority.medium.name,
     productUrl: 'https://www.roguefitness.com/rogue-adjustable-bench-3-0',
-    upgradeNotes: 'Old bench is wobbly.',
+    notes: 'Old bench is wobbly.',
   ),
 ];
 

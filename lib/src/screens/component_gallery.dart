@@ -28,7 +28,7 @@ class ComponentGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UpgradePriority? selectedPriority;
+    WishlistPriority? selectedPriority;
     return Material(
       color: AppTheme.lightBackground,
       child: Scaffold(
@@ -116,9 +116,9 @@ class ComponentGallery extends StatelessWidget {
                 style: TextStyle(fontFamily: 'Roboto'),
               ),
               const SizedBox(height: 8),
-              CustomDropdownField<UpgradePriority>(
-                hintText: 'Upgrade Priority',
-                items: UpgradePriority.values,
+              CustomDropdownField<WishlistPriority>(
+                hintText: 'Wishlist Priority',
+                items: WishlistPriority.values,
                 value: selectedPriority,
                 showAsterisk: true,
                 getLabel: (item) => item.label,

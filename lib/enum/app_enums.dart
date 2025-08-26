@@ -2,20 +2,20 @@
 // Enum definitions used across the Flex Gym Inventory app.
 
 // Upgrade priorities for planned upgrades
-enum UpgradePriority {
+enum WishlistPriority {
   low,
   medium,
   high,
 }
 
-extension UpgradePriorityLabel on UpgradePriority {
+extension WishlistPriorityLabel on WishlistPriority {
   String get label {
     switch (this) {
-      case UpgradePriority.low:
+      case WishlistPriority.low:
         return 'Low';
-      case UpgradePriority.medium:
+      case WishlistPriority.medium:
         return 'Medium';
-      case UpgradePriority.high:
+      case WishlistPriority.high:
         return 'High';
     }
   }
@@ -144,17 +144,17 @@ extension FileTypeLabel on FileType {
 }
 
 // Upgrade types for planned upgrades
-enum UpgradeType {
+enum WishlistType {
   newItem,
   replacement,
 }
 
-extension UpgradeTypeLabel on UpgradeType {
+extension WishlistTypeLabel on WishlistType {
   String get label {
     switch (this) {
-      case UpgradeType.newItem:
+      case WishlistType.newItem:
         return 'New Item';
-      case UpgradeType.replacement:
+      case WishlistType.replacement:
         return 'Replacement';
     }
   }

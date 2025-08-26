@@ -27,19 +27,19 @@ const WishlistSchema = CollectionSchema(
       name: r'category',
       type: IsarType.string,
     ),
-    r'createdDate': PropertySchema(
-      id: 2,
-      name: r'createdDate',
-      type: IsarType.dateTime,
-    ),
     r'name': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'notes',
+      type: IsarType.string,
+    ),
+    r'priority': PropertySchema(
+      id: 4,
+      name: r'priority',
       type: IsarType.string,
     ),
     r'productUrl': PropertySchema(
@@ -73,18 +73,8 @@ int _wishlistEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.brand;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.category;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.brand.length * 3;
+  bytesCount += 3 + object.category.length * 3;
   bytesCount += 3 + object.name.length * 3;
   {
     final value = object.notes;
@@ -92,6 +82,7 @@ int _wishlistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.priority.length * 3;
   {
     final value = object.productUrl;
     if (value != null) {
@@ -110,9 +101,9 @@ void _wishlistSerialize(
 ) {
   writer.writeString(offsets[0], object.brand);
   writer.writeString(offsets[1], object.category);
-  writer.writeDateTime(offsets[2], object.createdDate);
-  writer.writeString(offsets[3], object.name);
-  writer.writeString(offsets[4], object.notes);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.notes);
+  writer.writeString(offsets[4], object.priority);
   writer.writeString(offsets[5], object.productUrl);
   writer.writeString(offsets[6], object.wishlistType);
 }
@@ -124,11 +115,11 @@ Wishlist _wishlistDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Wishlist(
-    brand: reader.readStringOrNull(offsets[0]),
-    category: reader.readStringOrNull(offsets[1]),
-    createdDate: reader.readDateTime(offsets[2]),
-    name: reader.readString(offsets[3]),
-    notes: reader.readStringOrNull(offsets[4]),
+    brand: reader.readString(offsets[0]),
+    category: reader.readString(offsets[1]),
+    name: reader.readString(offsets[2]),
+    notes: reader.readStringOrNull(offsets[3]),
+    priority: reader.readString(offsets[4]),
     productUrl: reader.readStringOrNull(offsets[5]),
     wishlistType: reader.readString(offsets[6]),
   );
@@ -144,15 +135,15 @@ P _wishlistDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
-    case 1:
-      return (reader.readStringOrNull(offset)) as P;
-    case 2:
-      return (reader.readDateTime(offset)) as P;
-    case 3:
       return (reader.readString(offset)) as P;
-    case 4:
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
@@ -251,24 +242,8 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
 
 extension WishlistQueryFilter
     on QueryBuilder<Wishlist, Wishlist, QFilterCondition> {
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'brand',
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'brand',
-      ));
-    });
-  }
-
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -281,7 +256,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -296,7 +271,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -311,8 +286,8 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> brandBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -397,24 +372,8 @@ extension WishlistQueryFilter
     });
   }
 
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'category',
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'category',
-      ));
-    });
-  }
-
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -427,7 +386,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -442,7 +401,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -457,8 +416,8 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -539,60 +498,6 @@ extension WishlistQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'category',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> createdDateEqualTo(
-      DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'createdDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
-      createdDateGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'createdDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> createdDateLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'createdDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> createdDateBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'createdDate',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -925,6 +830,136 @@ extension WishlistQueryFilter
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'priority',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'priority',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'priority',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'priority',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'priority',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> productUrlIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1239,18 +1274,6 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
     });
   }
 
-  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByCreatedDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByCreatedDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdDate', Sort.desc);
-    });
-  }
-
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1272,6 +1295,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByPriority() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priority', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByPriorityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priority', Sort.desc);
     });
   }
 
@@ -1326,18 +1361,6 @@ extension WishlistQuerySortThenBy
     });
   }
 
-  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByCreatedDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByCreatedDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdDate', Sort.desc);
-    });
-  }
-
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1371,6 +1394,18 @@ extension WishlistQuerySortThenBy
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByPriority() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priority', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByPriorityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priority', Sort.desc);
     });
   }
 
@@ -1415,12 +1450,6 @@ extension WishlistQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByCreatedDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'createdDate');
-    });
-  }
-
   QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1432,6 +1461,13 @@ extension WishlistQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByPriority(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'priority', caseSensitive: caseSensitive);
     });
   }
 
@@ -1458,21 +1494,15 @@ extension WishlistQueryProperty
     });
   }
 
-  QueryBuilder<Wishlist, String?, QQueryOperations> brandProperty() {
+  QueryBuilder<Wishlist, String, QQueryOperations> brandProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'brand');
     });
   }
 
-  QueryBuilder<Wishlist, String?, QQueryOperations> categoryProperty() {
+  QueryBuilder<Wishlist, String, QQueryOperations> categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
-    });
-  }
-
-  QueryBuilder<Wishlist, DateTime, QQueryOperations> createdDateProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'createdDate');
     });
   }
 
@@ -1485,6 +1515,12 @@ extension WishlistQueryProperty
   QueryBuilder<Wishlist, String?, QQueryOperations> notesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notes');
+    });
+  }
+
+  QueryBuilder<Wishlist, String, QQueryOperations> priorityProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'priority');
     });
   }
 
