@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
 
-class DetailsCard extends StatelessWidget {
+class PurchaseCard extends StatelessWidget {
   final List<MapEntry<String, String>> details;
-  const DetailsCard({super.key, required this.details});
+  const PurchaseCard({super.key, required this.details});
 
   @override
   Widget build(BuildContext context) {
-    // Only show up to 5 rows, fill with empty if less
+    // Only show up to 4 rows, fill with empty if less
     final rows = List<MapEntry<String, String>>.generate(
-      5,
+      4,
       (i) => i < details.length
           ? details[i]
           : const MapEntry('', ''),
@@ -25,12 +25,12 @@ class DetailsCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          for (int i = 0; i < 5; i++) ...[
-            _DetailRow(
+          for (int i = 0; i < 4; i++) ...[
+            _PurchaseDetailRow(
               label: rows[i].key,
               value: rows[i].value,
             ),
-            if (i != 4) const SizedBox(height: 12),
+            if (i != 3) const SizedBox(height: 12),
           ],
         ],
       ),
@@ -38,10 +38,10 @@ class DetailsCard extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
+class _PurchaseDetailRow extends StatelessWidget {
   final String label;
   final String value;
-  const _DetailRow({required this.label, required this.value});
+  const _PurchaseDetailRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {

@@ -7,8 +7,8 @@ import '../src/screens/add_gym.dart';
 import '../src/screens/gym_detail.dart';
 import '../src/screens/edit_gym.dart';
 import '../src/screens/add_equipment.dart';
-//import '../src/screens/equipment_detail.dart';
-//import '../src/screens/wishlist_detail.dart';
+import '../src/screens/equipment_detail.dart';
+import '../src/screens/wishlist_detail.dart';
 import '../src/screens/add_wishlist.dart';
 import '../src/screens/edit_wishlist.dart';
 import '../src/screens/edit_equipment.dart';
@@ -28,55 +28,69 @@ import '../src/screens/onboarding_complete.dart';
 // Route name constants
 class AppRoutes {
   static const String splash = '/';
+  // Navigation routes
   static const String dashboard = '/dashboard';
   static const String componentGallery = '/component-gallery';
   static const String wishlist = '/wishlist';
+  static const String settings = '/settings';
+  // Gym routes
   static const String addGym = '/add-gym';
   static const String gymDetail = '/gym-detail';
   static const String editGym = '/edit-gym';
+  // Equipment routes
   static const String addEquipment = '/add-equipment';
-  static const String settings = '/settings';
+  static const String editEquipment = '/edit-equipment';
+  static const String equipmentDetail = '/equipment-detail';
+  // Wishlist routes
+  static const String wishlistDetail = '/wishlist-detail';
+  static const String addWishlist = '/add-wishlist';
+  static const String editWishlist = '/edit-wishlist';
+  // Auth routes
   static const String signup = '/signup';
   static const String login = '/login';
-  static const String appDetails = '/app-details';
   static const String verifiyEmail = '/verify-email';
   static const String optBiometrics = '/opt-biometrics';
   static const String optNotifications = '/opt-notifications';
   static const String welcome = '/welcome';
   static const String complete = '/complete';
   static const String onboardingUpgrade = '/onboarding-upgrade';
-  static const String equipmentDetail = '/equipment-detail';
-  static const String wishlistDetail = '/wishlist-detail';
-  static const String addWishlist = '/add-wishlist';
-  static const String editEquipment = '/edit-equipment';
-  static const String editWishlist = '/edit-wishlist';
+  // Settings routes
+  static const String appDetails = '/app-details';
+
   // Add more as needed
 }
 
 // Route map for MaterialApp
 final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
+  // Navigation routes
   AppRoutes.dashboard: (context) => const DashboardScreen(),
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
   AppRoutes.wishlist: (context) => const WishlistScreen(),
+  AppRoutes.settings: (context) => const SettingsScreen(),
+  // Gym routes
   AppRoutes.addGym: (context) => const AddGymScreen(),
   AppRoutes.gymDetail: (context) => const GymDetailScreen(),
-  //AppRoutes.equipmentDetail: (context) => const EquipmentDetailScreen(),
-  //AppRoutes.wishlistDetail: (context) => const WishlistDetailScreen(),
+  AppRoutes.editGym: (context) => const EditGymScreen(),
+  // Equipment routes
+  AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
+  AppRoutes.editEquipment: (context) => const EditEquipmentScreen(),
+  AppRoutes.equipmentDetail: (context) => const EquipmentDetailScreen(),
+  // Wishlist routes
   AppRoutes.addWishlist: (context) => const AddWishlistScreen(),
   AppRoutes.editWishlist: (context) => const EditWishlistScreen(),
-  AppRoutes.editEquipment: (context) => const EditEquipmentScreen(),
-  AppRoutes.editGym: (context) => const EditGymScreen(),
-  AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
-  AppRoutes.settings: (context) => const SettingsScreen(),
+  AppRoutes.wishlistDetail: (context) => const WishlistDetailScreen(),
+  // Auth routes
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),
-  AppRoutes.appDetails: (context) => const AppDetailsScreen(),
   AppRoutes.verifiyEmail: (context) => const VerifyEmailScreen(),
   AppRoutes.optBiometrics: (context) => const OptBiometricsScreen(),
   AppRoutes.optNotifications: (context) => const OptNotificationsScreen(),
   AppRoutes.welcome: (context) => const WelcomeScreen(),
   AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
   AppRoutes.onboardingUpgrade: (context) => const OnboardingUpgradeScreen(),
+  // Settings routes
+  AppRoutes.appDetails: (context) => const AppDetailsScreen(),
+  
   // Add more as needed
 };

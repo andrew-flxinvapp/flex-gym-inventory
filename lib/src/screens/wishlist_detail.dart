@@ -3,46 +3,28 @@ import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../theme/app_theme.dart';
-import '../widgets/cards/details_card.dart';
-import '../widgets/cards/purchase_card.dart';
+import '../widgets/cards/wishlist_card.dart';
 import '../widgets/cards/notes_card.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
 
-class EquipmentDetailScreen extends StatelessWidget {
-  const EquipmentDetailScreen({super.key});
+class WishlistDetailScreen extends StatelessWidget {
+  const WishlistDetailScreen({super.key});
 
-  String _calculateAge(String purchaseDate) {
-    try {
-      final date = DateTime.parse(purchaseDate);
-      final now = DateTime.now();
-      final duration = now.difference(date);
-      final years = duration.inDays ~/ 365;
-      final months = (duration.inDays % 365) ~/ 30;
-      if (years > 0) {
-        return months > 0 ? '$years yr $months mo' : '$years yr';
-      } else {
-        return '$months mo';
-      }
-    } catch (_) {
-      return '-';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    const purchaseDate = '2023-01-15';
-    final age = _calculateAge(purchaseDate);
+  // No age calculation needed for wishlist detail
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: TopAppBar(
-          title: 'Equipment Detail',
+          title: 'Wishlist Detail',
           showBackArrow: true,
           showRightIcon: true,
           rightIcon: AppIcons.edit,
           onRightIconPressed: () {
-            Navigator.of(context).pushNamed(AppRoutes.editEquipment);
+            Navigator.of(context).pushNamed(AppRoutes.editWishlist);
         },
       ),
       ),
@@ -72,7 +54,7 @@ class EquipmentDetailScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Text(
-                'Rogue Ohio Bar',
+                'Rogue Adjustable Bench 3.0',
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       color: AppTheme.lightTextPrimary,
                     ),
@@ -91,35 +73,13 @@ class EquipmentDetailScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: DetailsCard(
+              child: WishlistCard(
                 details: const [
                   MapEntry('Brand', 'Rogue'),
-                  MapEntry('Model', 'Ohio Bar'),
-                  MapEntry('Category', 'Implement'),
-                  MapEntry('Training Style', 'General'),
-                  MapEntry('Quantity', '1'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Text(
-                'Purchase Info',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: PurchaseCard(
-                details: [
-                  const MapEntry('Purchase Price', '\$295.00'),
-                  MapEntry('Purchase Date', purchaseDate),
-                  MapEntry('Age', age),
-                  const MapEntry('Warranty', 'Lifetime'),
+                  MapEntry('Category', 'Rig'),
+                  MapEntry('Type', 'Replacement'),
+                  MapEntry('Priority', 'Medium'),
+                  MapEntry('Link', 'https://www.roguefitness.com/rogue-adjustable-bench-3-0'),
                 ],
               ),
             ),
@@ -137,7 +97,7 @@ class EquipmentDetailScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: NotesCard(
-                notes: 'This bar is used for all general training. No rust, knurling is still sharp, and sleeves spin smoothly.',
+                notes: 'This bench is great for various exercises.',
               ),
             ),
             const SizedBox(height: 32),
@@ -149,7 +109,7 @@ class EquipmentDetailScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (ctx) => ConfirmDialog(
-                      title: 'Delete Equipment',
+                      title: 'Delete Item',
                       content: 'Are you sure you want to delete this item? This action cannot be undone.',
                       confirmText: 'Delete',
                       onConfirm: () {

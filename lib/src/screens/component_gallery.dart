@@ -18,6 +18,7 @@ import '../widgets/cards/dashboard_gym_card.dart';
 import '../widgets/cards/gym_stats_card.dart';
 import '../widgets/cards/equipment_card.dart';
 import '../widgets/cards/wishlist_item_card.dart';
+import '../widgets/cards/details_card.dart';
 import '../../enum/app_enums.dart';
 import '../widgets/inputs/toggle_input.dart';
 import '../widgets/inputs/gym_id_display_field.dart';
@@ -185,6 +186,25 @@ class ComponentGallery extends StatelessWidget {
               DisabledButton(
                 label: 'Disabled',
                 onPressed: () {},
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Details Card',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              DetailsCard(
+                details: [
+                  const MapEntry('Brand', 'Rogue'),
+                  const MapEntry('Model', 'Barbell'),
+                  const MapEntry('Category', 'Strength'),
+                  const MapEntry('Training Style', 'Black'),
+                  const MapEntry('Quantity', 'Excellent'),
+                ],
               ),
               const SizedBox(height: 40),
               const Text(

@@ -89,9 +89,14 @@ class WishlistScreen extends StatelessWidget {
                     brand: 'Kabuki Strength',
                   ),
                   const SizedBox(height: 16),
-                  WishlistItemCard(
-                    itemName: 'Rogue Adjustable Bench 3.0',
-                    brand: 'Rogue Fitness',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/wishlist-detail');
+                    },
+                    child: WishlistItemCard(
+                      itemName: 'Rogue Adjustable Bench 3.0',
+                      brand: 'Rogue Fitness',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   WishlistItemCard(

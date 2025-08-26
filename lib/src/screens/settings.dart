@@ -33,10 +33,10 @@ class SettingsScreen extends StatelessWidget {
 												SettingsItem(
 													title: 'Account Information',
 												),
-												const SizedBox(height: 12),
+												/*const SizedBox(height: 12),
 												SettingsItem(
 													title: 'Theme',
-												),
+												),*/
 												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'Upgrade Account',
@@ -52,10 +52,10 @@ class SettingsScreen extends StatelessWidget {
 																color: AppTheme.lightTextPrimary,
 															),
 												),
-												const SizedBox(height: 16),
+												/*const SizedBox(height: 16),
 												SettingsItem(
 													title: 'Export Data',
-												),
+												),*/
 												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'Notification Settings',
