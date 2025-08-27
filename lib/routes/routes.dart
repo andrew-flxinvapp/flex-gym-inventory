@@ -22,6 +22,8 @@ import '../src/screens/opt_notifications.dart';
 import '../src/screens/welcome.dart';
 import '../src/screens/onboarding_upgrade.dart';
 import '../src/screens/onboarding_complete.dart';
+import '../src/screens/support.dart';
+import '../src/screens/feedback.dart';
 
 // Add other imports as needed
 
@@ -56,6 +58,8 @@ class AppRoutes {
   static const String onboardingUpgrade = '/onboarding-upgrade';
   // Settings routes
   static const String appDetails = '/app-details';
+  static const String support = '/support';
+  static const String feedback = '/feedback';
 
   // Add more as needed
 }
@@ -91,6 +95,8 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.onboardingUpgrade: (context) => const OnboardingUpgradeScreen(),
   // Settings routes
   AppRoutes.appDetails: (context) => const AppDetailsScreen(),
-  
+  AppRoutes.support: (context) => const SupportScreen(),
+  AppRoutes.feedback: (context) => const FeedbackScreen(),
+
   // Add more as needed
 };

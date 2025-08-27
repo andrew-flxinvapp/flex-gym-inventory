@@ -22,8 +22,8 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
 
   // Controllers for all input fields
   EquipmentCategory? selectedCategory;
-  UpgradeType? selectedItemType;
-  UpgradePriority? selectedPriority;
+  WishlistType? selectedItemType;
+  WishlistPriority? selectedPriority;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
@@ -91,9 +91,9 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<UpgradeType>(
+                CustomDropdownField<WishlistType>(
                   hintText: 'Item Type',
-                  items: UpgradeType.values,
+                  items: WishlistType.values,
                   value: selectedItemType,
                   showAsterisk: true,
                   getLabel: (item) => item.label,
@@ -134,9 +134,9 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<UpgradePriority>(
+                CustomDropdownField<WishlistPriority>(
                   hintText: 'Priority',
-                  items: UpgradePriority.values,
+                  items: WishlistPriority.values,
                   value: selectedPriority,
                   showAsterisk: true,
                   getLabel: (item) => item.label,

@@ -81,10 +81,16 @@ class SettingsScreen extends StatelessWidget {
 												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'Contact Support',
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/support');
+                          },
 												),
 												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'App Feedback',
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/feedback');
+                          },
 												),
 																	const SizedBox(height: 32),
 																	PrimaryButton(

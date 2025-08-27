@@ -1,21 +1,26 @@
 # Flex Gym Inventory
 
-Flex Gym Inventory is a lightweight, powerful mobile app designed for home and small gym owners to track, manage, and organize their equipment. 
+Flex Gym Inventory 
 
-Built in Flutter for iOS and Android.
+Lightweight. Powerful. Purpose-Built.
 
 ## Description
 
+Flex Gym Inventory is a lightweight, powerful mobile app designed for home and small gym owners to track, manage, and organize their equipment. 
 
+Built in Flutter for iOS and Android.
 
 ## Build in Public
 
 This app is being developed in public to share the process, learn out loud, and invite feedback from fellow lifters and developers.
 
 Follow along:
-•	Instagram: @flxinv.app
-•	Bluesky: @flxinvapp.bsky.social
-•	Twitter/X: @flxinvapp
+-	Instagram: @flxinv.app
+-	Bluesky: @flxinvapp.bsky.social
+-	Twitter/X: @flxinvapp
+- Substack: www.substack.com/@heavydevco
+
+
 
 
 ## Features
