@@ -38,4 +38,7 @@ class AppIcons {
   static const String success = 'lib/assets/icons/success.png';
   static const String update = 'lib/assets/icons/update.png';
   static const String warning = 'lib/assets/icons/warning.png';
+  static const String proAvatar = 'lib/assets/icons/pro_avatar.png';
+  static const String user = 'lib/assets/icons/user.png';
+  static const String email = 'lib/assets/icons/email.png';
 }

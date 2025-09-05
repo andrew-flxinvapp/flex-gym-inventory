@@ -11,12 +11,15 @@ class SettingsScreen extends StatelessWidget {
 		@override
 		Widget build(BuildContext context) {
 							return Scaffold(
-								appBar: TopAppBar(
-									title: 'Settings',
-									showBackArrow: true,
-									showRightIcon: false,
-									onBackArrowPressed: () => Navigator.of(context).pop(),
-								),
+												appBar: TopAppBar(
+														title: 'Settings',
+														titleWidget: const Padding(
+															padding: EdgeInsets.only(left: 24.0),
+															child: Text('Settings'),
+														),
+														showBackArrow: false,
+														showRightIcon: false,
+												),
 								body: SingleChildScrollView(
 									child: Padding(
 										padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -31,7 +34,10 @@ class SettingsScreen extends StatelessWidget {
 												),
 												const SizedBox(height: 16),
 												SettingsItem(
-													title: 'Account Information',
+													title: 'Account',
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/account');
+                          },
 												),
 												/*const SizedBox(height: 12),
 												SettingsItem(

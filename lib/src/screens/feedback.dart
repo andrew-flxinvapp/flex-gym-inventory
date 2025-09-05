@@ -14,7 +14,7 @@ class FeedbackScreen extends StatelessWidget {
 		return Scaffold(
 			backgroundColor: AppTheme.lightBackground,
 			appBar: const TopAppBar(
-				title: 'Support',
+				title: 'Feedback',
 				showBackArrow: true,
 				showRightIcon: false,
 			),

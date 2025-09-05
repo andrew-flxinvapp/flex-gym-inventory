@@ -47,6 +47,7 @@ class AppTheme {
       displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
       titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.normal, color: lightTextPrimary),
       titleMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
+      titleSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: lightTextPrimary),
       bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: lightTextPrimary),
       bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: lightTextPrimary),
       bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: lightTextSecondary),

@@ -105,6 +105,9 @@ flutter:
     - lib/assets/icons/wishlist.png
     - lib/assets/icons/wishlist_filled.png
     - lib/assets/icons/sparkle.png
+    - lib/assets/icons/pro_avatar.png
+    - lib/assets/icons/user.png
+    - lib/assets/icons/email.png
 
 
 
