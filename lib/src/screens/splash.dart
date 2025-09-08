@@ -1,11 +1,4 @@
-//import 'package:flex_gym_inventory/src/screens/app_details.dart';
-// import 'package:flex_gym_inventory/src/screens/login.dart';
-// import 'package:flex_gym_inventory/src/screens/component_gallery.dart';
 import 'package:flex_gym_inventory/src/screens/dashboard.dart';
-// import 'package:flex_gym_inventory/src/screens/gym_detail.dart';
-// import 'package:flex_gym_inventory/src/screens/verify_email.dart';
-// import 'package:flex_gym_inventory/src/screens/opt_biometrics.dart';
-// import 'package:flex_gym_inventory/src/screens/onboarding_upgrade.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';

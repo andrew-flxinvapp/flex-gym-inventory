@@ -1,6 +1,7 @@
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import '../widgets/displays/account_greeting.dart';
 import '../widgets/displays/display_field.dart';
+import '../widgets/displays/display_field_upgrade.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
@@ -49,6 +50,39 @@ class AccountScreen extends StatelessWidget {
 																label: 'Email',
 																value: 'flex@flexgym.com',
 															),
+                              const SizedBox(height: 16),
+															const DisplayField(
+																iconPath: AppIcons.phone,
+																label: 'Phone',
+																value: '+1 (555) 123-4567',
+															),
+                              const SizedBox(height: 16),
+															const DisplayField(
+																iconPath: AppIcons.sparkle,
+																label: 'Wishlist',
+																value: '# of Items',
+															),
+															const SizedBox(height: 16),
+															const DisplayField(
+																iconPath: AppIcons.upgrade,
+																label: 'Plan',
+																value: 'Free',
+															),
+															const SizedBox(height: 16),
+															DisplayFieldUpgrade(
+																onPressed: () {
+																	Navigator.of(context).pushNamed('/upgrade-account');
+																},
+															),
+															const SizedBox(height: 16),
+															Text(
+																	'Legal',
+																	style: Theme.of(context).textTheme.titleMedium?.copyWith(
+																			color: AppTheme.lightTextPrimary,
+																			fontWeight: FontWeight.normal
+																	),
+															),
+
 									],
 								),
 						),

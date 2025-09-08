@@ -41,6 +41,7 @@ dependencies:
   path_provider: ^2.1.2
   flutter_riverpod: ^2.6.1
   url_launcher: ^6.3.2
+  dropdown_button2: ^2.3.9
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -108,6 +109,8 @@ flutter:
     - lib/assets/icons/pro_avatar.png
     - lib/assets/icons/user.png
     - lib/assets/icons/email.png
+    - lib/assets/icons/phone.png
+    - lib/assets/icons/upgrade_account.png
 
 
 

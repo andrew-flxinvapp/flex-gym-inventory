@@ -28,7 +28,7 @@ class AppTheme {
   static const Color disabledColor = Color(0xFFB9C3C7);
   static const Color warningColor= Color(0xFFFFCC00);
   static const Color updateColor = Color(0xFF4BB4E9);
-  static const Color proColor = Color(0xFFFFD700);
+  static const Color proColor = Color(0xFFC7A109);
 
 
   static final ThemeData lightTheme = ThemeData(

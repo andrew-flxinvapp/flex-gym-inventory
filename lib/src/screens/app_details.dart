@@ -27,7 +27,7 @@ class AppDetailsScreen extends StatelessWidget {
                     children: [
                       // App Info Section
                       Text('App Info',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -68,7 +68,7 @@ class AppDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       // Developer Info
                       Text('Developer Info',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -80,7 +80,7 @@ class AppDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       // Privacy Policy
                       Text('Privacy Policy',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -106,7 +106,7 @@ class AppDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       // Terms & Conditions
                       Text('Terms & Conditions',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -132,7 +132,7 @@ class AppDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       // Acknowledgements
                       Text('Acknowledgements',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -149,7 +149,7 @@ class AppDetailsScreen extends StatelessWidget {
               Center(
                 child: Text(
                   '© 2025 HEAVY DEV Co. LLC',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppTheme.lightTextPrimary,
                       ),
                 ),

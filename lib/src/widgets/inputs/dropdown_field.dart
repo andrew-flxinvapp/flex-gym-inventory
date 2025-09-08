@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import '../../../theme/app_theme.dart';
 
 class CustomDropdownField<T> extends StatelessWidget {
@@ -15,13 +16,13 @@ class CustomDropdownField<T> extends StatelessWidget {
   const CustomDropdownField({
     super.key,
     required this.hintText,
-    required this.items,
-    this.value,
-    this.onChanged,
-    this.getLabel,
     this.showAsterisk = false,
-    this.width = 370,
-    this.height = 50,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+    this.getLabel,
+    this.width = 360,
+    this.height = 56,
     this.validator,
   });
 
@@ -31,17 +32,21 @@ class CustomDropdownField<T> extends StatelessWidget {
       child: SizedBox(
         width: width,
         height: height,
-        child: DropdownButtonFormField<T>(
+        child: DropdownButtonFormField2<T>(
           value: value,
           validator: validator,
+          onChanged: onChanged,
+          isExpanded: true, // keep child filling the field width
+
+          // --- Label with optional asterisk (matches your current look) ---
           decoration: InputDecoration(
             hintText: null,
             label: RichText(
               text: TextSpan(
                 text: hintText,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.lightTextPrimary,
-                ),
+                      color: AppTheme.lightTextPrimary,
+                    ),
                 children: showAsterisk
                     ? [
                         TextSpan(
@@ -58,7 +63,8 @@ class CustomDropdownField<T> extends StatelessWidget {
             floatingLabelBehavior: FloatingLabelBehavior.auto,
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
@@ -72,21 +78,58 @@ class CustomDropdownField<T> extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           ),
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.lightTextPrimary),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: AppTheme.lightTextPrimary,
+
+          // --- Field (closed button) presentation ---
+          buttonStyleData: ButtonStyleData(
+            height: height,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
-          dropdownColor: Colors.white,
+
+          iconStyleData: IconStyleData(
+            icon: const Icon(Icons.keyboard_arrow_down_rounded),
+            iconEnabledColor: AppTheme.lightTextPrimary,
+            iconDisabledColor: AppTheme.lightTextPrimary.withOpacity(0.4),
+          ),
+
+          // --- The key fix: force the menu to match the field width ---
+          dropdownStyleData: DropdownStyleData(
+            width: width,               // <- menu equals closed widget width
+            maxHeight: 320,
+            elevation: 4,
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            offset: const Offset(0, 4),
+            useSafeArea: true,
+          ),
+
+          menuItemStyleData: const MenuItemStyleData(
+            height: 48,
+            padding: EdgeInsets.symmetric(horizontal: 12),
+          ),
+
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.lightTextPrimary,
+              ),
+
           items: items.map((item) {
             final label = getLabel != null
                 ? getLabel!(item)
                 : item.toString().split('.').last;
             return DropdownMenuItem<T>(
               value: item,
-              child: Text(label),
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+              ),
             );
           }).toList(),
-          onChanged: onChanged,
         ),
       ),
     );

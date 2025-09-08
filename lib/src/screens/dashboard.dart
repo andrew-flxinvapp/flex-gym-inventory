@@ -153,6 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.of(context).pushNamed(AppRoutes.componentGallery);
                 },
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),

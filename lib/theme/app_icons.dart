@@ -24,6 +24,7 @@ class AppIcons {
   static const String back = 'lib/assets/icons/arrow_small_left.png';
   static const String forward = 'lib/assets/icons/arrow_small_right.png';
   static const String reset = 'lib/assets/icons/reset.png';
+  static const String upgrade = 'lib/assets/icons/upgrade_account.png';
 
   // Upgrade to PRO
   static const String pro = 'lib/assets/icons/crown.png';
@@ -41,4 +42,5 @@ class AppIcons {
   static const String proAvatar = 'lib/assets/icons/pro_avatar.png';
   static const String user = 'lib/assets/icons/user.png';
   static const String email = 'lib/assets/icons/email.png';
+  static const String phone = 'lib/assets/icons/phone.png';
 }

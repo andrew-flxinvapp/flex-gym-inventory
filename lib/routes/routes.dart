@@ -25,6 +25,7 @@ import '../src/screens/onboarding_complete.dart';
 import '../src/screens/support.dart';
 import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
+import '../src/screens/upgrade_account.dart';
 
 // Add other imports as needed
 
@@ -62,6 +63,7 @@ class AppRoutes {
   static const String support = '/support';
   static const String feedback = '/feedback';
   static const String account = '/account';
+  static const String upgradeAccount = '/upgrade-account';
 
   // Add more as needed
 }
@@ -100,6 +102,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.support: (context) => const SupportScreen(),
   AppRoutes.feedback: (context) => const FeedbackScreen(),
   AppRoutes.account: (context) => const AccountScreen(),
+  AppRoutes.upgradeAccount: (context) => const UpgradeAccountScreen(),
 
   // Add more as needed
 };
