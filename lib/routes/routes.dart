@@ -26,6 +26,7 @@ import '../src/screens/support.dart';
 import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
 import '../src/screens/upgrade_account.dart';
+import '../src/screens/delete_account.dart';
 
 // Add other imports as needed
 
@@ -64,6 +65,7 @@ class AppRoutes {
   static const String feedback = '/feedback';
   static const String account = '/account';
   static const String upgradeAccount = '/upgrade-account';
+  static const String deleteAccount = '/delete-account';
 
   // Add more as needed
 }
@@ -103,6 +105,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.feedback: (context) => const FeedbackScreen(),
   AppRoutes.account: (context) => const AccountScreen(),
   AppRoutes.upgradeAccount: (context) => const UpgradeAccountScreen(),
+  AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(), 
 
   // Add more as needed
 };

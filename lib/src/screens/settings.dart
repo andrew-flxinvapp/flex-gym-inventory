@@ -53,6 +53,9 @@ class SettingsScreen extends StatelessWidget {
 												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'Delete Account',
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/delete-account');
+                          },
 												),
 												const SizedBox(height: 32),
 												Text(
@@ -77,10 +80,6 @@ class SettingsScreen extends StatelessWidget {
 															),
 												),
 												const SizedBox(height: 16),
-												SettingsItem(
-													title: 'Legal',
-												),
-												const SizedBox(height: 12),
 												SettingsItem(
 													title: 'App Info',
 													onTap: () {

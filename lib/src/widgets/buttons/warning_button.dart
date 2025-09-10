@@ -28,7 +28,6 @@ class WarningButton extends StatelessWidget {
           foregroundColor: AppTheme.lightBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: AppTheme.warningColor, width: 1),
           ),
         ),
         child: Text(
