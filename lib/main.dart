@@ -1,21 +1,36 @@
+import 'package:flex_gym_inventory/src/models/equipment_model.dart';
+import 'package:flex_gym_inventory/src/models/gym_model.dart';
+import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 //import 'src/screens/splash.dart';
 import 'config/size_config.dart';
 import 'routes/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
-    url: 'https://ihfwdlyewavkqxuqhthu.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZndkbHlld2F2a3F4dXFodGh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NTQzMzAsImV4cCI6MjA2OTAzMDMzMH0.PSU08Fhf4mu29wluO7x5lQSgC1YZgTMWkc4lMhjgaJ4',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  runApp(const MyApp());
+
+  final dir = await getApplicationDocumentsDirectory();
+  final isar = await Isar.open(
+    [GymSchema,EquipmentSchema,WishlistSchema],
+    directory: dir.path,
+  );
+
+  runApp(MyApp(isar: isar));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Isar isar;
+  const MyApp({super.key, required this.isar});
 
   @override
   Widget build(BuildContext context) {
