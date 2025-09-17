@@ -80,7 +80,7 @@ class _DashboardPieChartState extends State<DashboardPieChart> {
                                     ? '${(percent * 100).toStringAsFixed(0)}%'
                                     : '',
                                 radius: 100, // Increased radius for larger slices
-                                titleStyle: theme.textTheme.labelSmall?.copyWith(
+                                titleStyle: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),

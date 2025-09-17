@@ -1,4 +1,4 @@
-import 'package:flex_gym_inventory/src/screens/dashboard.dart';
+//import 'package:flex_gym_inventory/src/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,9 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const DashboardScreen()),
-        );
+        Navigator.of(context).pushReplacementNamed('/dashboard');
       }
     });
   }

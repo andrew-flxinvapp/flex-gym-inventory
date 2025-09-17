@@ -43,11 +43,8 @@ dependencies:
   url_launcher: ^6.3.2
   dropdown_button2: ^2.3.9
   pdf: ^3.11.3
-  printing: ^5.11.0
-  share_plus: ^6.3.0
-  intl: ^0.18.0
-  open_filex: ^4.7.0
   flutter_dotenv: ^6.0.0
+  shared_preferences: ^2.5.3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -74,6 +71,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - .env
+
     # FGI Logo and App Icon
     - lib/assets/images/db_logo.png
     - lib/assets/images/fgi_logo_white.png
@@ -117,7 +116,6 @@ flutter:
     - lib/assets/icons/email.png
     - lib/assets/icons/phone.png
     - lib/assets/icons/upgrade_account.png
-
 
 
 

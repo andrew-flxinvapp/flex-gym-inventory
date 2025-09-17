@@ -2,7 +2,6 @@ import '../../theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
-import '../../src/widgets/bottom_navigation.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/dashboard_piechart.dart';
 import '../../enum/app_enums.dart';
@@ -158,10 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBarModern(
-        currentIndex: 0,
-        onTap: (index) {},
-      ),
+      // bottomNavigationBar removed; now managed by HomeScreen
     );
   }
 }

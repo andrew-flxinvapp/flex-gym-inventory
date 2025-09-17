@@ -41,8 +41,25 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       initialRoute: AppRoutes.splash,
+      // Use appRoutes for named routes lookup, but override transitions with onGenerateRoute
       routes: appRoutes,
-      // Optionally: onGenerateRoute: yourRouteGenerator,
+      onGenerateRoute: (settings) {
+        final builder = appRoutes[settings.name];
+        if (builder != null) {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            settings: settings,
+          );
+        }
+        // Fallback to default if route not found
+        return null;
+      },
     );
   }
 }

@@ -13,22 +13,9 @@ class BottomNavigationBarModern extends StatelessWidget {
   });
 
   void _handleNavigation(BuildContext context, int index) {
-    String? route;
-    switch (index) {
-      case 0:
-        route = '/dashboard';
-        break;
-      case 1:
-        route = '/wishlist';
-        break;
-      case 2:
-        route = '/settings';
-        break;
+    if (currentIndex != index) {
+      onTap(index);
     }
-    if (route != null && currentIndex != index) {
-      Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
-    }
-    onTap(index);
   }
 
   @override

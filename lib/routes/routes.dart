@@ -1,8 +1,9 @@
+import '../src/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../src/screens/splash.dart';
 import '../src/screens/component_gallery.dart';
-import '../src/screens/dashboard.dart';
-import '../src/screens/wishlist.dart';
+//import '../src/screens/dashboard.dart';
+//import '../src/screens/wishlist.dart';
 import '../src/screens/add_gym.dart';
 import '../src/screens/gym_detail.dart';
 import '../src/screens/edit_gym.dart';
@@ -12,7 +13,7 @@ import '../src/screens/wishlist_detail.dart';
 import '../src/screens/add_wishlist.dart';
 import '../src/screens/edit_wishlist.dart';
 import '../src/screens/edit_equipment.dart';
-import '../src/screens/settings.dart';
+//import '../src/screens/settings.dart';
 import '../src/screens/signup.dart';
 import '../src/screens/login.dart';
 import '../src/screens/app_details.dart';
@@ -27,6 +28,7 @@ import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
 import '../src/screens/upgrade_account.dart';
 import '../src/screens/delete_account.dart';
+import '../src/screens/notifications.dart';
 
 // Add other imports as needed
 
@@ -66,6 +68,7 @@ class AppRoutes {
   static const String account = '/account';
   static const String upgradeAccount = '/upgrade-account';
   static const String deleteAccount = '/delete-account';
+  static const String notifications = '/notifications';
 
   // Add more as needed
 }
@@ -74,10 +77,10 @@ class AppRoutes {
 final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
   // Navigation routes
-  AppRoutes.dashboard: (context) => const DashboardScreen(),
+  AppRoutes.dashboard: (context) => const HomeScreen(initialIndex: 0),
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
-  AppRoutes.wishlist: (context) => const WishlistScreen(),
-  AppRoutes.settings: (context) => const SettingsScreen(),
+  AppRoutes.wishlist: (context) => const HomeScreen(initialIndex: 1),
+  AppRoutes.settings: (context) => const HomeScreen(initialIndex: 2),
   // Gym routes
   AppRoutes.addGym: (context) => const AddGymScreen(),
   AppRoutes.gymDetail: (context) => const GymDetailScreen(),
@@ -105,7 +108,8 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.feedback: (context) => const FeedbackScreen(),
   AppRoutes.account: (context) => const AccountScreen(),
   AppRoutes.upgradeAccount: (context) => const UpgradeAccountScreen(),
-  AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(), 
+  AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
+  AppRoutes.notifications: (context) => const NotificationsScreen(),
 
   // Add more as needed
 };

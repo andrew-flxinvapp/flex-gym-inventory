@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
@@ -13,7 +14,20 @@ class OptNotificationsScreen extends StatefulWidget {
 }
 
 class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
-  bool _biometricsEnabled = false;
+  bool _allowNotifications = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPreference();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _allowNotifications = prefs.getBool('allow_notifications') ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +79,13 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
                 ),
                 const SizedBox(width: 16),
                 CupertinoSwitch(
-                  value: _biometricsEnabled,
-                  onChanged: (value) {
+                  value: _allowNotifications,
+                  onChanged: (value) async {
                     setState(() {
-                      _biometricsEnabled = value;
+                      _allowNotifications = value;
                     });
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setBool('allow_notifications', value);
                   },
                   // activeColor: AppTheme.primary,
                 ),
@@ -88,3 +104,4 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
     );
   }
 }
+

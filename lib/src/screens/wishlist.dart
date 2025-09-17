@@ -3,7 +3,6 @@ import '../widgets/buttons/secondary_button.dart';
 import '../widgets/cards/wishlist_item_card.dart';
 import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
-import '../widgets/bottom_navigation.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
 class WishlistScreen extends StatelessWidget {
@@ -109,24 +108,7 @@ class WishlistScreen extends StatelessWidget {
           }
         },
       ),
-      bottomNavigationBar: BottomNavigationBarModern(
-        currentIndex: 1, // Set to the correct index for Wishlist
-        onTap: (index) {
-          // Implement navigation logic here
-          switch (index) {
-            case 0:
-              Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
-              break;
-            case 1:
-              // Already on Wishlist
-              break;
-            case 2:
-              Navigator.of(context).pushReplacementNamed(AppRoutes.settings);
-              break;
-            // Add more cases as needed
-          }
-        },
-      ),
+      // bottomNavigationBar removed; now managed by HomeScreen
     );
   }
 }
