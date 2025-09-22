@@ -18,7 +18,6 @@ import '../src/screens/signup.dart';
 import '../src/screens/login.dart';
 import '../src/screens/app_details.dart';
 import '../src/screens/verify_email.dart';
-import '../src/screens/opt_biometrics.dart';
 import '../src/screens/opt_notifications.dart';
 import '../src/screens/welcome.dart';
 import '../src/screens/onboarding_upgrade.dart';
@@ -29,6 +28,9 @@ import '../src/screens/account.dart';
 import '../src/screens/upgrade_account.dart';
 import '../src/screens/delete_account.dart';
 import '../src/screens/notifications.dart';
+import '../src/screens/onboarding_feature_one.dart';
+import '../src/screens/onboarding_feature_two.dart';
+import '../src/screens/social_proof.dart';
 
 // Add other imports as needed
 
@@ -56,11 +58,13 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String login = '/login';
   static const String verifiyEmail = '/verify-email';
-  static const String optBiometrics = '/opt-biometrics';
   static const String optNotifications = '/opt-notifications';
+  static const String onboardingFeatureOne = '/onboarding-feature-one';
+  static const String onboardingFeatureTwo = '/onboarding-feature-two';
   static const String welcome = '/welcome';
-  static const String complete = '/complete';
+  static const String socialProof = '/social-proof';
   static const String onboardingUpgrade = '/onboarding-upgrade';
+  static const String complete = '/complete';
   // Settings routes
   static const String appDetails = '/app-details';
   static const String support = '/support';
@@ -97,11 +101,14 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.verifiyEmail: (context) => const VerifyEmailScreen(),
-  AppRoutes.optBiometrics: (context) => const OptBiometricsScreen(),
   AppRoutes.optNotifications: (context) => const OptNotificationsScreen(),
+  AppRoutes.onboardingFeatureOne: (context) => const OnboardingFeatureOneScreen(),
+  AppRoutes.onboardingFeatureTwo: (context) => const OnboardingFeatureTwoScreen(),
   AppRoutes.welcome: (context) => const WelcomeScreen(),
-  AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
+  AppRoutes.socialProof: (context) => const SocialProofScreen(),  
   AppRoutes.onboardingUpgrade: (context) => const OnboardingUpgradeScreen(),
+  AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
+
   // Settings routes
   AppRoutes.appDetails: (context) => const AppDetailsScreen(),
   AppRoutes.support: (context) => const SupportScreen(),

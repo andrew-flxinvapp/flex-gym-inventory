@@ -116,6 +116,8 @@ flutter:
     - lib/assets/icons/email.png
     - lib/assets/icons/phone.png
     - lib/assets/icons/upgrade_account.png
+    - lib/assets/icons/star.png
+    - lib/assets/icons/apple.png
 
 
 
@@ -129,6 +131,8 @@ flutter:
     - lib/assets/images/celebrate.png
     - lib/assets/images/empty_gym.png
     - lib/assets/images/searching.png
+    - lib/assets/images/feature_1.png
+    - lib/assets/images/feature_2.png
     
 flutter_icons:
     android: true

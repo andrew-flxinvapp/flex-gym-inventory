@@ -16,6 +16,8 @@ class AppIcons {
   static const String check = 'lib/assets/icons/check.png';
   static const String plus = 'lib/assets/icons/plus.png';
   static const String sparkle = 'lib/assets/icons/sparkle.png';
+  static const String star = 'lib/assets/icons/star.png';
+  static const String apple = 'lib/assets/icons/apple.png';
 
 
   // Actions

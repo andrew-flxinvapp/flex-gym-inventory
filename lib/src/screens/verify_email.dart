@@ -69,7 +69,7 @@ class VerifyEmailScreen extends StatelessWidget {
                 // Resend magic link button at the bottom
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/opt-biometrics'); // Navigate to the next screen
+                    Navigator.of(context).pushNamed('/opt-notifications'); // Navigate to the next screen
                   },
                   child: Text(
                     'Resend magic link',

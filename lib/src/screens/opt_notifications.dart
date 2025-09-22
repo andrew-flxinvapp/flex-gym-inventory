@@ -33,7 +33,9 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      appBar: const OnboardingLogoAppBar(),
+      appBar: const OnboardingLogoAppBar(
+        showBackArrow: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -95,7 +97,7 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
             PrimaryButton(
               label: 'Continue',
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.welcome);
+                Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureOne);
               },
             ),
           ],

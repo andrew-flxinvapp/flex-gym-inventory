@@ -54,7 +54,7 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
             PrimaryButton(
               label: 'To Dashboard',
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.dashboard);
+                Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
               },
             ),
           ],
