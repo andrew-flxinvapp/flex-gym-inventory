@@ -64,14 +64,15 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
           });
         },
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 const SizedBox(height: 8),
                 Text(
                   'Enter Equipment information below.',
@@ -247,6 +248,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

@@ -38,9 +38,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final sampleCategoryCounts = {
       EquipmentCategory.implement: 5,
-      EquipmentCategory.weight: 8,
+      EquipmentCategory.weight: 12,
       EquipmentCategory.machine: 2,
-      EquipmentCategory.other: 3,
+      EquipmentCategory.other: 18,
     };
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
@@ -95,13 +95,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
@@ -158,6 +159,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       // bottomNavigationBar removed; now managed by HomeScreen
-    );
+    ));
   }
 }

@@ -20,12 +20,13 @@ class DeleteAccountScreen extends StatelessWidget {
 					showRightIcon: false,
 				),
 			),
-							body: SingleChildScrollView(
-								child: Padding(
-									padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: [
+									body: SafeArea(
+										child: SingleChildScrollView(
+											child: Padding(
+												padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+												child: Column(
+													crossAxisAlignment: CrossAxisAlignment.start,
+													children: [
 											Text(
 												'Are you sure?',
 												style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -79,7 +80,7 @@ class DeleteAccountScreen extends StatelessWidget {
 										],
 									),
 								),
-							),
-		);
-	}
-}
+									),
+								));
+							}
+						}
