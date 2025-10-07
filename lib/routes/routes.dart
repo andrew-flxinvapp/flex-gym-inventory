@@ -31,6 +31,7 @@ import '../src/screens/notifications.dart';
 import '../src/screens/onboarding_feature_one.dart';
 import '../src/screens/onboarding_feature_two.dart';
 import '../src/screens/social_proof.dart';
+import '../src/screens/about_flex_rackley.dart';
 
 // Add other imports as needed
 
@@ -73,6 +74,7 @@ class AppRoutes {
   static const String upgradeAccount = '/upgrade-account';
   static const String deleteAccount = '/delete-account';
   static const String notifications = '/notifications';
+  static const String aboutFlexRackley = '/about-flex-rackley';
 
   // Add more as needed
 }
@@ -117,6 +119,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.upgradeAccount: (context) => const UpgradeAccountScreen(),
   AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
   AppRoutes.notifications: (context) => const NotificationsScreen(),
+  AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),
 
   // Add more as needed
 };

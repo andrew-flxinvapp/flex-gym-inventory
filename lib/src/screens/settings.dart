@@ -9,111 +9,120 @@ class SettingsScreen extends StatelessWidget {
 
 		@override
 		Widget build(BuildContext context) {
-						return Scaffold(
-							appBar: TopAppBar(
-								title: 'Settings',
-								titleWidget: const Padding(
-									padding: EdgeInsets.only(left: 24.0),
-									child: Text('Settings'),
+							return Scaffold(
+								appBar: TopAppBar(
+									title: 'Settings',
+									titleWidget: const Padding(
+										padding: EdgeInsets.only(left: 24.0),
+										child: Text('Settings'),
+									),
+									showBackArrow: false,
+									showRightIcon: false,
 								),
-								showBackArrow: false,
-								showRightIcon: false,
-							),
-							body: SingleChildScrollView(
-								child: Padding(
-									padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: [
-											Text(
-												'Account & Access',
-												style: Theme.of(context).textTheme.displaySmall?.copyWith(
-													color: AppTheme.lightTextPrimary,
-												),
-											),
-											const SizedBox(height: 16),
-											SettingsItem(
-												title: 'Account',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/account');
-                          },
-											),
-											/*const SizedBox(height: 12),
-											SettingsItem(
-												title: 'Theme',
-											),*/
-											const SizedBox(height: 12),
-											SettingsItem(
-												title: 'Upgrade Account',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/upgrade-account');
-                          },
-											),
-											const SizedBox(height: 12),
-											SettingsItem(
-												title: 'Delete Account',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/delete-account');
-                          },
-											),
-											const SizedBox(height: 32),
-											Text(
-												'App Tools & Features',
-												style: Theme.of(context).textTheme.displaySmall?.copyWith(
-													color: AppTheme.lightTextPrimary,
-												),
-											),
-											/*const SizedBox(height: 16),
-											SettingsItem(
-												title: 'Export Data',
-											),*/
-											const SizedBox(height: 12),
-											SettingsItem(
-												title: 'Notification Settings',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/notifications');
-                          },
-											),
-											const SizedBox(height: 32),
-											Text(
-												'App Info & Support',
-												style: Theme.of(context).textTheme.displaySmall?.copyWith(
-													color: AppTheme.lightTextPrimary,
-												),
-											),
-											const SizedBox(height: 16),
-											SettingsItem(
-												title: 'App Info',
-												onTap: () {
-													Navigator.of(context).pushNamed('/app-details');
-												},
-											),
-											const SizedBox(height: 12),
-											SettingsItem(
-												title: 'Contact Support',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/support');
-                          },
-											),
-											const SizedBox(height: 12),
-											SettingsItem(
-												title: 'App Feedback',
-                          onTap: () {
-                            Navigator.of(context).pushNamed('/feedback');
-                          },
-											),
-														const SizedBox(height: 32),
-														PrimaryButton(
-															label: 'Sign Out',
-															onPressed: () {
-																// TODO: Implement sign out logic
-															},
+								body: SafeArea(
+									child: SingleChildScrollView(
+										child: Padding(
+											padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+											child: Column(
+												crossAxisAlignment: CrossAxisAlignment.start,
+												children: [
+													Text(
+														'Account & Access',
+														style: Theme.of(context).textTheme.displaySmall?.copyWith(
+															color: AppTheme.lightTextPrimary,
 														),
-														// ...other settings content goes here...
-										],
+													),
+													const SizedBox(height: 16),
+													SettingsItem(
+														title: 'Account',
+														onTap: () {
+															Navigator.of(context).pushNamed('/account');
+														},
+													),
+													/*const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Theme',
+													),*/
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Upgrade Account',
+														onTap: () {
+															Navigator.of(context).pushNamed('/upgrade-account');
+														},
+													),
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Delete Account',
+														onTap: () {
+															Navigator.of(context).pushNamed('/delete-account');
+														},
+													),
+													const SizedBox(height: 32),
+													Text(
+														'App Tools & Features',
+														style: Theme.of(context).textTheme.displaySmall?.copyWith(
+															color: AppTheme.lightTextPrimary,
+														),
+													),
+													/*const SizedBox(height: 16),
+													SettingsItem(
+														title: 'Export Data',
+													),*/
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Notification Settings',
+														onTap: () {
+															Navigator.of(context).pushNamed('/notifications');
+														},
+													),
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'About Flex Rackley',
+														onTap: () {
+															Navigator.of(context).pushNamed('/about-flex-rackley');
+														},
+													),
+													const SizedBox(height: 32),
+													Text(
+														'App Info & Support',
+														style: Theme.of(context).textTheme.displaySmall?.copyWith(
+															color: AppTheme.lightTextPrimary,
+														),
+													),
+													const SizedBox(height: 16),
+													SettingsItem(
+														title: 'App Info',
+														onTap: () {
+															Navigator.of(context).pushNamed('/app-details');
+														},
+													),
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Contact Support',
+														onTap: () {
+															Navigator.of(context).pushNamed('/support');
+														},
+													),
+													const SizedBox(height: 12),
+													SettingsItem(
+														title: 'App Feedback',
+														onTap: () {
+															Navigator.of(context).pushNamed('/feedback');
+														},
+													),
+													const SizedBox(height: 32),
+													PrimaryButton(
+														label: 'Sign Out',
+														onPressed: () {
+															// TODO: Implement sign out logic
+														},
+													),
+													// ...other settings content goes here...
+												],
+											),
+										),
 									),
 								),
-							),
-						);
+							);
 		}
 }

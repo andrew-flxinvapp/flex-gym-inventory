@@ -48,128 +48,130 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
           });
         },
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                Text(
-                  'Edit Wishlist Item information below.',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.w500,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
+                    'Edit Wishlist Item information below.',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      '*',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.stopColor,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        '*',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.stopColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Required field',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                      const SizedBox(width: 4),
+                      Text(
+                        'Required field',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                // ...existing code...
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Name',
-                  showAsterisk: true,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<String>(
-                  hintText: 'Item Type',
-                  items: const ['New Item', 'Replacement'], // TODO: Replace with dynamic gym list
-                  value: null,
-                  showAsterisk: true,
-                  getLabel: (item) => item,
-                  onChanged: (value) {
-                    // TODO: Handle gym selection
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Item Type selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<String>(
-                  hintText: 'Category',
-                  items: const ['Weight', 'Implement', 'Machine'], // TODO: Replace with dynamic equipment list
-                  value: null,
-                  showAsterisk: true,
-                  getLabel: (item) => item,
-                  onChanged: (value) {
-                    // TODO: Handle equipment type selection
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Category selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Brand',
-                  showAsterisk: true,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<String>(
-                  hintText: 'Priority',
-                  items: const ['Low', 'Medium', 'High'], // TODO: Replace with dynamic equipment list
-                  value: null,
-                  showAsterisk: true,
-                  getLabel: (item) => item,
-                  onChanged: (value) {
-                    // TODO: Handle equipment type selection
-                  },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Priority selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Link (URL)',
-                  showAsterisk: false,
-                ),
-                const SizedBox(height: 20),
-                CustomMultilineTextInput(
-                  hintText: 'Notes',
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 32),
-                PrimaryButton(
-                  label: 'Save',
-                  onPressed: () {
-                    // TODO: Implement save logic
-                  },
-                ),
-                const SizedBox(height: 16),
-                SecondaryButton(
-                  label: 'Cancel',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  // ...existing code...
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Name',
+                    showAsterisk: true,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<String>(
+                    hintText: 'Item Type',
+                    items: const ['New Item', 'Replacement'], // TODO: Replace with dynamic gym list
+                    value: null,
+                    showAsterisk: true,
+                    getLabel: (item) => item,
+                    onChanged: (value) {
+                      // TODO: Handle gym selection
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Item Type selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<String>(
+                    hintText: 'Category',
+                    items: const ['Weight', 'Implement', 'Machine'], // TODO: Replace with dynamic equipment list
+                    value: null,
+                    showAsterisk: true,
+                    getLabel: (item) => item,
+                    onChanged: (value) {
+                      // TODO: Handle equipment type selection
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Category selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Brand',
+                    showAsterisk: true,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<String>(
+                    hintText: 'Priority',
+                    items: const ['Low', 'Medium', 'High'], // TODO: Replace with dynamic equipment list
+                    value: null,
+                    showAsterisk: true,
+                    getLabel: (item) => item,
+                    onChanged: (value) {
+                      // TODO: Handle equipment type selection
+                    },
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Priority selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Link (URL)',
+                    showAsterisk: false,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomMultilineTextInput(
+                    hintText: 'Notes',
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 32),
+                  PrimaryButton(
+                    label: 'Save',
+                    onPressed: () {
+                      // TODO: Implement save logic
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  SecondaryButton(
+                    label: 'Cancel',
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
