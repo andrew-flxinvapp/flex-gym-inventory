@@ -5,7 +5,7 @@ import '../snackbar.dart';
 
 class WishlistCard extends StatelessWidget {
   final List<MapEntry<String, String>> details;
-  const WishlistCard({Key? key, required this.details}) : super(key: key);
+  const WishlistCard({super.key, required this.details});
 
   @override
   Widget build(BuildContext context) {

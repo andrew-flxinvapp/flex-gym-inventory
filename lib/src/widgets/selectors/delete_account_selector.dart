@@ -7,11 +7,11 @@ class DeleteAccountSelector extends StatelessWidget {
 	final String text;
 
 	const DeleteAccountSelector({
-		Key? key,
+		super.key,
 		required this.selected,
 		required this.text,
 		this.onTap,
-	}) : super(key: key);
+	});
 
 	@override
 	Widget build(BuildContext context) {

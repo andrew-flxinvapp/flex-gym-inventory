@@ -10,11 +10,11 @@ class NotificationsToggle extends StatefulWidget {
 	final ValueChanged<bool>? onChanged;
 
 	const NotificationsToggle({
-		Key? key,
+		super.key,
 		required this.label,
 		this.initialValue = false,
 		this.onChanged,
-	}) : super(key: key);
+	});
 
 	@override
 	State<NotificationsToggle> createState() => _NotificationsToggleState();
