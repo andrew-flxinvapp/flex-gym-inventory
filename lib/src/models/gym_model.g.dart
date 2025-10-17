@@ -48,7 +48,47 @@ const GymSchema = CollectionSchema(
   deserialize: _gymDeserialize,
   deserializeProp: _gymDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'gymId': IndexSchema(
+      id: 7901962257235038427,
+      name: r'gymId',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'gymId',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'createdDate': IndexSchema(
+      id: 7275501510556639048,
+      name: r'createdDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'createdDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _gymGetId,
@@ -144,10 +184,72 @@ void _gymAttach(IsarCollection<dynamic> col, Id id, Gym object) {
   object.id = id;
 }
 
+extension GymByIndex on IsarCollection<Gym> {
+  Future<Gym?> getByGymId(String gymId) {
+    return getByIndex(r'gymId', [gymId]);
+  }
+
+  Gym? getByGymIdSync(String gymId) {
+    return getByIndexSync(r'gymId', [gymId]);
+  }
+
+  Future<bool> deleteByGymId(String gymId) {
+    return deleteByIndex(r'gymId', [gymId]);
+  }
+
+  bool deleteByGymIdSync(String gymId) {
+    return deleteByIndexSync(r'gymId', [gymId]);
+  }
+
+  Future<List<Gym?>> getAllByGymId(List<String> gymIdValues) {
+    final values = gymIdValues.map((e) => [e]).toList();
+    return getAllByIndex(r'gymId', values);
+  }
+
+  List<Gym?> getAllByGymIdSync(List<String> gymIdValues) {
+    final values = gymIdValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'gymId', values);
+  }
+
+  Future<int> deleteAllByGymId(List<String> gymIdValues) {
+    final values = gymIdValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'gymId', values);
+  }
+
+  int deleteAllByGymIdSync(List<String> gymIdValues) {
+    final values = gymIdValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'gymId', values);
+  }
+
+  Future<Id> putByGymId(Gym object) {
+    return putByIndex(r'gymId', object);
+  }
+
+  Id putByGymIdSync(Gym object, {bool saveLinks = true}) {
+    return putByIndexSync(r'gymId', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByGymId(List<Gym> objects) {
+    return putAllByIndex(r'gymId', objects);
+  }
+
+  List<Id> putAllByGymIdSync(List<Gym> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'gymId', objects, saveLinks: saveLinks);
+  }
+}
+
 extension GymQueryWhereSort on QueryBuilder<Gym, Gym, QWhere> {
   QueryBuilder<Gym, Gym, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhere> anyCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'createdDate'),
+      );
     });
   }
 }
@@ -213,6 +315,182 @@ extension GymQueryWhere on QueryBuilder<Gym, Gym, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> gymIdEqualTo(String gymId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'gymId',
+        value: [gymId],
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> gymIdNotEqualTo(String gymId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [],
+              upper: [gymId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [gymId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [gymId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [],
+              upper: [gymId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> nameEqualTo(String name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> nameNotEqualTo(String name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> createdDateEqualTo(
+      DateTime createdDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdDate',
+        value: [createdDate],
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> createdDateNotEqualTo(
+      DateTime createdDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [],
+              upper: [createdDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [createdDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [createdDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [],
+              upper: [createdDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> createdDateGreaterThan(
+    DateTime createdDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [createdDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> createdDateLessThan(
+    DateTime createdDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [],
+        upper: [createdDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Gym, Gym, QAfterWhereClause> createdDateBetween(
+    DateTime lowerCreatedDate,
+    DateTime upperCreatedDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [lowerCreatedDate],
+        includeLower: includeLower,
+        upper: [upperCreatedDate],
         includeUpper: includeUpper,
       ));
     });

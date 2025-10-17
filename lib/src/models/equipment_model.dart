@@ -5,21 +5,40 @@ part 'equipment_model.g.dart';
 @Collection()
 class Equipment {
   Id id = Isar.autoIncrement;
-  String gymId;
-  String name;
-  String category;
-  String brand;
-  String model;
-  String trainingStyle;
-  int quantity;
+
+  /// Indexed fields (for filtering, sorting,and scoping)
+
+  @Index() // used to scope equipment to a specific gym
+  late String gymId; 
+
+  @Index(caseSensitive: false) // alphabetical sorting, search
+  late String name;
+
+  @Index(caseSensitive: false) // category filter
+  late String category;
+
+  @Index(caseSensitive: false) // future condition filter
+  late String condition;
+
+  @Index() // for date sorting or filtering
+  late DateTime? purchaseDate;
+
+  @Index() // for value-based soriting / insurance export
+  late double? value;
+
+  /// Non-indexed fields (informational / secondary data)
+
+  late String brand;
+  late String model;
+  late String trainingStyle;
+  late int quantity;
   bool? isPair;
-  String condition;
-  DateTime? purchaseDate;
-  double? value;
   bool? isEstimate;
   String? serialNumber;
   String? maintenanceNotes;
-  String equipmentId;
+
+  // internal reference ID (human-readable like PREFIX-001)
+  late String equipmentId;
 
   Equipment({
     required this.gymId,

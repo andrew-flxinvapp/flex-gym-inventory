@@ -103,7 +103,86 @@ const EquipmentSchema = CollectionSchema(
   deserialize: _equipmentDeserialize,
   deserializeProp: _equipmentDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'gymId': IndexSchema(
+      id: 7901962257235038427,
+      name: r'gymId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'gymId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'category': IndexSchema(
+      id: -7560358558326323820,
+      name: r'category',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'category',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'condition': IndexSchema(
+      id: -8516742099328010389,
+      name: r'condition',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'condition',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'purchaseDate': IndexSchema(
+      id: 1174684625301313566,
+      name: r'purchaseDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'purchaseDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'value': IndexSchema(
+      id: -8658876004265234192,
+      name: r'value',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'value',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _equipmentGetId,
@@ -255,6 +334,22 @@ extension EquipmentQueryWhereSort
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhere> anyPurchaseDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'purchaseDate'),
+      );
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhere> anyValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'value'),
+      );
+    });
+  }
 }
 
 extension EquipmentQueryWhere
@@ -319,6 +414,407 @@ extension EquipmentQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> gymIdEqualTo(
+      String gymId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'gymId',
+        value: [gymId],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> gymIdNotEqualTo(
+      String gymId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [],
+              upper: [gymId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [gymId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [gymId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gymId',
+              lower: [],
+              upper: [gymId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> nameEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> nameNotEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryEqualTo(
+      String category) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [category],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryNotEqualTo(
+      String category) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> conditionEqualTo(
+      String condition) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'condition',
+        value: [condition],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> conditionNotEqualTo(
+      String condition) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'condition',
+              lower: [],
+              upper: [condition],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'condition',
+              lower: [condition],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'condition',
+              lower: [condition],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'condition',
+              lower: [],
+              upper: [condition],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'purchaseDate',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause>
+      purchaseDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'purchaseDate',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateEqualTo(
+      DateTime? purchaseDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'purchaseDate',
+        value: [purchaseDate],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateNotEqualTo(
+      DateTime? purchaseDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'purchaseDate',
+              lower: [],
+              upper: [purchaseDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'purchaseDate',
+              lower: [purchaseDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'purchaseDate',
+              lower: [purchaseDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'purchaseDate',
+              lower: [],
+              upper: [purchaseDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateGreaterThan(
+    DateTime? purchaseDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'purchaseDate',
+        lower: [purchaseDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateLessThan(
+    DateTime? purchaseDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'purchaseDate',
+        lower: [],
+        upper: [purchaseDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> purchaseDateBetween(
+    DateTime? lowerPurchaseDate,
+    DateTime? upperPurchaseDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'purchaseDate',
+        lower: [lowerPurchaseDate],
+        includeLower: includeLower,
+        upper: [upperPurchaseDate],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'value',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'value',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueEqualTo(
+      double? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'value',
+        value: [value],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueNotEqualTo(
+      double? value) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'value',
+              lower: [],
+              upper: [value],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'value',
+              lower: [value],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'value',
+              lower: [value],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'value',
+              lower: [],
+              upper: [value],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueGreaterThan(
+    double? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'value',
+        lower: [value],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueLessThan(
+    double? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'value',
+        lower: [],
+        upper: [value],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> valueBetween(
+    double? lowerValue,
+    double? upperValue, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'value',
+        lower: [lowerValue],
+        includeLower: includeLower,
+        upper: [upperValue],
         includeUpper: includeUpper,
       ));
     });
