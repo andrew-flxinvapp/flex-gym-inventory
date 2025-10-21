@@ -58,7 +58,73 @@ const WishlistSchema = CollectionSchema(
   deserialize: _wishlistDeserialize,
   deserializeProp: _wishlistDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'wishlistType': IndexSchema(
+      id: -5489783101815476979,
+      name: r'wishlistType',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'wishlistType',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'category': IndexSchema(
+      id: -7560358558326323820,
+      name: r'category',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'category',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'brand': IndexSchema(
+      id: 6145529221080171523,
+      name: r'brand',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'brand',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'priority': IndexSchema(
+      id: -6477851841645083544,
+      name: r'priority',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'priority',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _wishlistGetId,
@@ -236,6 +302,230 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> nameEqualTo(String name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> nameNotEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> wishlistTypeEqualTo(
+      String wishlistType) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'wishlistType',
+        value: [wishlistType],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> wishlistTypeNotEqualTo(
+      String wishlistType) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'wishlistType',
+              lower: [],
+              upper: [wishlistType],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'wishlistType',
+              lower: [wishlistType],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'wishlistType',
+              lower: [wishlistType],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'wishlistType',
+              lower: [],
+              upper: [wishlistType],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> categoryEqualTo(
+      String category) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [category],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> categoryNotEqualTo(
+      String category) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> brandEqualTo(
+      String brand) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'brand',
+        value: [brand],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> brandNotEqualTo(
+      String brand) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> priorityEqualTo(
+      String priority) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'priority',
+        value: [priority],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> priorityNotEqualTo(
+      String priority) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'priority',
+              lower: [],
+              upper: [priority],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'priority',
+              lower: [priority],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'priority',
+              lower: [priority],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'priority',
+              lower: [],
+              upper: [priority],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

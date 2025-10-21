@@ -64,6 +64,13 @@ class SettingsScreen extends StatelessWidget {
 															color: AppTheme.lightTextPrimary,
 														),
 													),
+                          const SizedBox(height: 12),
+													SettingsItem(
+														title: 'Set Default Gym',
+														onTap: () {
+															Navigator.of(context).pushNamed('/default-gym-picker');
+														},
+													),
 													/*const SizedBox(height: 16),
 													SettingsItem(
 														title: 'Export Data',

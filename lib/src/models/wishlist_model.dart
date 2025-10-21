@@ -6,11 +6,30 @@ part 'wishlist_model.g.dart';
 
 class Wishlist {
   Id id = Isar.autoIncrement;
-  String name;
-  String wishlistType;
-  String category;
-  String brand;
-  String priority;
+
+  ///Indexed fields (filtering, sorting, scoping, and searching)
+
+  /// For alphabetical sorting and quick lookups
+  @Index(caseSensitive: false)
+  late String name;
+
+  /// Filter by type
+  @Index(caseSensitive: false)
+  late String wishlistType;
+
+  /// Filter by category
+  @Index(caseSensitive: false)
+  late String category;
+
+  /// Filter by brand
+  @Index(caseSensitive: false)
+  late String brand;
+
+  /// Priorty level of the wishlist item
+  @Index(caseSensitive: false)
+  late String priority;
+
+  /// Non-indexed fields (informational / secondary data)
   String? productUrl;
   String? notes;
 

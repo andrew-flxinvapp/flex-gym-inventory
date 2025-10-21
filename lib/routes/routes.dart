@@ -32,6 +32,7 @@ import '../src/screens/onboarding_feature_one.dart';
 import '../src/screens/onboarding_feature_two.dart';
 import '../src/screens/social_proof.dart';
 import '../src/screens/about_flex_rackley.dart';
+import '../src/screens/default_gym_picker.dart';
 
 // Add other imports as needed
 
@@ -75,6 +76,7 @@ class AppRoutes {
   static const String deleteAccount = '/delete-account';
   static const String notifications = '/notifications';
   static const String aboutFlexRackley = '/about-flex-rackley';
+  static const String defaultGymPicker = '/default-gym-picker';
 
   // Add more as needed
 }
@@ -120,6 +122,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),
+  AppRoutes.defaultGymPicker: (context) => const DefaultGymScreen(),
 
   // Add more as needed
 };

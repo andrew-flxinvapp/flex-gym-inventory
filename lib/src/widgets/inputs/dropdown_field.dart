@@ -92,7 +92,7 @@ class CustomDropdownField<T> extends StatelessWidget {
           iconStyleData: IconStyleData(
             icon: const Icon(Icons.keyboard_arrow_down_rounded),
             iconEnabledColor: AppTheme.lightTextPrimary,
-            iconDisabledColor: AppTheme.lightTextPrimary.withOpacity(0.4),
+            iconDisabledColor: AppTheme.lightTextPrimary.withValues(alpha: 0.4),
           ),
 
           // --- The key fix: force the menu to match the field width ---

@@ -25,7 +25,7 @@ class DashboardGymCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -80,7 +80,7 @@ class DashboardGymCard extends StatelessWidget {
                 Text(
                   'Updated $daysAgo days ago',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppTheme.lightPrimary.withOpacity(0.6),
+                        color: AppTheme.lightPrimary.withValues(alpha: 0.6),
                       ),
                 ),
               ],
