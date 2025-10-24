@@ -8,6 +8,8 @@ class Gym {
 
   /// Indexed fields (filtering, sorting, and scoping)
   
+  @Index()
+  late String userId;
   /// Human-readable unique gym identifier
   @Index(unique: true, caseSensitive: false)
   late String gymId;
@@ -25,6 +27,7 @@ class Gym {
   String? gymNotes;
 
   Gym({
+    required this.userId,
     required this.gymId,
     required this.name,
     this.location,

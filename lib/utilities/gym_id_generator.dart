@@ -1,18 +1,31 @@
-/// Utility for generating unique Gym IDs in the format GYM-0001, GYM-0002, etc.
 class GymIdGenerator {
-  int _lastId = 0;
+  GymIdGenerator({
+    this.prefix = 'GYM',
+    this.width = 3,
+    int? startAt,
+  }) : _lastNumber = startAt ?? 0;
 
-  /// Returns the next gym ID in the format GYM-0001, GYM-0002, etc.
-  String nextId() {
-    _lastId++;
-    return 'GYM-${_lastId.toString().padLeft(4, '0')}';
+  final String prefix;
+  final int width;
+
+  int _lastNumber;
+
+  String next() {
+    _lastNumber ++;
+    final padded = _lastNumber.toString().padLeft(width, '0');
+    return '$prefix-$padded';
   }
 
-  /// Optionally, set the last used ID (e.g., after loading from storage)
-  void setLastId(int lastId) {
-    _lastId = lastId;
+  void setLastNumber(int n) => _lastNumber = n;
+
+  int get lastNumber => _lastNumber;
+
+  int? parseNumber(String id) {
+    final re = RegExp('^${RegExp.escape(prefix)}-(\\d{${width},})\$');
+    final m = re.firstMatch(id);
+    if (m == null) return null;
+    return int.tryParse(m.group(1)!);
   }
 
-  /// Optionally, get the last used ID
-  int get lastId => _lastId;
+  bool isValid(String id) => parseNumber(id) != null;
 }
