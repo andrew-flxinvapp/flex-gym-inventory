@@ -181,6 +181,32 @@ const EquipmentSchema = CollectionSchema(
           caseSensitive: false,
         )
       ],
+    ),
+    r'brand': IndexSchema(
+      id: 6145529221080171523,
+      name: r'brand',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'brand',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'trainingStyle': IndexSchema(
+      id: -2202215163940182315,
+      name: r'trainingStyle',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'trainingStyle',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
     )
   },
   links: {},
@@ -817,6 +843,96 @@ extension EquipmentQueryWhere
         upper: [upperValue],
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> brandEqualTo(
+      String brand) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'brand',
+        value: [brand],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> brandNotEqualTo(
+      String brand) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [brand],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'brand',
+              lower: [],
+              upper: [brand],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> trainingStyleEqualTo(
+      String trainingStyle) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'trainingStyle',
+        value: [trainingStyle],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> trainingStyleNotEqualTo(
+      String trainingStyle) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'trainingStyle',
+              lower: [],
+              upper: [trainingStyle],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'trainingStyle',
+              lower: [trainingStyle],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'trainingStyle',
+              lower: [trainingStyle],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'trainingStyle',
+              lower: [],
+              upper: [trainingStyle],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }

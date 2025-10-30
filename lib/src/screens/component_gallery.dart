@@ -1,3 +1,4 @@
+import '../widgets/dialogs/confirm_dialog.dart';
 import '../widgets/cards/settings_item.dart';
 import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/snackbar.dart';
@@ -355,6 +356,67 @@ class ComponentGallery extends StatelessWidget {
               SettingsItem(),
               const SizedBox(height: 40),
               // Add more components here as you build them!
+              const SizedBox(height: 40),
+              const Text(
+                'Dialogs',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              const SizedBox(height: 16),
+              Builder(
+                builder: (context) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    PrimaryButton(
+                      label: 'Confirm Dialog (Stop Color)',
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ConfirmDialog(
+                            title: 'Confirm Action',
+                            content: 'Are you sure you want to proceed?',
+                            confirmText: 'Confirm',
+                            onConfirm: () {
+                              showFlexSnackbar(
+                                context,
+                                title: 'Confirmed!',
+                                subtitle: 'You have confirmed the action.',
+                                type: SnackbarType.success,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    PrimaryButton(
+                      label: 'Confirm Dialog (Primary Color)',
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ConfirmDialog(
+                            title: 'Confirm Action',
+                            content: 'Are you sure you want to proceed?',
+                            confirmText: 'Confirm',
+                            usePrimaryColor: true,
+                            onConfirm: () {
+                              showFlexSnackbar(
+                                context,
+                                title: 'Confirmed!',
+                                subtitle: 'You have confirmed the action.',
+                                type: SnackbarType.success,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

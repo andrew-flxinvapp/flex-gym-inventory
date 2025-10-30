@@ -26,11 +26,15 @@ class Equipment {
   @Index() // for value-based soriting / insurance export
   late double? value;
 
+  @Index() // brand filter
+  late String brand;
+
+  @Index() // training style filter
+  late String trainingStyle; 
+
   /// Non-indexed fields (informational / secondary data)
 
-  late String brand;
   late String model;
-  late String trainingStyle;
   late int quantity;
   bool? isPair;
   bool? isEstimate;

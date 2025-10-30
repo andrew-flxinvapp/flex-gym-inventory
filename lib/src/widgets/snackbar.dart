@@ -2,6 +2,39 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 
+void showFlexSnackbar(
+  BuildContext context, {
+  required String title,
+  String? subtitle,
+  required SnackbarType type,
+  Duration duration = const Duration(seconds: 3),
+}) {
+  final overlay = Overlay.of(context);
+  late OverlayEntry overlayEntry;
+  overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      bottom: 40,
+      left: 24,
+      right: 24,
+      child: Material(
+        color: Colors.transparent,
+        child: FlexSnackbar(
+          title: title,
+          subtitle: subtitle,
+          type: type,
+          onClose: () {
+            overlayEntry.remove();
+          },
+        ),
+      ),
+    ),
+  );
+  overlay.insert(overlayEntry);
+  Future.delayed(duration, () {
+    if (overlayEntry.mounted) overlayEntry.remove();
+  });
+}
+
 enum SnackbarType { success, warning, update, stop }
 
 class FlexSnackbar extends StatelessWidget {

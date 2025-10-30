@@ -8,6 +8,7 @@ class ConfirmDialog extends StatelessWidget {
   final String cancelText;
   final VoidCallback onConfirm;
   final VoidCallback? onCancel;
+  final bool usePrimaryColor;
 
   const ConfirmDialog({
     super.key,
@@ -17,6 +18,7 @@ class ConfirmDialog extends StatelessWidget {
     this.cancelText = 'Cancel',
     required this.onConfirm,
     this.onCancel,
+    this.usePrimaryColor = false,
   });
 
   @override
@@ -37,33 +39,41 @@ class ConfirmDialog extends StatelessWidget {
             ),
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            if (onCancel != null) onCancel!();
-          },
-          child: Text(
-            cancelText,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.lightTextSecondary,
-                ),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (onCancel != null) onCancel!();
+              },
+              child: Text(
+                cancelText,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                    ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: usePrimaryColor
+                    ? AppTheme.lightTextPrimary
+                    : AppTheme.stopColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                onConfirm();
+              },
+              child: Text(
+                confirmText,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Colors.white,
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.stopColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-            onConfirm();
-          },
-          child: Text(
-            confirmText,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                ),
-          ),
+              ),
+            ),
+          ],
         ),
       ],
     );
