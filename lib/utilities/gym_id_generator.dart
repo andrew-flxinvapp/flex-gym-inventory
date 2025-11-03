@@ -21,7 +21,7 @@ class GymIdGenerator {
   int get lastNumber => _lastNumber;
 
   int? parseNumber(String id) {
-    final re = RegExp('^${RegExp.escape(prefix)}-(\\d{${width},})\$');
+    final re = RegExp('^${RegExp.escape(prefix)}-(\\d{$width,})\$');
     final m = re.firstMatch(id);
     if (m == null) return null;
     return int.tryParse(m.group(1)!);

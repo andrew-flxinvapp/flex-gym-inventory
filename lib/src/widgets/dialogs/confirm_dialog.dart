@@ -24,11 +24,12 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       backgroundColor: AppTheme.lightCard,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+        style: Theme.of(context).textTheme.displaySmall?.copyWith(
               color: AppTheme.lightTextPrimary,
             ),
       ),
@@ -54,13 +55,13 @@ class ConfirmDialog extends StatelessWidget {
                     ),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 56),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: usePrimaryColor
                     ? AppTheme.lightTextPrimary
                     : AppTheme.stopColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
