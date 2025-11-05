@@ -20,6 +20,11 @@ class IsarService {
     return _isar!;
   }
 
+  /// For testing: set the Isar instance directly.
+  static Future<void> initForTesting({required Isar instance}) async {
+    _isar = instance;
+  }
+
   /// Get the current Isar instance. Throws if not initialized.
   static Isar get isar {
     if (_isar == null) {

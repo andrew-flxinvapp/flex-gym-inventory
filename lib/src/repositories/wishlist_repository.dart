@@ -25,6 +25,65 @@ class WishlistRepository {
     });
   }
 
+  /// Create a new wishlist item and insert it.
+  Future<Wishlist> createWishlist({
+    required String name,
+    required String wishlistType,
+    required String category,
+    required String brand,
+    required String priority,
+    String? productUrl,
+    String? notes,
+  }) async {
+    final item = Wishlist(
+      name: name,
+      wishlistType: wishlistType,
+      category: category,
+      brand: brand,
+      priority: priority,
+      productUrl: productUrl,
+      notes: notes,
+    );
+    await upsert(item);
+    return item;
+  }
+
+  /// Update an existing wishlist item by Isar id.
+  Future<Wishlist?> updateWishlist({
+    required int id,
+    String? name,
+    String? wishlistType,
+    String? category,
+    String? brand,
+    String? priority,
+    String? productUrl,
+    String? notes,
+  }) async {
+    final isar = IsarService.isar;
+    final item = await isar.wishlists.get(id);
+    if (item == null) return null;
+    if (name != null) item.name = name;
+    if (wishlistType != null) item.wishlistType = wishlistType;
+    if (category != null) item.category = category;
+    if (brand != null) item.brand = brand;
+    if (priority != null) item.priority = priority;
+    if (productUrl != null) item.productUrl = productUrl;
+    if (notes != null) item.notes = notes;
+    await upsert(item);
+    return item;
+  }
+
+  /// Delete a wishlist item by Isar id and return the deleted item.
+  Future<Wishlist?> deleteWishlist(int id) async {
+    final isar = IsarService.isar;
+    final item = await isar.wishlists.get(id);
+    if (item == null) return null;
+    await isar.writeTxn(() async {
+      await isar.wishlists.delete(id);
+    });
+    return item;
+  }
+
   // -------------------- Lookups ---------------------------------------------
 
   /// Get by Isar id.

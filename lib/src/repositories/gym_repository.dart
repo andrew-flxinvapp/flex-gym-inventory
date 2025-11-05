@@ -8,20 +8,53 @@ enum GymSort { nameAsc, nameDesc, newest, oldest }
 class GymRepository {
   // -------------------- Create / Update / Delete -----------------------------
 
-  /// Insert or replace a gym.
-  Future<void> upsert(Gym gym) async {
-    final isar = IsarService.isar;
-    await isar.writeTxn(() async {
-      await isar.gyms.put(gym);
-    });
+  /// Create a new gym and insert it.
+  Future<Gym> createGym({
+    required String gymId,
+    required String name,
+    required String userId,
+    String? location,
+    String? gymNotes,
+  }) async {
+    final gym = Gym(
+      gymId: gymId,
+      name: name,
+      userId: userId,
+      location: location,
+      gymNotes: gymNotes,
+      createdDate: DateTime.now(),
+    );
+    await upsert(gym);
+    return gym;
   }
 
-  /// Delete by Isar id.
-  Future<void> deleteByIsarId(int isarId) async {
+
+  /// Update an existing gym by Isar id.
+  Future<Gym?> updateGym({
+    required int id,
+    String? name,
+    String? location,
+    String? gymNotes,
+  }) async {
     final isar = IsarService.isar;
+    final gym = await isar.gyms.get(id);
+    if (gym == null) return null;
+    if (name != null) gym.name = name;
+    if (location != null) gym.location = location;
+    if (gymNotes != null) gym.gymNotes = gymNotes;
+    await upsert(gym);
+    return gym;
+  }
+
+  /// Delete a gym by Isar id and return the deleted gym.
+  Future<Gym?> deleteGym(int id) async {
+    final isar = IsarService.isar;
+    final gym = await isar.gyms.get(id);
+    if (gym == null) return null;
     await isar.writeTxn(() async {
-      await isar.gyms.delete(isarId);
+      await isar.gyms.delete(id);
     });
+    return gym;
   }
 
   // -------------------- Lookups ---------------------------------------------
@@ -108,5 +141,13 @@ class GymRepository {
   Future<int> countForUser(String userId) async {
     final isar = IsarService.isar;
     return isar.gyms.filter().userIdEqualTo(userId).count();
+  }
+
+  /// Insert or replace a gym.
+  Future<void> upsert(Gym gym) async {
+    final isar = IsarService.isar;
+    await isar.writeTxn(() async {
+      await isar.gyms.put(gym);
+    });
   }
 }

@@ -31,6 +31,95 @@ class EquipmentRepository {
     });
   }
 
+  /// Create a new equipment record and insert it.
+  Future<Equipment> createEquipment({
+    required String gymId,
+    required String name,
+    required String category,
+    required String brand,
+    required String model,
+    required String trainingStyle,
+    required int quantity,
+    required String condition,
+    required String equipmentId,
+    DateTime? purchaseDate,
+    double? value,
+    bool? isPair,
+    bool? isEstimate,
+    String? serialNumber,
+    String? maintenanceNotes,
+  }) async {
+    final equipment = Equipment(
+      gymId: gymId,
+      name: name,
+      category: category,
+      brand: brand,
+      model: model,
+      trainingStyle: trainingStyle,
+      quantity: quantity,
+      condition: condition,
+      equipmentId: equipmentId,
+      purchaseDate: purchaseDate,
+      value: value,
+      isPair: isPair,
+      isEstimate: isEstimate,
+      serialNumber: serialNumber,
+      maintenanceNotes: maintenanceNotes,
+    );
+    await upsert(equipment);
+    return equipment;
+  }
+
+  /// Update an existing equipment record by Isar id.
+  Future<Equipment?> updateEquipment({
+    required int id,
+    String? name,
+    String? category,
+    String? brand,
+    String? model,
+    String? trainingStyle,
+    int? quantity,
+    String? condition,
+    String? equipmentId,
+    DateTime? purchaseDate,
+    double? value,
+    bool? isPair,
+    bool? isEstimate,
+    String? serialNumber,
+    String? maintenanceNotes,
+  }) async {
+    final isar = IsarService.isar;
+    final equipment = await isar.equipments.get(id);
+    if (equipment == null) return null;
+    if (name != null) equipment.name = name;
+    if (category != null) equipment.category = category;
+    if (brand != null) equipment.brand = brand;
+    if (model != null) equipment.model = model;
+    if (trainingStyle != null) equipment.trainingStyle = trainingStyle;
+    if (quantity != null) equipment.quantity = quantity;
+    if (condition != null) equipment.condition = condition;
+    if (equipmentId != null) equipment.equipmentId = equipmentId;
+    if (purchaseDate != null) equipment.purchaseDate = purchaseDate;
+    if (value != null) equipment.value = value;
+    if (isPair != null) equipment.isPair = isPair;
+    if (isEstimate != null) equipment.isEstimate = isEstimate;
+    if (serialNumber != null) equipment.serialNumber = serialNumber;
+    if (maintenanceNotes != null) equipment.maintenanceNotes = maintenanceNotes;
+    await upsert(equipment);
+    return equipment;
+  }
+
+  /// Delete an equipment record by Isar id and return the deleted equipment.
+  Future<Equipment?> deleteEquipment(int id) async {
+    final isar = IsarService.isar;
+    final equipment = await isar.equipments.get(id);
+    if (equipment == null) return null;
+    await isar.writeTxn(() async {
+      await isar.equipments.delete(id);
+    });
+    return equipment;
+  }
+
   // -------------------- Lookups ---------------------------------------------
 
   /// Get by Isar id.
