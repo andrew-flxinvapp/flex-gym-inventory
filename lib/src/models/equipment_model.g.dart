@@ -37,63 +37,58 @@ const EquipmentSchema = CollectionSchema(
       name: r'condition',
       type: IsarType.string,
     ),
-    r'equipmentId': PropertySchema(
-      id: 4,
-      name: r'equipmentId',
-      type: IsarType.string,
-    ),
     r'gymId': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'gymId',
       type: IsarType.string,
     ),
     r'isEstimate': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'isEstimate',
       type: IsarType.bool,
     ),
     r'isPair': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'isPair',
       type: IsarType.bool,
     ),
     r'maintenanceNotes': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'maintenanceNotes',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'model',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'name',
       type: IsarType.string,
     ),
     r'purchaseDate': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'purchaseDate',
       type: IsarType.dateTime,
     ),
     r'quantity': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'serialNumber': PropertySchema(
-      id: 13,
+      id: 12,
       name: r'serialNumber',
       type: IsarType.string,
     ),
     r'trainingStyle': PropertySchema(
-      id: 14,
+      id: 13,
       name: r'trainingStyle',
       type: IsarType.string,
     ),
     r'value': PropertySchema(
-      id: 15,
+      id: 14,
       name: r'value',
       type: IsarType.double,
     )
@@ -226,7 +221,6 @@ int _equipmentEstimateSize(
   bytesCount += 3 + object.brand.length * 3;
   bytesCount += 3 + object.category.length * 3;
   bytesCount += 3 + object.condition.length * 3;
-  bytesCount += 3 + object.equipmentId.length * 3;
   bytesCount += 3 + object.gymId.length * 3;
   {
     final value = object.maintenanceNotes;
@@ -256,18 +250,17 @@ void _equipmentSerialize(
   writer.writeString(offsets[1], object.brand);
   writer.writeString(offsets[2], object.category);
   writer.writeString(offsets[3], object.condition);
-  writer.writeString(offsets[4], object.equipmentId);
-  writer.writeString(offsets[5], object.gymId);
-  writer.writeBool(offsets[6], object.isEstimate);
-  writer.writeBool(offsets[7], object.isPair);
-  writer.writeString(offsets[8], object.maintenanceNotes);
-  writer.writeString(offsets[9], object.model);
-  writer.writeString(offsets[10], object.name);
-  writer.writeDateTime(offsets[11], object.purchaseDate);
-  writer.writeLong(offsets[12], object.quantity);
-  writer.writeString(offsets[13], object.serialNumber);
-  writer.writeString(offsets[14], object.trainingStyle);
-  writer.writeDouble(offsets[15], object.value);
+  writer.writeString(offsets[4], object.gymId);
+  writer.writeBool(offsets[5], object.isEstimate);
+  writer.writeBool(offsets[6], object.isPair);
+  writer.writeString(offsets[7], object.maintenanceNotes);
+  writer.writeString(offsets[8], object.model);
+  writer.writeString(offsets[9], object.name);
+  writer.writeDateTime(offsets[10], object.purchaseDate);
+  writer.writeLong(offsets[11], object.quantity);
+  writer.writeString(offsets[12], object.serialNumber);
+  writer.writeString(offsets[13], object.trainingStyle);
+  writer.writeDouble(offsets[14], object.value);
 }
 
 Equipment _equipmentDeserialize(
@@ -280,18 +273,17 @@ Equipment _equipmentDeserialize(
     brand: reader.readString(offsets[1]),
     category: reader.readString(offsets[2]),
     condition: reader.readString(offsets[3]),
-    equipmentId: reader.readString(offsets[4]),
-    gymId: reader.readString(offsets[5]),
-    isEstimate: reader.readBoolOrNull(offsets[6]),
-    isPair: reader.readBoolOrNull(offsets[7]),
-    maintenanceNotes: reader.readStringOrNull(offsets[8]),
-    model: reader.readString(offsets[9]),
-    name: reader.readString(offsets[10]),
-    purchaseDate: reader.readDateTimeOrNull(offsets[11]),
-    quantity: reader.readLong(offsets[12]),
-    serialNumber: reader.readStringOrNull(offsets[13]),
-    trainingStyle: reader.readString(offsets[14]),
-    value: reader.readDoubleOrNull(offsets[15]),
+    gymId: reader.readString(offsets[4]),
+    isEstimate: reader.readBoolOrNull(offsets[5]),
+    isPair: reader.readBoolOrNull(offsets[6]),
+    maintenanceNotes: reader.readStringOrNull(offsets[7]),
+    model: reader.readString(offsets[8]),
+    name: reader.readString(offsets[9]),
+    purchaseDate: reader.readDateTimeOrNull(offsets[10]),
+    quantity: reader.readLong(offsets[11]),
+    serialNumber: reader.readStringOrNull(offsets[12]),
+    trainingStyle: reader.readString(offsets[13]),
+    value: reader.readDoubleOrNull(offsets[14]),
   );
   object.id = id;
   return object;
@@ -315,26 +307,24 @@ P _equipmentDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 6:
       return (reader.readBoolOrNull(offset)) as P;
     case 7:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 8:
       return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
-    case 11:
       return (reader.readDateTimeOrNull(offset)) as P;
-    case 12:
+    case 11:
       return (reader.readLong(offset)) as P;
-    case 13:
+    case 12:
       return (reader.readStringOrNull(offset)) as P;
-    case 14:
+    case 13:
       return (reader.readString(offset)) as P;
-    case 15:
+    case 14:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1396,140 +1386,6 @@ extension EquipmentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'condition',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      equipmentIdGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'equipmentId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      equipmentIdStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'equipmentId',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> equipmentIdMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'equipmentId',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      equipmentIdIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'equipmentId',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      equipmentIdIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'equipmentId',
         value: '',
       ));
     });
@@ -2734,18 +2590,6 @@ extension EquipmentQuerySortBy on QueryBuilder<Equipment, Equipment, QSortBy> {
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByEquipmentId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'equipmentId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByEquipmentIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'equipmentId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByGymId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gymId', Sort.asc);
@@ -2930,18 +2774,6 @@ extension EquipmentQuerySortThenBy
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByEquipmentId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'equipmentId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByEquipmentIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'equipmentId', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByGymId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gymId', Sort.asc);
@@ -3117,13 +2949,6 @@ extension EquipmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QDistinct> distinctByEquipmentId(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'equipmentId', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QDistinct> distinctByGymId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3228,12 +3053,6 @@ extension EquipmentQueryProperty
   QueryBuilder<Equipment, String, QQueryOperations> conditionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'condition');
-    });
-  }
-
-  QueryBuilder<Equipment, String, QQueryOperations> equipmentIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'equipmentId');
     });
   }
 

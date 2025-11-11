@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 
 import 'package:flex_gym_inventory/service/isar_service.dart';
-import 'package:flex_gym_inventory/src/models/gym_model.dart';
+// import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
 
-import 'isar_test_util.dart';
+import '../helpers/isar_test_util.dart';
 
 void main() {
   late Isar isar;
@@ -38,23 +38,15 @@ void main() {
     test('update gym', () async {
       final g = await repo.createGym(gymId: 'GYM-002', name: 'Before', userId: 'user1');
       // Update by changing name and upserting
-      final updatedGym = Gym(
-        id: g.id,
-        gymId: g.gymId,
-        name: 'After',
-        userId: g.userId,
-        location: g.location,
-        gymNotes: g.gymNotes,
-        createdDate: g.createdDate,
-      );
-      await repo.upsert(updatedGym);
+      g.name = 'After';
+      await repo.upsert(g);
       final fetched = await repo.getByIsarId(g.id);
       expect(fetched!.name, equals('After'));
     });
 
     test('delete gym', () async {
       final g = await repo.createGym(gymId: 'GYM-003', name: 'To Delete', userId: 'user1');
-      await repo.deleteByIsarId(g.id);
+      await repo.deleteGym(g.id);
       final fetched = await repo.getByIsarId(g.id);
       expect(fetched, isNull);
     });

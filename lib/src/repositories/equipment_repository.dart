@@ -41,7 +41,6 @@ class EquipmentRepository {
     required String trainingStyle,
     required int quantity,
     required String condition,
-    required String equipmentId,
     DateTime? purchaseDate,
     double? value,
     bool? isPair,
@@ -58,7 +57,6 @@ class EquipmentRepository {
       trainingStyle: trainingStyle,
       quantity: quantity,
       condition: condition,
-      equipmentId: equipmentId,
       purchaseDate: purchaseDate,
       value: value,
       isPair: isPair,
@@ -98,7 +96,6 @@ class EquipmentRepository {
     if (trainingStyle != null) equipment.trainingStyle = trainingStyle;
     if (quantity != null) equipment.quantity = quantity;
     if (condition != null) equipment.condition = condition;
-    if (equipmentId != null) equipment.equipmentId = equipmentId;
     if (purchaseDate != null) equipment.purchaseDate = purchaseDate;
     if (value != null) equipment.value = value;
     if (isPair != null) equipment.isPair = isPair;
@@ -128,15 +125,6 @@ class EquipmentRepository {
     return isar.equipments.get(isarId);
   }
 
-  /// Get by your human-readable equipmentId (e.g., "DB-0001").
-  /// If you haven't added equipmentId yet, you can remove this method.
-  Future<Equipment?> getByEquipmentId(String equipmentId) async {
-    final isar = IsarService.isar;
-    return isar.equipments
-        .filter()
-        .equipmentIdEqualTo(equipmentId)
-        .findFirst();
-  }
 
   // -------------------- List (with search/filter/sort) -----------------------
 

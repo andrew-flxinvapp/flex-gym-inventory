@@ -41,8 +41,6 @@ class Equipment {
   String? serialNumber;
   String? maintenanceNotes;
 
-  // internal reference ID (human-readable like PREFIX-001)
-  late String equipmentId;
 
   Equipment({
     required this.gymId,
@@ -59,7 +57,6 @@ class Equipment {
     this.isEstimate,
     this.serialNumber,
     this.maintenanceNotes,
-    required this.equipmentId,
   });
 
   int? get age {
