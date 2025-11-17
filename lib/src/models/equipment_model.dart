@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 part 'equipment_model.g.dart';
 
@@ -6,33 +7,32 @@ part 'equipment_model.g.dart';
 class Equipment {
   Id id = Isar.autoIncrement;
 
-  /// Indexed fields (for filtering, sorting,and scoping)
+  @Index()
+  late String gymId;
 
-  @Index() // used to scope equipment to a specific gym
-  late String gymId; 
+  @Index(caseSensitive: false)
+  @Enumerated(EnumType.name)
+  late EquipmentCategory category;
 
-  @Index(caseSensitive: false) // alphabetical sorting, search
+  @Index(caseSensitive: false)
   late String name;
 
-  @Index(caseSensitive: false) // category filter
-  late String category;
+  @Index(caseSensitive: false)
+  @Enumerated(EnumType.name)
+  late EquipmentCondition condition;
 
-  @Index(caseSensitive: false) // future condition filter
-  late String condition;
-
-  @Index() // for date sorting or filtering
+  @Index()
   late DateTime? purchaseDate;
 
-  @Index() // for value-based soriting / insurance export
+  @Index()
   late double? value;
 
-  @Index() // brand filter
+  @Index()
   late String brand;
 
-  @Index() // training style filter
-  late String trainingStyle; 
-
-  /// Non-indexed fields (informational / secondary data)
+  @Index()
+  @Enumerated(EnumType.name)
+  late TrainingStyle trainingStyle;
 
   late String model;
   late int quantity;
@@ -40,7 +40,6 @@ class Equipment {
   bool? isEstimate;
   String? serialNumber;
   String? maintenanceNotes;
-
 
   Equipment({
     required this.gymId,

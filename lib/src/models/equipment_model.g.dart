@@ -31,11 +31,13 @@ const EquipmentSchema = CollectionSchema(
       id: 2,
       name: r'category',
       type: IsarType.string,
+      enumMap: _EquipmentcategoryEnumValueMap,
     ),
     r'condition': PropertySchema(
       id: 3,
       name: r'condition',
       type: IsarType.string,
+      enumMap: _EquipmentconditionEnumValueMap,
     ),
     r'gymId': PropertySchema(
       id: 4,
@@ -86,6 +88,7 @@ const EquipmentSchema = CollectionSchema(
       id: 13,
       name: r'trainingStyle',
       type: IsarType.string,
+      enumMap: _EquipmenttrainingStyleEnumValueMap,
     ),
     r'value': PropertySchema(
       id: 14,
@@ -112,19 +115,6 @@ const EquipmentSchema = CollectionSchema(
         )
       ],
     ),
-    r'name': IndexSchema(
-      id: 879695947855722453,
-      name: r'name',
-      unique: false,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'name',
-          type: IndexType.hash,
-          caseSensitive: false,
-        )
-      ],
-    ),
     r'category': IndexSchema(
       id: -7560358558326323820,
       name: r'category',
@@ -133,6 +123,19 @@ const EquipmentSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'category',
+          type: IndexType.hash,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
           type: IndexType.hash,
           caseSensitive: false,
         )
@@ -219,8 +222,8 @@ int _equipmentEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.brand.length * 3;
-  bytesCount += 3 + object.category.length * 3;
-  bytesCount += 3 + object.condition.length * 3;
+  bytesCount += 3 + object.category.name.length * 3;
+  bytesCount += 3 + object.condition.name.length * 3;
   bytesCount += 3 + object.gymId.length * 3;
   {
     final value = object.maintenanceNotes;
@@ -236,7 +239,7 @@ int _equipmentEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.trainingStyle.length * 3;
+  bytesCount += 3 + object.trainingStyle.name.length * 3;
   return bytesCount;
 }
 
@@ -248,8 +251,8 @@ void _equipmentSerialize(
 ) {
   writer.writeLong(offsets[0], object.age);
   writer.writeString(offsets[1], object.brand);
-  writer.writeString(offsets[2], object.category);
-  writer.writeString(offsets[3], object.condition);
+  writer.writeString(offsets[2], object.category.name);
+  writer.writeString(offsets[3], object.condition.name);
   writer.writeString(offsets[4], object.gymId);
   writer.writeBool(offsets[5], object.isEstimate);
   writer.writeBool(offsets[6], object.isPair);
@@ -259,7 +262,7 @@ void _equipmentSerialize(
   writer.writeDateTime(offsets[10], object.purchaseDate);
   writer.writeLong(offsets[11], object.quantity);
   writer.writeString(offsets[12], object.serialNumber);
-  writer.writeString(offsets[13], object.trainingStyle);
+  writer.writeString(offsets[13], object.trainingStyle.name);
   writer.writeDouble(offsets[14], object.value);
 }
 
@@ -271,8 +274,12 @@ Equipment _equipmentDeserialize(
 ) {
   final object = Equipment(
     brand: reader.readString(offsets[1]),
-    category: reader.readString(offsets[2]),
-    condition: reader.readString(offsets[3]),
+    category:
+        _EquipmentcategoryValueEnumMap[reader.readStringOrNull(offsets[2])] ??
+            EquipmentCategory.weight,
+    condition:
+        _EquipmentconditionValueEnumMap[reader.readStringOrNull(offsets[3])] ??
+            EquipmentCondition.brandNew,
     gymId: reader.readString(offsets[4]),
     isEstimate: reader.readBoolOrNull(offsets[5]),
     isPair: reader.readBoolOrNull(offsets[6]),
@@ -282,7 +289,9 @@ Equipment _equipmentDeserialize(
     purchaseDate: reader.readDateTimeOrNull(offsets[10]),
     quantity: reader.readLong(offsets[11]),
     serialNumber: reader.readStringOrNull(offsets[12]),
-    trainingStyle: reader.readString(offsets[13]),
+    trainingStyle: _EquipmenttrainingStyleValueEnumMap[
+            reader.readStringOrNull(offsets[13])] ??
+        TrainingStyle.general,
     value: reader.readDoubleOrNull(offsets[14]),
   );
   object.id = id;
@@ -301,9 +310,12 @@ P _equipmentDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (_EquipmentcategoryValueEnumMap[reader.readStringOrNull(offset)] ??
+          EquipmentCategory.weight) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (_EquipmentconditionValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          EquipmentCondition.brandNew) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
@@ -323,13 +335,74 @@ P _equipmentDeserializeProp<P>(
     case 12:
       return (reader.readStringOrNull(offset)) as P;
     case 13:
-      return (reader.readString(offset)) as P;
+      return (_EquipmenttrainingStyleValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          TrainingStyle.general) as P;
     case 14:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _EquipmentcategoryEnumValueMap = {
+  r'weight': r'weight',
+  r'implement': r'implement',
+  r'machine': r'machine',
+  r'storage': r'storage',
+  r'rig': r'rig',
+  r'support': r'support',
+  r'safety': r'safety',
+  r'other': r'other',
+};
+const _EquipmentcategoryValueEnumMap = {
+  r'weight': EquipmentCategory.weight,
+  r'implement': EquipmentCategory.implement,
+  r'machine': EquipmentCategory.machine,
+  r'storage': EquipmentCategory.storage,
+  r'rig': EquipmentCategory.rig,
+  r'support': EquipmentCategory.support,
+  r'safety': EquipmentCategory.safety,
+  r'other': EquipmentCategory.other,
+};
+const _EquipmentconditionEnumValueMap = {
+  r'brandNew': r'brandNew',
+  r'excellent': r'excellent',
+  r'good': r'good',
+  r'fair': r'fair',
+  r'damaged': r'damaged',
+  r'retired': r'retired',
+};
+const _EquipmentconditionValueEnumMap = {
+  r'brandNew': EquipmentCondition.brandNew,
+  r'excellent': EquipmentCondition.excellent,
+  r'good': EquipmentCondition.good,
+  r'fair': EquipmentCondition.fair,
+  r'damaged': EquipmentCondition.damaged,
+  r'retired': EquipmentCondition.retired,
+};
+const _EquipmenttrainingStyleEnumValueMap = {
+  r'general': r'general',
+  r'olympicWeightlifting': r'olympicWeightlifting',
+  r'powerlifting': r'powerlifting',
+  r'strongman': r'strongman',
+  r'bodybuilding': r'bodybuilding',
+  r'crossfit': r'crossfit',
+  r'calisthenics': r'calisthenics',
+  r'hiit': r'hiit',
+  r'circuit': r'circuit',
+};
+const _EquipmenttrainingStyleValueEnumMap = {
+  r'general': TrainingStyle.general,
+  r'olympicWeightlifting': TrainingStyle.olympicWeightlifting,
+  r'powerlifting': TrainingStyle.powerlifting,
+  r'strongman': TrainingStyle.strongman,
+  r'bodybuilding': TrainingStyle.bodybuilding,
+  r'crossfit': TrainingStyle.crossfit,
+  r'calisthenics': TrainingStyle.calisthenics,
+  r'hiit': TrainingStyle.hiit,
+  r'circuit': TrainingStyle.circuit,
+};
 
 Id _equipmentGetId(Equipment object) {
   return object.id;
@@ -480,6 +553,51 @@ extension EquipmentQueryWhere
     });
   }
 
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryEqualTo(
+      EquipmentCategory category) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [category],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryNotEqualTo(
+      EquipmentCategory category) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
   QueryBuilder<Equipment, Equipment, QAfterWhereClause> nameEqualTo(
       String name) {
     return QueryBuilder.apply(this, (query) {
@@ -525,53 +643,8 @@ extension EquipmentQueryWhere
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryEqualTo(
-      String category) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'category',
-        value: [category],
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> categoryNotEqualTo(
-      String category) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'category',
-              lower: [],
-              upper: [category],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'category',
-              lower: [category],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'category',
-              lower: [category],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'category',
-              lower: [],
-              upper: [category],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterWhereClause> conditionEqualTo(
-      String condition) {
+      EquipmentCondition condition) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'condition',
@@ -581,7 +654,7 @@ extension EquipmentQueryWhere
   }
 
   QueryBuilder<Equipment, Equipment, QAfterWhereClause> conditionNotEqualTo(
-      String condition) {
+      EquipmentCondition condition) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -882,7 +955,7 @@ extension EquipmentQueryWhere
   }
 
   QueryBuilder<Equipment, Equipment, QAfterWhereClause> trainingStyleEqualTo(
-      String trainingStyle) {
+      TrainingStyle trainingStyle) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'trainingStyle',
@@ -892,7 +965,7 @@ extension EquipmentQueryWhere
   }
 
   QueryBuilder<Equipment, Equipment, QAfterWhereClause> trainingStyleNotEqualTo(
-      String trainingStyle) {
+      TrainingStyle trainingStyle) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -1129,7 +1202,7 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> categoryEqualTo(
-    String value, {
+    EquipmentCategory value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1142,7 +1215,7 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> categoryGreaterThan(
-    String value, {
+    EquipmentCategory value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1157,7 +1230,7 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> categoryLessThan(
-    String value, {
+    EquipmentCategory value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1172,8 +1245,8 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> categoryBetween(
-    String lower,
-    String upper, {
+    EquipmentCategory lower,
+    EquipmentCategory upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1260,7 +1333,7 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> conditionEqualTo(
-    String value, {
+    EquipmentCondition value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1274,7 +1347,7 @@ extension EquipmentQueryFilter
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       conditionGreaterThan(
-    String value, {
+    EquipmentCondition value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1289,7 +1362,7 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> conditionLessThan(
-    String value, {
+    EquipmentCondition value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1304,8 +1377,8 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition> conditionBetween(
-    String lower,
-    String upper, {
+    EquipmentCondition lower,
+    EquipmentCondition upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2322,7 +2395,7 @@ extension EquipmentQueryFilter
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       trainingStyleEqualTo(
-    String value, {
+    TrainingStyle value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -2336,7 +2409,7 @@ extension EquipmentQueryFilter
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       trainingStyleGreaterThan(
-    String value, {
+    TrainingStyle value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2352,7 +2425,7 @@ extension EquipmentQueryFilter
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       trainingStyleLessThan(
-    String value, {
+    TrainingStyle value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -2368,8 +2441,8 @@ extension EquipmentQueryFilter
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       trainingStyleBetween(
-    String lower,
-    String upper, {
+    TrainingStyle lower,
+    TrainingStyle upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -3044,13 +3117,15 @@ extension EquipmentQueryProperty
     });
   }
 
-  QueryBuilder<Equipment, String, QQueryOperations> categoryProperty() {
+  QueryBuilder<Equipment, EquipmentCategory, QQueryOperations>
+      categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
     });
   }
 
-  QueryBuilder<Equipment, String, QQueryOperations> conditionProperty() {
+  QueryBuilder<Equipment, EquipmentCondition, QQueryOperations>
+      conditionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'condition');
     });
@@ -3111,7 +3186,8 @@ extension EquipmentQueryProperty
     });
   }
 
-  QueryBuilder<Equipment, String, QQueryOperations> trainingStyleProperty() {
+  QueryBuilder<Equipment, TrainingStyle, QQueryOperations>
+      trainingStyleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'trainingStyle');
     });

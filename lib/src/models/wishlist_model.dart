@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 part 'wishlist_model.g.dart';
 
@@ -6,6 +7,9 @@ part 'wishlist_model.g.dart';
 
 class Wishlist {
   Id id = Isar.autoIncrement;
+
+  @Index()
+  late String userId; // for Supabase user association
 
   ///Indexed fields (filtering, sorting, scoping, and searching)
 
@@ -15,11 +19,13 @@ class Wishlist {
 
   /// Filter by type
   @Index(caseSensitive: false)
-  late String wishlistType;
+  @Enumerated(EnumType.name)
+  late WishlistType wishlistType;
 
   /// Filter by category
   @Index(caseSensitive: false)
-  late String category;
+  @Enumerated(EnumType.name)
+  late EquipmentCategory category;
 
   /// Filter by brand
   @Index(caseSensitive: false)
@@ -27,13 +33,15 @@ class Wishlist {
 
   /// Priorty level of the wishlist item
   @Index(caseSensitive: false)
-  late String priority;
+  @Enumerated(EnumType.name)
+  late WishlistPriority priority;
 
   /// Non-indexed fields (informational / secondary data)
   String? productUrl;
   String? notes;
 
   Wishlist({
+    required this.userId,
     required this.name,
     required this.wishlistType,
     required this.category,
@@ -42,4 +50,4 @@ class Wishlist {
     this.productUrl,
     this.notes,
   });
-} 
+}

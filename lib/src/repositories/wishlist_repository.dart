@@ -2,6 +2,7 @@
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 /// Basic sort modes that map cleanly to your fields.
 enum WishlistSort { nameAsc, nameDesc, brandAsc, brandDesc }
@@ -27,15 +28,17 @@ class WishlistRepository {
 
   /// Create a new wishlist item and insert it.
   Future<Wishlist> createWishlist({
+    required String userId,
     required String name,
-    required String wishlistType,
-    required String category,
+    required WishlistType wishlistType,
+    required EquipmentCategory category,
     required String brand,
-    required String priority,
+    required WishlistPriority priority,
     String? productUrl,
     String? notes,
   }) async {
     final item = Wishlist(
+      userId: userId,
       name: name,
       wishlistType: wishlistType,
       category: category,
@@ -52,10 +55,10 @@ class WishlistRepository {
   Future<Wishlist?> updateWishlist({
     required int id,
     String? name,
-    String? wishlistType,
-    String? category,
+    WishlistType? wishlistType,
+    EquipmentCategory? category,
     String? brand,
-    String? priority,
+    WishlistPriority? priority,
     String? productUrl,
     String? notes,
   }) async {
@@ -103,33 +106,29 @@ class WishlistRepository {
   ///    e.g., `['High','Medium','Low']` (ties break by name).
   Future<List<Wishlist>> getAll({
     String? search,
-    String? wishlistType,
-    String? category,
+    WishlistType? wishlistType,
+    EquipmentCategory? category,
     String? brand,
-    String? priority,            // single priority filter
-    List<String>? priorities,    // multi-priority filter
+    WishlistPriority? priority,            // single priority filter
+    List<WishlistPriority>? priorities,    // multi-priority filter
     WishlistSort sort = WishlistSort.nameAsc,
-    List<String>? priorityOrder, // optional custom sort precedence
+    List<String>? priorityOrder, // optional custom sort precedence (labels)
   }) async {
     final isar = IsarService.isar;
 
     // Base fetch (indexed filters first)
-    var items = await isar.wishlists
-        .filter()
-        .optional(wishlistType != null && wishlistType.isNotEmpty,
-            (q) => q.wishlistTypeEqualTo(wishlistType!))
-        .optional(category != null && category.isNotEmpty,
-            (q) => q.categoryEqualTo(category!))
-        .optional(brand != null && brand.isNotEmpty,
-            (q) => q.brandEqualTo(brand!))
-        .optional(priority != null && priority.isNotEmpty,
-            (q) => q.priorityEqualTo(priority!))
-        .findAll();
+  var items = await isar.wishlists
+    .filter()
+    .optional(wishlistType != null, (q) => q.wishlistTypeEqualTo(wishlistType!))
+    .optional(category != null, (q) => q.categoryEqualTo(category!))
+    .optional(brand != null && brand.isNotEmpty, (q) => q.brandEqualTo(brand!))
+    .optional(priority != null, (q) => q.priorityEqualTo(priority!))
+    .findAll();
 
     // Multi-priority filter (local)
     if (priorities != null && priorities.isNotEmpty) {
-      final set = priorities.map((p) => p.toLowerCase()).toSet();
-      items = items.where((w) => set.contains(w.priority.toLowerCase())).toList();
+      final set = priorities.map((p) => p.name.toLowerCase()).toSet();
+      items = items.where((w) => set.contains(w.priority.name.toLowerCase())).toList();
     }
 
     // Text search (local, case-insensitive)
@@ -138,7 +137,7 @@ class WishlistRepository {
       items = items.where((w) {
         final n = w.name.toLowerCase();
         final b = w.brand.toLowerCase();
-        final c = w.category.toLowerCase();
+        final c = w.category.name.toLowerCase();
         return n.contains(q) || b.contains(q) || c.contains(q);
       }).toList();
     }
@@ -157,8 +156,8 @@ class WishlistRepository {
         ranks[priorityOrder[i].toLowerCase()] = i;
       }
       items.sort((a, b) {
-        final ra = ranks[a.priority.toLowerCase()] ?? 9999;
-        final rb = ranks[b.priority.toLowerCase()] ?? 9999;
+        final ra = ranks[a.priority.label.toLowerCase()] ?? 9999;
+        final rb = ranks[b.priority.label.toLowerCase()] ?? 9999;
         final r = ra.compareTo(rb);
         if (r != 0) return r;
         return nameCmp(a, b); // tie-breaker

@@ -10,9 +10,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  LogHandler.setupLogging();
   await dotenv.load(fileName: ".env");
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,

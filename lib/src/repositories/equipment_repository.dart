@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 /// Simple sort modes aligned to your fields.
 enum EquipmentSort {
@@ -35,12 +36,12 @@ class EquipmentRepository {
   Future<Equipment> createEquipment({
     required String gymId,
     required String name,
-    required String category,
+    required EquipmentCategory category,
     required String brand,
     required String model,
-    required String trainingStyle,
+    required TrainingStyle trainingStyle,
     required int quantity,
-    required String condition,
+    required EquipmentCondition condition,
     DateTime? purchaseDate,
     double? value,
     bool? isPair,
@@ -72,12 +73,12 @@ class EquipmentRepository {
   Future<Equipment?> updateEquipment({
     required int id,
     String? name,
-    String? category,
+    EquipmentCategory? category,
     String? brand,
     String? model,
-    String? trainingStyle,
+    TrainingStyle? trainingStyle,
     int? quantity,
-    String? condition,
+    EquipmentCondition? condition,
     String? equipmentId,
     DateTime? purchaseDate,
     double? value,
@@ -136,21 +137,19 @@ class EquipmentRepository {
   Future<List<Equipment>> getAllForGym(
     String gymId, {
     String? search,
-    String? category,
-    String? condition,
+    EquipmentCategory? category,
+    EquipmentCondition? condition,
     EquipmentSort sort = EquipmentSort.nameAsc,
   }) async {
     final isar = IsarService.isar;
 
     // Base query leveraging your indexed fields
-    var items = await isar.equipments
-        .filter()
-        .gymIdEqualTo(gymId)
-        .optional(category != null && category.isNotEmpty,
-            (q) => q.categoryEqualTo(category!))
-        .optional(condition != null && condition.isNotEmpty,
-            (q) => q.conditionEqualTo(condition!))
-        .findAll();
+  var items = await isar.equipments
+    .filter()
+    .gymIdEqualTo(gymId)
+    .optional(category != null, (q) => q.categoryEqualTo(category!))
+    .optional(condition != null, (q) => q.conditionEqualTo(condition!))
+    .findAll();
 
     // Local, case-insensitive text search over name/brand/model
     if (search != null && search.trim().isNotEmpty) {

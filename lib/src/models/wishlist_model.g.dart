@@ -26,6 +26,7 @@ const WishlistSchema = CollectionSchema(
       id: 1,
       name: r'category',
       type: IsarType.string,
+      enumMap: _WishlistcategoryEnumValueMap,
     ),
     r'name': PropertySchema(
       id: 2,
@@ -41,16 +42,23 @@ const WishlistSchema = CollectionSchema(
       id: 4,
       name: r'priority',
       type: IsarType.string,
+      enumMap: _WishlistpriorityEnumValueMap,
     ),
     r'productUrl': PropertySchema(
       id: 5,
       name: r'productUrl',
       type: IsarType.string,
     ),
-    r'wishlistType': PropertySchema(
+    r'userId': PropertySchema(
       id: 6,
+      name: r'userId',
+      type: IsarType.string,
+    ),
+    r'wishlistType': PropertySchema(
+      id: 7,
       name: r'wishlistType',
       type: IsarType.string,
+      enumMap: _WishlistwishlistTypeEnumValueMap,
     )
   },
   estimateSize: _wishlistEstimateSize,
@@ -59,6 +67,19 @@ const WishlistSchema = CollectionSchema(
   deserializeProp: _wishlistDeserializeProp,
   idName: r'id',
   indexes: {
+    r'userId': IndexSchema(
+      id: -2005826577402374815,
+      name: r'userId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'userId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
     r'name': IndexSchema(
       id: 879695947855722453,
       name: r'name',
@@ -140,7 +161,7 @@ int _wishlistEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.brand.length * 3;
-  bytesCount += 3 + object.category.length * 3;
+  bytesCount += 3 + object.category.name.length * 3;
   bytesCount += 3 + object.name.length * 3;
   {
     final value = object.notes;
@@ -148,14 +169,15 @@ int _wishlistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.priority.length * 3;
+  bytesCount += 3 + object.priority.name.length * 3;
   {
     final value = object.productUrl;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.wishlistType.length * 3;
+  bytesCount += 3 + object.userId.length * 3;
+  bytesCount += 3 + object.wishlistType.name.length * 3;
   return bytesCount;
 }
 
@@ -166,12 +188,13 @@ void _wishlistSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.brand);
-  writer.writeString(offsets[1], object.category);
+  writer.writeString(offsets[1], object.category.name);
   writer.writeString(offsets[2], object.name);
   writer.writeString(offsets[3], object.notes);
-  writer.writeString(offsets[4], object.priority);
+  writer.writeString(offsets[4], object.priority.name);
   writer.writeString(offsets[5], object.productUrl);
-  writer.writeString(offsets[6], object.wishlistType);
+  writer.writeString(offsets[6], object.userId);
+  writer.writeString(offsets[7], object.wishlistType.name);
 }
 
 Wishlist _wishlistDeserialize(
@@ -182,12 +205,19 @@ Wishlist _wishlistDeserialize(
 ) {
   final object = Wishlist(
     brand: reader.readString(offsets[0]),
-    category: reader.readString(offsets[1]),
+    category:
+        _WishlistcategoryValueEnumMap[reader.readStringOrNull(offsets[1])] ??
+            EquipmentCategory.weight,
     name: reader.readString(offsets[2]),
     notes: reader.readStringOrNull(offsets[3]),
-    priority: reader.readString(offsets[4]),
+    priority:
+        _WishlistpriorityValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+            WishlistPriority.low,
     productUrl: reader.readStringOrNull(offsets[5]),
-    wishlistType: reader.readString(offsets[6]),
+    userId: reader.readString(offsets[6]),
+    wishlistType: _WishlistwishlistTypeValueEnumMap[
+            reader.readStringOrNull(offsets[7])] ??
+        WishlistType.newItem,
   );
   object.id = id;
   return object;
@@ -203,21 +233,66 @@ P _wishlistDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (_WishlistcategoryValueEnumMap[reader.readStringOrNull(offset)] ??
+          EquipmentCategory.weight) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (_WishlistpriorityValueEnumMap[reader.readStringOrNull(offset)] ??
+          WishlistPriority.low) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (_WishlistwishlistTypeValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          WishlistType.newItem) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _WishlistcategoryEnumValueMap = {
+  r'weight': r'weight',
+  r'implement': r'implement',
+  r'machine': r'machine',
+  r'storage': r'storage',
+  r'rig': r'rig',
+  r'support': r'support',
+  r'safety': r'safety',
+  r'other': r'other',
+};
+const _WishlistcategoryValueEnumMap = {
+  r'weight': EquipmentCategory.weight,
+  r'implement': EquipmentCategory.implement,
+  r'machine': EquipmentCategory.machine,
+  r'storage': EquipmentCategory.storage,
+  r'rig': EquipmentCategory.rig,
+  r'support': EquipmentCategory.support,
+  r'safety': EquipmentCategory.safety,
+  r'other': EquipmentCategory.other,
+};
+const _WishlistpriorityEnumValueMap = {
+  r'low': r'low',
+  r'medium': r'medium',
+  r'high': r'high',
+};
+const _WishlistpriorityValueEnumMap = {
+  r'low': WishlistPriority.low,
+  r'medium': WishlistPriority.medium,
+  r'high': WishlistPriority.high,
+};
+const _WishlistwishlistTypeEnumValueMap = {
+  r'newItem': r'newItem',
+  r'replacement': r'replacement',
+};
+const _WishlistwishlistTypeValueEnumMap = {
+  r'newItem': WishlistType.newItem,
+  r'replacement': WishlistType.replacement,
+};
 
 Id _wishlistGetId(Wishlist object) {
   return object.id;
@@ -305,6 +380,51 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> userIdEqualTo(
+      String userId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'userId',
+        value: [userId],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> userIdNotEqualTo(
+      String userId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userId',
+              lower: [],
+              upper: [userId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userId',
+              lower: [userId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userId',
+              lower: [userId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userId',
+              lower: [],
+              upper: [userId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> nameEqualTo(String name) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -350,7 +470,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> wishlistTypeEqualTo(
-      String wishlistType) {
+      WishlistType wishlistType) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'wishlistType',
@@ -360,7 +480,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> wishlistTypeNotEqualTo(
-      String wishlistType) {
+      WishlistType wishlistType) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -395,7 +515,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> categoryEqualTo(
-      String category) {
+      EquipmentCategory category) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'category',
@@ -405,7 +525,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> categoryNotEqualTo(
-      String category) {
+      EquipmentCategory category) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -485,7 +605,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> priorityEqualTo(
-      String priority) {
+      WishlistPriority priority) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'priority',
@@ -495,7 +615,7 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> priorityNotEqualTo(
-      String priority) {
+      WishlistPriority priority) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -663,7 +783,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryEqualTo(
-    String value, {
+    EquipmentCategory value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -676,7 +796,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryGreaterThan(
-    String value, {
+    EquipmentCategory value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -691,7 +811,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryLessThan(
-    String value, {
+    EquipmentCategory value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -706,8 +826,8 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> categoryBetween(
-    String lower,
-    String upper, {
+    EquipmentCategory lower,
+    EquipmentCategory upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1121,7 +1241,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityEqualTo(
-    String value, {
+    WishlistPriority value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1134,7 +1254,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityGreaterThan(
-    String value, {
+    WishlistPriority value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1149,7 +1269,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityLessThan(
-    String value, {
+    WishlistPriority value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1164,8 +1284,8 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priorityBetween(
-    String lower,
-    String upper, {
+    WishlistPriority lower,
+    WishlistPriority upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1398,8 +1518,138 @@ extension WishlistQueryFilter
     });
   }
 
-  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> wishlistTypeEqualTo(
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdEqualTo(
     String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> userIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> wishlistTypeEqualTo(
+    WishlistType value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1413,7 +1663,7 @@ extension WishlistQueryFilter
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
       wishlistTypeGreaterThan(
-    String value, {
+    WishlistType value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1428,7 +1678,7 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> wishlistTypeLessThan(
-    String value, {
+    WishlistType value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1443,8 +1693,8 @@ extension WishlistQueryFilter
   }
 
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> wishlistTypeBetween(
-    String lower,
-    String upper, {
+    WishlistType lower,
+    WishlistType upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1612,6 +1862,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByWishlistType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wishlistType', Sort.asc);
@@ -1711,6 +1973,18 @@ extension WishlistQuerySortThenBy
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByWishlistType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'wishlistType', Sort.asc);
@@ -1768,6 +2042,13 @@ extension WishlistQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByUserId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByWishlistType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1790,7 +2071,8 @@ extension WishlistQueryProperty
     });
   }
 
-  QueryBuilder<Wishlist, String, QQueryOperations> categoryProperty() {
+  QueryBuilder<Wishlist, EquipmentCategory, QQueryOperations>
+      categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
     });
@@ -1808,7 +2090,8 @@ extension WishlistQueryProperty
     });
   }
 
-  QueryBuilder<Wishlist, String, QQueryOperations> priorityProperty() {
+  QueryBuilder<Wishlist, WishlistPriority, QQueryOperations>
+      priorityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'priority');
     });
@@ -1820,7 +2103,14 @@ extension WishlistQueryProperty
     });
   }
 
-  QueryBuilder<Wishlist, String, QQueryOperations> wishlistTypeProperty() {
+  QueryBuilder<Wishlist, String, QQueryOperations> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userId');
+    });
+  }
+
+  QueryBuilder<Wishlist, WishlistType, QQueryOperations>
+      wishlistTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'wishlistType');
     });

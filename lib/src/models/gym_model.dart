@@ -9,7 +9,8 @@ class Gym {
   /// Indexed fields (filtering, sorting, and scoping)
   
   @Index()
-  late String userId;
+  late String userId; // for Supabase user association
+  
   /// Human-readable unique gym identifier
   @Index(unique: true, caseSensitive: false)
   late String gymId;
