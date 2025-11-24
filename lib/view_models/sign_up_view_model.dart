@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
 
 class SignUpViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final AuthRepository _authRepository;
+
+  SignUpViewModel({AuthRepository? authRepository})
+      : _authRepository = authRepository ?? AuthRepository();
+
   bool _loading = false;
   String? _message;
 
@@ -16,15 +21,10 @@ class SignUpViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     final password = passwordController.text;
     try {
-      final response = await Supabase.instance.client.auth.signUp(
-        email: email,
-        password: password,
-      );
-      if (response.user != null) {
-        _setMessage('Sign up successful! Please check your email to verify your account.');
-      } else {
-        _setMessage('Sign up failed.');
-      }
+      await _authRepository.signUp(email, password: password);
+      _setMessage('Sign up successful! Please check your email to verify your account.');
+    } on AuthException catch (ae) {
+      _setMessage(ae.message ?? 'Sign up failed.');
     } catch (e) {
       _setMessage('Error: ${e.toString()}');
     } finally {

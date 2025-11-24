@@ -1,6 +1,8 @@
 import '../../theme/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
+import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/dashboard_piechart.dart';
@@ -8,23 +10,16 @@ import '../../enum/app_enums.dart';
 import '../widgets/cards/dashboard_gym_card.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
-/// DashboardScreen
-/// 
-/// This screen provides an overview of gym equipment breakdowns at a glance.
-/// Follows MVVM architecture. Connect to a ViewModel for state management.
-/// 
-/// TODO: Connect to DashboardViewModel and implement Riverpod for state management.
-/// TODO: Add responsive layout using size_config.dart.
-/// TODO: Add modular widgets for dashboard cards and summaries.
 
-class DashboardScreen extends StatefulWidget {
+
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
@@ -36,12 +31,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sampleCategoryCounts = {
-      EquipmentCategory.implement: 5,
-      EquipmentCategory.weight: 12,
-      EquipmentCategory.machine: 2,
-      EquipmentCategory.other: 18,
-    };
+    final state = ref.watch(dashboardProvider);
+    final categoryCounts = state.categoryCounts;
+    final gyms = state.gyms;
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: TopAppBar(
@@ -114,8 +106,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+              // TODO: When the app is live, ensure the pie chart receives an
+              // empty/zeroed `categoryCounts` for brand-new users (no gyms)
+              // so `DashboardPieChart` can render its built-in empty state.
               Center(
-                child: DashboardPieChart(categoryCounts: sampleCategoryCounts),
+                child: DashboardPieChart(categoryCounts: categoryCounts),
               ),
               const SizedBox(height: 24),
               Align(
@@ -133,11 +128,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.of(context).pushNamed(AppRoutes.gymDetail);
                 },
                 borderRadius: BorderRadius.circular(16),
-                child: DashboardGymCard(
-                  gymName: 'Flex Home Gym',
-                  equipmentCount: 27,
-                  lastUpdated: DateTime.now().subtract(const Duration(days: 3)),
-                ),
+                child: gyms.isNotEmpty
+                    ? DashboardGymCard(
+                        gymName: gyms[0].gymName,
+                        equipmentCount: gyms[0].equipmentCount,
+                        lastUpdated: gyms[0].lastUpdated,
+                      )
+                    : DashboardGymCard(
+                        gymName: 'No gyms yet',
+                        equipmentCount: 0,
+                        lastUpdated: DateTime.now(),
+                      ),
               ),
               const SizedBox(height: 16),
               PrimaryButton(

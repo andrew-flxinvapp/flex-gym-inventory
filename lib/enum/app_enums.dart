@@ -23,12 +23,13 @@ extension WishlistPriorityLabel on WishlistPriority {
 
 // Equipment categories for gym inventory
 enum EquipmentCategory {
-  weight,
-  implement,
-  machine,
+  weights, // Plates, dumbbells, barbells, kettlebells
+  specialty, 
+  machines, // Cable machines, selectorized machines, and other standalone equipment
   storage,
-  rig,
-  support,
+  racks, // Power racks, squat racks, half racks etc.
+  attachments,
+  accessories,
   safety,
   other,
 }
@@ -36,18 +37,20 @@ enum EquipmentCategory {
 extension EquipmentCategoryLabel on EquipmentCategory {
   String get label {
     switch (this) {
-      case EquipmentCategory.weight:
-        return 'Weight';
-      case EquipmentCategory.implement:
-        return 'Implement';
-      case EquipmentCategory.machine:
-        return 'Machine';
+      case EquipmentCategory.weights:
+        return 'Weights';
+      case EquipmentCategory.specialty:
+        return 'Specialty';
+      case EquipmentCategory.machines:
+        return 'Machines';
       case EquipmentCategory.storage:
         return 'Storage';
-      case EquipmentCategory.rig:
-        return 'Rig';
-      case EquipmentCategory.support:
-        return 'Support';
+      case EquipmentCategory.racks:
+        return 'Racks';
+      case EquipmentCategory.attachments:
+        return 'Attachments';
+      case EquipmentCategory.accessories:
+        return 'Accessories';
       case EquipmentCategory.safety:
         return 'Safety';
       case EquipmentCategory.other:

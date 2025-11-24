@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+
 
 class LoginViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
+  final AuthRepository _authRepository;
+
+  LoginViewModel({AuthRepository? authRepository})
+      : _authRepository = authRepository ?? AuthRepository();
+
   bool _loading = false;
   String? _message;
 
@@ -14,8 +20,10 @@ class LoginViewModel extends ChangeNotifier {
     _setMessage(null);
     final email = emailController.text.trim();
     try {
-      await Supabase.instance.client.auth.signInWithOtp(email: email);
+      await _authRepository.signInWithMagicLink(email);
       _setMessage('Magic link sent! Check your email.');
+    } on AuthException catch (ae) {
+      _setMessage(ae.message ?? 'Failed to send magic link');
     } catch (e) {
       _setMessage('Error: ${e.toString()}');
     } finally {
