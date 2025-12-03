@@ -33,29 +33,36 @@ import '../src/screens/onboarding_feature_two.dart';
 import '../src/screens/social_proof.dart';
 import '../src/screens/about_flex_rackley.dart';
 import '../src/screens/default_gym_picker.dart';
+import '../src/screens/startup_router.dart';
 
 // Add other imports as needed
 
 // Route name constants
 class AppRoutes {
   static const String splash = '/';
+  static const String startupRouter = '/startup-router';
+  
   // Navigation routes
   static const String dashboard = '/dashboard';
   static const String componentGallery = '/component-gallery';
   static const String wishlist = '/wishlist';
   static const String settings = '/settings';
+
   // Gym routes
   static const String addGym = '/add-gym';
   static const String gymDetail = '/gym-detail';
   static const String editGym = '/edit-gym';
+
   // Equipment routes
   static const String addEquipment = '/add-equipment';
   static const String editEquipment = '/edit-equipment';
   static const String equipmentDetail = '/equipment-detail';
+
   // Wishlist routes
   static const String wishlistDetail = '/wishlist-detail';
   static const String addWishlist = '/add-wishlist';
   static const String editWishlist = '/edit-wishlist';
+
   // Auth routes
   static const String signup = '/signup';
   static const String login = '/login';
@@ -67,6 +74,7 @@ class AppRoutes {
   static const String socialProof = '/social-proof';
   static const String onboardingUpgrade = '/onboarding-upgrade';
   static const String complete = '/complete';
+
   // Settings routes
   static const String appDetails = '/app-details';
   static const String support = '/support';
@@ -84,23 +92,29 @@ class AppRoutes {
 // Route map for MaterialApp
 final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.splash: (context) => const SplashScreen(),
+  AppRoutes.startupRouter: (context) => const StartupRouterScreen(),
+
   // Navigation routes
   AppRoutes.dashboard: (context) => const HomeScreen(initialIndex: 0),
   AppRoutes.componentGallery: (context) => const ComponentGallery(),
   AppRoutes.wishlist: (context) => const HomeScreen(initialIndex: 1),
   AppRoutes.settings: (context) => const HomeScreen(initialIndex: 2),
+
   // Gym routes
   AppRoutes.addGym: (context) => const AddGymScreen(),
   AppRoutes.gymDetail: (context) => const GymDetailScreen(),
   AppRoutes.editGym: (context) => const EditGymScreen(),
+
   // Equipment routes
   AppRoutes.addEquipment: (context) => const AddEquipmentScreen(),
   AppRoutes.editEquipment: (context) => const EditEquipmentScreen(),
   AppRoutes.equipmentDetail: (context) => const EquipmentDetailScreen(),
+
   // Wishlist routes
   AppRoutes.addWishlist: (context) => const AddWishlistScreen(),
   AppRoutes.editWishlist: (context) => const EditWishlistScreen(),
   AppRoutes.wishlistDetail: (context) => const WishlistDetailScreen(),
+
   // Auth routes
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),

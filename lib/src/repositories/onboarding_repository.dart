@@ -28,14 +28,12 @@ class OnboardingRepository {
   /// }
   Future<void> completeOnboarding({
     required bool notificationsOn,
-    required bool proPlan,
   }) async {
     await _client.auth.updateUser(
       UserAttributes(
         data: {
           'onboardingComplete': true,
           'notificationsOn': notificationsOn,
-          'proPlan': proPlan,
         },
       ),
     );

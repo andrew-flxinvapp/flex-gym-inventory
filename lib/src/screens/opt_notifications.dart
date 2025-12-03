@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
@@ -14,19 +14,37 @@ class OptNotificationsScreen extends StatefulWidget {
 }
 
 class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
+
+  // whether notifications are allowed
   bool _allowNotifications = false;
 
   @override
   void initState() {
     super.initState();
-    _loadNotificationPreference();
+    _loadNotificationsPreference();
+  }
+  Future<void> _loadNotificationsPreference() async {
+    final user = Supabase.instance.client.auth.currentUser;
+
+    if (user != null) {
+      final value = (user.userMetadata?['notificationsOn'] as bool?) ?? false;
+
+      setState(() {
+        _allowNotifications = value;
+      });
+    }
   }
 
-  Future<void> _loadNotificationPreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _allowNotifications = prefs.getBool('allow_notifications') ?? false;
-    });
+  Future<void> _saveNotificationsPreference() async {
+    try {
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(
+          data: {'notificationsOn': _allowNotifications},
+        ),
+      );
+    } catch (e) {
+      // ignore errors for now; could log or show a message
+    }
   }
 
   @override
@@ -87,8 +105,7 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
                       setState(() {
                         _allowNotifications = value;
                       });
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool('allow_notifications', value);
+                      await _saveNotificationsPreference();
                     },
                     // activeColor: AppTheme.primary,
                   ),

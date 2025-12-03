@@ -8,12 +8,10 @@ import '../repositories/onboarding_repository.dart';
 class OnboardingCompleteScreen extends StatefulWidget {
   const OnboardingCompleteScreen({
     super.key,
-    required this.notificationsOn,
-    required this.didUserBuyPro,
+    this.notificationsOn = false,
   });
 
   final bool notificationsOn;
-  final bool didUserBuyPro;
 
   @override
   State<OnboardingCompleteScreen> createState() => _OnboardingCompleteScreenState();
@@ -30,7 +28,6 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
     try {
       await _onboardingRepository.completeOnboarding(
         notificationsOn: widget.notificationsOn,
-        proPlan: widget.didUserBuyPro,
       );
 
       if (!mounted) return;
