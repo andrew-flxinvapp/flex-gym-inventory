@@ -24,13 +24,14 @@ extension WishlistPriorityLabel on WishlistPriority {
 // Equipment categories for gym inventory
 enum EquipmentCategory {
   weights, // Plates, dumbbells, barbells, kettlebells
-  specialty, 
+  specialty, // Strongman, sleds, sandbags etc.
   machines, // Cable machines, selectorized machines, and other standalone equipment
-  storage,
+  storage, // Plate trees, dbell racks, barbell holders and shelving
   racks, // Power racks, squat racks, half racks etc.
-  attachments,
-  accessories,
-  safety,
+  attachments, // Rack/machine add-ons and handles
+  benches, // Flat, incline, decline, adjustable benches
+  accessories, // Belts, straps, wraps, sleeves etc.
+  safety, // Safety equipment like collars, clips, spotter arms etc.
   other,
 }
 
@@ -49,6 +50,8 @@ extension EquipmentCategoryLabel on EquipmentCategory {
         return 'Racks';
       case EquipmentCategory.attachments:
         return 'Attachments';
+      case EquipmentCategory.benches:
+        return 'Benches';
       case EquipmentCategory.accessories:
         return 'Accessories';
       case EquipmentCategory.safety:

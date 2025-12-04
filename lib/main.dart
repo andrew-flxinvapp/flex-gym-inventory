@@ -7,10 +7,13 @@ import 'theme/app_theme.dart';
 import 'config/size_config.dart';
 import 'routes/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'service/deeplink_service.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +30,54 @@ void main() async {
     directory: dir.path,
   );
 
+  // Initialize deeplink handling and register a simple handler that
+  // navigates to the verify-email screen and forwards parsed params.
+  DeeplinkService.instance.registerHandler((uri, params) async {
+    // ignore: avoid_print
+    print('Deeplink received: $uri params: $params');
+    try {
+      // If the link contains Supabase auth tokens (fragment) or an auth code
+      // (query param `code`), ask the Supabase client to parse & restore the
+      // session. `getSessionFromUrl` will extract tokens and set the session.
+      final hasToken = params.containsKey('access_token') || params.containsKey('refresh_token');
+      final hasCode = uri.queryParameters.containsKey('code');
+
+      if (hasToken || hasCode) {
+        try {
+          await Supabase.instance.client.auth.getSessionFromUrl(uri);
+        } catch (e, st) {
+          // Log and fall through to show verify screen
+          // ignore: avoid_print
+          print('Deeplink: getSessionFromUrl failed: $e\n$st');
+        }
+
+        final user = Supabase.instance.client.auth.currentUser;
+        if (user != null) {
+          // Successful sign-in — navigate into the app (startup router will
+          // decide whether to show onboarding or main flow).
+          navigatorKey.currentState?.pushNamedAndRemoveUntil(
+            AppRoutes.startupRouter,
+            (_) => false,
+          );
+          return;
+        }
+      }
+
+      // No tokens/code or session restore failed — navigate to verify email
+      navigatorKey.currentState?.pushNamed(
+        AppRoutes.verifiyEmail,
+        arguments: params,
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error handling deeplink: $e');
+      try {
+        navigatorKey.currentState?.pushNamed(AppRoutes.verifiyEmail, arguments: params);
+      } catch (_) {}
+    }
+  });
+  await DeeplinkService.instance.init();
+
   runApp(MyApp(isar: isar));
 }
 
@@ -39,6 +90,7 @@ class MyApp extends StatelessWidget {
     SizeConfig.init(context);
     return MaterialApp(
       title: 'Flex Gym Inventory',
+      navigatorKey: navigatorKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
