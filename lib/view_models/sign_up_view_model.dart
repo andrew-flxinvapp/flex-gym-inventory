@@ -16,10 +16,33 @@ class SignUpViewModel extends ChangeNotifier {
   String? get message => _message;
 
   Future<void> signUp() async {
-    _setLoading(true);
-    _setMessage(null);
     final email = emailController.text.trim();
     final password = passwordController.text;
+
+    // Basic client-side validation.
+    if (email.isEmpty) {
+      _setMessage('Please enter your email address.');
+      return;
+    }
+
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailRegex.hasMatch(email)) {
+      _setMessage('Please enter a valid email address.');
+      return;
+    }
+
+    if (password.isEmpty) {
+      _setMessage('Please enter a password.');
+      return;
+    }
+
+    if (password.length < 8) {
+      _setMessage('Password must be at least 8 characters.');
+      return;
+    }
+
+    _setLoading(true);
+    _setMessage(null);
     try {
       await _authRepository.signUp(email, password: password);
       _setMessage('Sign up successful! Please check your email to verify your account.');

@@ -16,9 +16,23 @@ class LoginViewModel extends ChangeNotifier {
   String? get message => _message;
 
   Future<void> sendMagicLink() async {
+    final email = emailController.text.trim();
+
+    // Basic validation before calling the network layer.
+    if (email.isEmpty) {
+      _setMessage('Please enter your email address.');
+      return;
+    }
+
+    // Simple email pattern — good enough for client-side validation.
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailRegex.hasMatch(email)) {
+      _setMessage('Please enter a valid email address.');
+      return;
+    }
+
     _setLoading(true);
     _setMessage(null);
-    final email = emailController.text.trim();
     try {
       await _authRepository.signInWithMagicLink(email);
       _setMessage('Magic link sent! Check your email.');
