@@ -1,18 +1,78 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-//import '../widgets/buttons/primary_button.dart';
-//import '../widgets/buttons/disabled_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import '../../view_models/auth_view_model.dart';
 
-// Verifiy Email Screen
-// This screen instrucets users to check their email for a magic link to continue sign in or sign up.
-// Follows MVVM architecture. Connect to a ViewModel for state management.
+// Verify Email Screen
+// This screen instructs users to check their email for a magic link to continue sign in or sign up.
+// It can optionally accept route arguments containing an email or params map.
 
-class VerifyEmailScreen extends StatelessWidget {
+class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen({super.key});
 
   @override
+  State<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
+}
+
+class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  final AuthViewModel _authViewModel = AuthViewModel();
+  bool _loading = false;
+  String? _message;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Read optional email from route arguments. The app may pass a Map of params
+    // from the deeplink handler, or a plain String email. We handle both.
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null) {
+      if (args is Map && args.containsKey('email')) {
+        _authViewModel.emailController.text = args['email']?.toString() ?? '';
+      } else if (args is String) {
+        _authViewModel.emailController.text = args;
+      } else if (args is Map<String, String> && args.containsKey('user_email')) {
+        _authViewModel.emailController.text = args['user_email']!;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _authViewModel.dispose();
+    super.dispose();
+  }
+
+  Future<void> _resend() async {
+    setState(() {
+      _loading = true;
+      _message = null;
+    });
+    try {
+      await _authViewModel.resendMagicLink();
+      setState(() {
+        _message = _authViewModel.message ?? 'Magic link resent — check your email.';
+      });
+    } catch (e) {
+      setState(() {
+        _message = 'Error: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+    if (_message != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_message!)));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final emailLabel = _authViewModel.emailController.text.isNotEmpty
+        ? _authViewModel.emailController.text
+        : '(user-email)';
+
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const OnboardingLogoAppBar(),
@@ -48,7 +108,7 @@ class VerifyEmailScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 // Subtitle
                 Text(
-                  'We just emailed a magic link to (user-email). Check your email on this device to continue', //use $email to insert the user's email
+                  'We just emailed a magic link to $emailLabel. Check your email on this device to continue',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppTheme.lightTextPrimary,
                         fontWeight: FontWeight.normal,
@@ -66,13 +126,12 @@ class VerifyEmailScreen extends StatelessWidget {
                       ),
                   textAlign: TextAlign.center,
                 ),
+                const SizedBox(height: 8),
                 // Resend magic link button at the bottom
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/opt-notifications'); // Navigate to the next screen
-                  },
+                  onPressed: _loading ? null : _resend,
                   child: Text(
-                    'Resend magic link',
+                    _loading ? 'Resending...' : 'Resend magic link',
                     style: TextStyle(
                       color: AppTheme.lightTextPrimary,
                       fontWeight: FontWeight.bold,

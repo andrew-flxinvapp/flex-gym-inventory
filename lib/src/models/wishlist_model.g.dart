@@ -207,7 +207,7 @@ Wishlist _wishlistDeserialize(
     brand: reader.readString(offsets[0]),
     category:
         _WishlistcategoryValueEnumMap[reader.readStringOrNull(offsets[1])] ??
-            EquipmentCategory.weight,
+            EquipmentCategory.weights,
     name: reader.readString(offsets[2]),
     notes: reader.readStringOrNull(offsets[3]),
     priority:
@@ -234,7 +234,7 @@ P _wishlistDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 1:
       return (_WishlistcategoryValueEnumMap[reader.readStringOrNull(offset)] ??
-          EquipmentCategory.weight) as P;
+          EquipmentCategory.weights) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -256,22 +256,26 @@ P _wishlistDeserializeProp<P>(
 }
 
 const _WishlistcategoryEnumValueMap = {
-  r'weight': r'weight',
-  r'implement': r'implement',
-  r'machine': r'machine',
+  r'weights': r'weights',
+  r'specialty': r'specialty',
+  r'machines': r'machines',
   r'storage': r'storage',
-  r'rig': r'rig',
-  r'support': r'support',
+  r'racks': r'racks',
+  r'attachments': r'attachments',
+  r'benches': r'benches',
+  r'accessories': r'accessories',
   r'safety': r'safety',
   r'other': r'other',
 };
 const _WishlistcategoryValueEnumMap = {
-  r'weight': EquipmentCategory.weight,
-  r'implement': EquipmentCategory.implement,
-  r'machine': EquipmentCategory.machine,
+  r'weights': EquipmentCategory.weights,
+  r'specialty': EquipmentCategory.specialty,
+  r'machines': EquipmentCategory.machines,
   r'storage': EquipmentCategory.storage,
-  r'rig': EquipmentCategory.rig,
-  r'support': EquipmentCategory.support,
+  r'racks': EquipmentCategory.racks,
+  r'attachments': EquipmentCategory.attachments,
+  r'benches': EquipmentCategory.benches,
+  r'accessories': EquipmentCategory.accessories,
   r'safety': EquipmentCategory.safety,
   r'other': EquipmentCategory.other,
 };

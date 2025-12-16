@@ -4,6 +4,7 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/disabled_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import '../../view_models/auth_view_model.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -18,6 +19,45 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool _agreedToTerms = false;
+  final AuthViewModel _authViewModel = AuthViewModel();
+  bool _loading = false;
+  String? _message;
+
+  /// Kick off the sign-up flow using the view model.
+  void _performSignUp() {
+    // fire-and-forget from a sync callback so we can satisfy VoidCallback
+    () async {
+      setState(() {
+        _loading = true;
+        _message = null;
+      });
+      try {
+        await _authViewModel.signUp();
+        _message = _authViewModel.message;
+                                    // On success, navigate to verify email screen
+                                    if (!mounted) return;
+                                    Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
+      } catch (e) {
+        _message = 'Error: ${e.toString()}';
+      } finally {
+        setState(() {
+          _loading = false;
+        });
+      }
+                                  if (_message != null) {
+                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(_message!)),
+                                    );
+                                  }
+    }();
+  }
+
+  @override
+  void dispose() {
+    _authViewModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +166,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(
                     height: 50,
                     child: TextField(
+                      controller: _authViewModel.emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -194,9 +236,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   // Sign Up Button
                   _agreedToTerms
                       ? PrimaryButton(
-                          label: 'Sign Up',
+                          label: _loading ? 'Signing up...' : 'Sign Up',
                           onPressed: () {
-                            Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
+                            if (_loading) return;
+                            _performSignUp();
                           },
                         )
                       : DisabledButton(
