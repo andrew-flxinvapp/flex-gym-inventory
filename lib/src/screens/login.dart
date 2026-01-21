@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../widgets/buttons/primary_button.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../view_models/login_view_model.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
 // LoginScreen
@@ -22,35 +22,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  bool _loading = false;
-  String? _message;
+  final LoginViewModel _loginViewModel = LoginViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    _loginViewModel.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
 
   Future<void> _sendMagicLink() async {
-    setState(() {
-      _loading = true;
-      _message = null;
-    });
-    final email = _emailController.text.trim();
-    try {
-      await Supabase.instance.client.auth.signInWithOtp(email: email);
-      setState(() {
-        _message = 'Magic link sent! Check your email.';
-      });
-    } catch (e) {
-      setState(() {
-        _message = 'Error: ${e.toString()}';
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
+    await _loginViewModel.sendMagicLink();
+    final message = _loginViewModel.message;
+    if (!mounted) return;
+    if (message != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _loginViewModel.dispose();
     super.dispose();
   }
 
@@ -111,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 50,
                     child: TextField(
-                      controller: _emailController,
+                      controller: _loginViewModel.emailController,
                       decoration: InputDecoration(
                         hintText: 'flex@flxinv.com',
                         hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
@@ -129,19 +122,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   PrimaryButton(
-                    label: _loading ? 'Sending...' : 'Sign In',
+                    label: _loginViewModel.loading ? 'Sending...' : 'Sign In',
                     onPressed: () {
-                      if (!_loading) {
+                      if (!_loginViewModel.loading) {
                         _sendMagicLink();
                       }
                     },
                   ),
-                  if (_message != null) ...[
+                  if (_loginViewModel.message != null) ...[
                     const SizedBox(height: 16),
                     Text(
-                      _message!,
+                      _loginViewModel.message!,
                       style: TextStyle(
-                        color: _message!.startsWith('Error') ? Colors.red : Colors.green,
+                        color: _loginViewModel.message!.startsWith('Error') ? Colors.red : Colors.green,
                         fontSize: 16,
                         fontFamily: 'Roboto',
                       ),

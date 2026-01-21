@@ -24,6 +24,20 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Deep link intent-filter for Supabase magic links (custom URL scheme).
+                 This enables opening the app from links like: flexgyminv://auth#access_token=...
+                 If you prefer a different scheme, replace "flexgyminv" and/or host.
+                 For HTTPS App Links use an intent-filter with android:scheme="https" and
+                 android:host="yourdomain.com" and consider android:autoVerify="true".
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Custom scheme approach (recommended for mobile magic links). -->
+                <data android:scheme="flexgyminv" android:host="auth" />
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

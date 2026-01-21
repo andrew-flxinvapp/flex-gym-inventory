@@ -35,19 +35,27 @@ class AuthRepository {
     }
   }
 
-  /// Create an account for [email]. Depending on your Supabase settings this
-  /// may send a confirmation email or sign the user in immediately.
-  Future<void> signUp(String email, {String? password}) async {
+  /// Create an account for [email] using magic-link (OTP) flow.
+  ///
+  /// This app uses magic links only. `signUp` will therefore always send a
+  /// magic link (via `signInWithOtp`). If you need to persist user metadata
+  /// (first/last name, etc.) do so after the user completes verification by
+  /// calling [updateUserMetadata]. Attempting to pass metadata during the
+  /// magic-link sign-up is unreliable across Supabase versions and project
+  /// settings, so we avoid doing that here.
+  Future<void> signUp(String email) async {
     try {
-      // supabase API accepts an optional password. If your app uses magic
-      // links only, password can be null and the backend may still accept it.
-      if (password == null) {
-        // If no password is supplied, request a magic link which will
-        // behave like a sign-up flow if the user doesn't exist yet.
-        await _client.auth.signInWithOtp(email: email);
-      } else {
-        await _client.auth.signUp(email: email, password: password);
-      }
+      await _client.auth.signInWithOtp(email: email);
+    } catch (e, st) {
+      throw _mapToAuthException(e, st);
+    }
+  }
+
+  /// Update the currently authenticated user's metadata. Call this after the
+  /// user has completed the magic-link verification and a session is active.
+  Future<void> updateUserMetadata(Map<String, dynamic> metadata) async {
+    try {
+      await _client.auth.updateUser(UserAttributes(data: metadata));
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }

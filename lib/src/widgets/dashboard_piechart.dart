@@ -31,6 +31,8 @@ class _DashboardPieChartState extends State<DashboardPieChart> {
       Color(0xFF6A4C93),
       Color(0xFFA8A8A8),
       Color(0xFF264653),
+      Color(0xFFDE6D87),
+      Color(0xFF3A8F7D),
     ];
 
     final entries = widget.categoryCounts.entries.toList();

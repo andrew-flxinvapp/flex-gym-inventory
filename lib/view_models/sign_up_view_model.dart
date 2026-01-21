@@ -3,7 +3,6 @@ import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
 
 class SignUpViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final AuthRepository _authRepository;
 
   SignUpViewModel({AuthRepository? authRepository})
@@ -15,9 +14,8 @@ class SignUpViewModel extends ChangeNotifier {
   bool get loading => _loading;
   String? get message => _message;
 
-  Future<void> signUp() async {
+  Future<void> signUp({Map<String, dynamic>? userMetadata}) async {
     final email = emailController.text.trim();
-    final password = passwordController.text;
 
     // Basic client-side validation.
     if (email.isEmpty) {
@@ -31,20 +29,14 @@ class SignUpViewModel extends ChangeNotifier {
       return;
     }
 
-    if (password.isEmpty) {
-      _setMessage('Please enter a password.');
-      return;
-    }
-
-    if (password.length < 8) {
-      _setMessage('Password must be at least 8 characters.');
-      return;
-    }
-
     _setLoading(true);
     _setMessage(null);
     try {
-      await _authRepository.signUp(email, password: password);
+      // Magic-link (OTP) only sign-up. Metadata cannot reliably be saved
+      // during the magic-link flow across all Supabase setups, so we only
+      // request the magic link here. Persist metadata after verification
+      // using `AuthRepository.updateUserMetadata` when a session is active.
+      await _authRepository.signUp(email);
       _setMessage('Sign up successful! Please check your email to verify your account.');
     } on AuthException catch (ae) {
       _setMessage(ae.message ?? 'Sign up failed.');
@@ -68,7 +60,6 @@ class SignUpViewModel extends ChangeNotifier {
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 }

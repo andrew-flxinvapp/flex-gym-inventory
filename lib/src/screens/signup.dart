@@ -4,7 +4,8 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/disabled_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import '../../view_models/auth_view_model.dart';
+import '../../view_models/sign_up_view_model.dart';
+import '../utils/pending_metadata_store.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -19,43 +20,60 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool _agreedToTerms = false;
-  final AuthViewModel _authViewModel = AuthViewModel();
-  bool _loading = false;
-  String? _message;
+  final SignUpViewModel _signUpViewModel = SignUpViewModel();
+  // Optional local controllers for additional profile fields
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
 
   /// Kick off the sign-up flow using the view model.
   void _performSignUp() {
-    // fire-and-forget from a sync callback so we can satisfy VoidCallback
     () async {
-      setState(() {
-        _loading = true;
-        _message = null;
-      });
-      try {
-        await _authViewModel.signUp();
-        _message = _authViewModel.message;
-                                    // On success, navigate to verify email screen
-                                    if (!mounted) return;
-                                    Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
-      } catch (e) {
-        _message = 'Error: ${e.toString()}';
-      } finally {
-        setState(() {
-          _loading = false;
-        });
+      // Build user metadata from first/last name fields (omit empty values)
+      final userMetadata = <String, dynamic>{};
+      if (_firstNameController.text.trim().isNotEmpty) {
+        userMetadata['first_name'] = _firstNameController.text.trim();
       }
-                                  if (_message != null) {
-                                    if (!mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(_message!)),
-                                    );
-                                  }
+      if (_lastNameController.text.trim().isNotEmpty) {
+        userMetadata['last_name'] = _lastNameController.text.trim();
+      }
+
+      // Persist pending metadata locally so it can be reconciled after the
+      // user completes the magic-link flow and a session exists.
+      if (userMetadata.isNotEmpty) {
+        await PendingMetadataStore.save(userMetadata);
+      }
+
+      // Trigger the view model sign-up which handles validation and network
+      await _signUpViewModel.signUp();
+
+      final message = _signUpViewModel.message;
+
+      if (!mounted) return;
+      if (message != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      }
+
+      // If signup was successful (vm sets a success message), navigate to verify
+      if (message != null && message.toLowerCase().contains('sign up successful')) {
+        Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
+      }
     }();
   }
 
   @override
+  void initState() {
+    super.initState();
+    _signUpViewModel.addListener(() {
+      // Rebuild when view model updates loading/message state
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
-    _authViewModel.dispose();
+    _signUpViewModel.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -96,6 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(
                     height: 50,
                     child: TextField(
+                      controller: _firstNameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -131,6 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(
                     height: 50,
                     child: TextField(
+                      controller: _lastNameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -166,7 +186,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(
                     height: 50,
                     child: TextField(
-                      controller: _authViewModel.emailController,
+                      controller: _signUpViewModel.emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -189,6 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16),
                   const SizedBox(height: 8),
                   // Checkbox for Terms and Conditions
                   CheckboxListTile(
@@ -236,9 +257,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   // Sign Up Button
                   _agreedToTerms
                       ? PrimaryButton(
-                          label: _loading ? 'Signing up...' : 'Sign Up',
+                          label: _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
                           onPressed: () {
-                            if (_loading) return;
+                            if (_signUpViewModel.loading) return;
                             _performSignUp();
                           },
                         )

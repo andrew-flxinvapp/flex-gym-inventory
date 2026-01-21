@@ -10,7 +10,7 @@ class AuthViewModel extends ChangeNotifier {
       : _authRepository = authRepository ?? AuthRepository();
 
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  
 
   bool _loading = false;
   String? _message;
@@ -42,11 +42,9 @@ class AuthViewModel extends ChangeNotifier {
     _setLoading(true);
     _setMessage(null);
     final email = emailController.text.trim();
-    final password = passwordController.text.isNotEmpty
-        ? passwordController.text
-        : null;
     try {
-      await _authRepository.signUp(email, password: password);
+      // Magic-link only signup
+      await _authRepository.signUp(email);
       _setMessage('Sign up successful. Check your email to verify.');
     } on AuthException catch (ae) {
       _setMessage(ae.message ?? 'Sign up failed');
@@ -101,7 +99,6 @@ class AuthViewModel extends ChangeNotifier {
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 }

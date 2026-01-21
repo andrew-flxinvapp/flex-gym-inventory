@@ -2,6 +2,7 @@ import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_theme.dart';
 //import 'src/screens/splash.dart';
 import 'config/size_config.dart';
@@ -12,6 +13,8 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
+import 'package:flex_gym_inventory/src/utils/pending_metadata_store.dart';
+import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -53,6 +56,20 @@ void main() async {
 
         final user = Supabase.instance.client.auth.currentUser;
         if (user != null) {
+          // If we have pending metadata saved during signup, attempt to
+          // reconcile it to the authenticated user now that a session exists.
+          try {
+            final pending = await PendingMetadataStore.read();
+            if (pending != null && pending.isNotEmpty) {
+              await AuthRepository().updateUserMetadata(pending);
+              await PendingMetadataStore.clear();
+            }
+          } catch (e) {
+            // Don't block navigation on reconciliation failures – log and continue.
+            // ignore: avoid_print
+            print('Metadata reconciliation failed: $e');
+          }
+
           // Successful sign-in — navigate into the app (startup router will
           // decide whether to show onboarding or main flow).
           navigatorKey.currentState?.pushNamedAndRemoveUntil(
@@ -78,7 +95,7 @@ void main() async {
   });
   await DeeplinkService.instance.init();
 
-  runApp(MyApp(isar: isar));
+  runApp(ProviderScope(child: MyApp(isar: isar)));
 }
 
 class MyApp extends StatelessWidget {
