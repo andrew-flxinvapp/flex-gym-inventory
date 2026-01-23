@@ -38,19 +38,19 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 
 
 **Concrete Gaps & Risks (blocking reliable testing now)**
-1. Inconsistent view-model usage
+1. Inconsistent view-model usage -COMPLETE-
 - `signup.dart` uses `AuthViewModel` (generic) while a dedicated `SignUpViewModel` exists with validation and tests. `login.dart` calls Supabase directly but `LoginViewModel` contains validation and tests.
 - Why it matters: inconsistent usage affects testability, duplicate logic, and makes UI behavior harder to assert in widget tests.
 
-2. Signup UI fields are not wired or persisted
+2. Signup UI fields are not wired or persisted -COMPLETE-
 - `signup.dart` shows First/Last Name fields but they have no controllers and aren’t saved to Supabase. The `SignUpViewModel` expects a password, but the UI provides no password field.
 - Why it matters: tests expect password handling; user data (names) won't be stored unless you add metadata handling.
 
-3. Password vs magic-link mismatch
+3. Password vs magic-link mismatch -COMPLETE-
 - Repos and VMs support both magic-link and password flows, but the UI is inconsistent. `AuthRepository.signUp` falls back to magic link if password is null.
 - Decide which sign-up method you want and align UI, VMs, tests, and repository accordingly.
 
-4. Startup routing ignores onboarding status
+4. Startup routing ignores onboarding status -COMPLETE-
 - `StartupRouterScreen` checks only for a session; it sends a logged-in user straight to dashboard. It should inspect `OnboardingRepository.isOnboardingComplete` and route to onboarding if needed.
 
 5. Validation and UX
