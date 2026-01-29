@@ -53,10 +53,10 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 4. Startup routing ignores onboarding status -COMPLETE-
 - `StartupRouterScreen` checks only for a session; it sends a logged-in user straight to dashboard. It should inspect `OnboardingRepository.isOnboardingComplete` and route to onboarding if needed.
 
-5. Validation and UX
+5. Validation and UX -COMPLETE-
 - `login.dart` lacks client-side validation for empty or malformed email; `LoginViewModel` has it. `signup.dart` has no email/password validation wired into the UI.
 
-6. Message handling inconsistency
+6. Message handling inconsistency -COMPLETE-
 - Some screens rely on local `_message` variables, some use view model messages. Pick one approach for consistent SnackBar/inline feedback behavior.
 
 7. Notifications flow limited

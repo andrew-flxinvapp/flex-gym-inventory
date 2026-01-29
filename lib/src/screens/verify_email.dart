@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../../view_models/auth_view_model.dart';
+import '../widgets/snackbar.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 // Verify Email Screen
 // This screen instructs users to check their email for a magic link to continue sign in or sign up.
@@ -16,8 +18,6 @@ class VerifyEmailScreen extends StatefulWidget {
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   final AuthViewModel _authViewModel = AuthViewModel();
-  bool _loading = false;
-  String? _message;
 
   @override
   void didChangeDependencies() {
@@ -41,30 +41,21 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     _authViewModel.dispose();
     super.dispose();
   }
+  void initState() {
+    super.initState();
+    _authViewModel.addListener(() {
+      if (!mounted) return;
+      final msg = _authViewModel.message;
+      if (msg != null) {
+        showFlexSnackbarFromUiMessage(context, msg);
+        _authViewModel.clearMessage();
+      }
+      setState(() {});
+    });
+  }
 
   Future<void> _resend() async {
-    setState(() {
-      _loading = true;
-      _message = null;
-    });
-    try {
-      await _authViewModel.resendMagicLink();
-      setState(() {
-        _message = _authViewModel.message ?? 'Magic link resent — check your email.';
-      });
-    } catch (e) {
-      setState(() {
-        _message = 'Error: ${e.toString()}';
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-    if (_message != null) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_message!)));
-    }
+    await _authViewModel.resendMagicLink();
   }
 
   @override
@@ -129,9 +120,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 const SizedBox(height: 8),
                 // Resend magic link button at the bottom
                 TextButton(
-                  onPressed: _loading ? null : _resend,
+                  onPressed: _authViewModel.loading ? null : _resend,
                   child: Text(
-                    _loading ? 'Resending...' : 'Resend magic link',
+                    _authViewModel.loading ? 'Resending...' : 'Resend magic link',
                     style: TextStyle(
                       color: AppTheme.lightTextPrimary,
                       fontWeight: FontWeight.bold,

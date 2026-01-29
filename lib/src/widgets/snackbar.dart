@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
+import '../models/ui_message.dart';
 
 void showFlexSnackbar(
   BuildContext context, {
@@ -33,6 +34,35 @@ void showFlexSnackbar(
   Future.delayed(duration, () {
     if (overlayEntry.mounted) overlayEntry.remove();
   });
+}
+
+void showFlexSnackbarFromUiMessage(BuildContext context, UiMessage message,
+    {Duration duration = const Duration(seconds: 3)}) {
+  // Map UiMessageType -> SnackbarType
+  SnackbarType type;
+  switch (message.type) {
+    case UiMessageType.success:
+      type = SnackbarType.success;
+      break;
+    case UiMessageType.warning:
+      type = SnackbarType.warning;
+      break;
+    case UiMessageType.info:
+      type = SnackbarType.update;
+      break;
+    case UiMessageType.error:
+    default:
+      type = SnackbarType.stop;
+      break;
+  }
+
+  showFlexSnackbar(
+    context,
+    title: message.title,
+    subtitle: message.subtitle,
+    type: type,
+    duration: duration,
+  );
 }
 
 enum SnackbarType { success, warning, update, stop }

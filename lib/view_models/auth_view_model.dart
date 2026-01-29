@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 /// A small ChangeNotifier that wraps [AuthRepository] to provide
 /// a single view-model for auth UI screens (login, signup, resend, signout).
@@ -13,10 +14,10 @@ class AuthViewModel extends ChangeNotifier {
   
 
   bool _loading = false;
-  String? _message;
+  UiMessage? _message;
 
   bool get loading => _loading;
-  String? get message => _message;
+  UiMessage? get message => _message;
 
   /// Returns the current authenticated user object from the repository
   /// (may be `null` if not signed in).
@@ -28,7 +29,7 @@ class AuthViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     try {
       await _authRepository.signInWithMagicLink(email);
-      _setMessage('Magic link sent — check your email.');
+      _setMessage(UiMessage('Magic link sent — check your email.', type: UiMessageType.info));
     } on AuthException catch (ae) {
       _setMessage(ae.message ?? 'Unable to send magic link');
     } catch (e) {
@@ -45,7 +46,7 @@ class AuthViewModel extends ChangeNotifier {
     try {
       // Magic-link only signup
       await _authRepository.signUp(email);
-      _setMessage('Sign up successful. Check your email to verify.');
+      _setMessage(UiMessage('Sign up successful. Check your email to verify.', type: UiMessageType.success));
     } on AuthException catch (ae) {
       _setMessage(ae.message ?? 'Sign up failed');
     } catch (e) {
@@ -61,7 +62,7 @@ class AuthViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     try {
       await _authRepository.resendMagicLink(email);
-      _setMessage('Magic link resent.');
+      _setMessage(UiMessage('Magic link resent.', type: UiMessageType.info));
     } on AuthException catch (ae) {
       _setMessage(ae.message ?? 'Unable to resend magic link');
     } catch (e) {
@@ -91,8 +92,14 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setMessage(String? m) {
+  void _setMessage(UiMessage? m) {
     _message = m;
+    notifyListeners();
+  }
+
+  /// Clear the current message after it's been shown by the UI.
+  void clearMessage() {
+    _message = null;
     notifyListeners();
   }
 

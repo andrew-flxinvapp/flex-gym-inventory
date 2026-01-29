@@ -6,6 +6,8 @@ import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../view_models/sign_up_view_model.dart';
 import '../utils/pending_metadata_store.dart';
+import '../widgets/snackbar.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -24,6 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
   // Optional local controllers for additional profile fields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// Kick off the sign-up flow using the view model.
   void _performSignUp() {
@@ -45,18 +48,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
       // Trigger the view model sign-up which handles validation and network
       await _signUpViewModel.signUp();
-
-      final message = _signUpViewModel.message;
-
-      if (!mounted) return;
-      if (message != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-      }
-
-      // If signup was successful (vm sets a success message), navigate to verify
-      if (message != null && message.toLowerCase().contains('sign up successful')) {
-        Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
-      }
     }();
   }
 
@@ -64,8 +55,17 @@ class _SignupScreenState extends State<SignupScreen> {
   void initState() {
     super.initState();
     _signUpViewModel.addListener(() {
-      // Rebuild when view model updates loading/message state
-      if (mounted) setState(() {});
+      if (!mounted) return;
+      final msg = _signUpViewModel.message;
+      if (msg != null) {
+        showFlexSnackbarFromUiMessage(context, msg);
+        // If sign-up succeeded, go to verify email screen.
+        if (msg.type == UiMessageType.success) {
+          Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
+        }
+        _signUpViewModel.clearMessage();
+      }
+      setState(() {});
     });
   }
 
@@ -112,28 +112,43 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 8),
                   // First Name TextField
                   SizedBox(
-                    height: 50,
-                    child: TextField(
-                      controller: _firstNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: TextField(
+                            controller: _firstNameController,
+                            onChanged: (_) => _signUpViewModel.clearFirstNameError(),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              filled: true,
+                              fillColor: AppTheme.lightCard,
+                              hintText: 'Flex',
+                              hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                            ),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        filled: true,
-                        fillColor: AppTheme.lightCard,
-                        hintText: 'Flex',
-                        hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 24),
-                      ),
+                        if (_signUpViewModel.firstNameError != null) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            _signUpViewModel.firstNameError!,
+                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ]
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -148,28 +163,43 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 8),
                   // Last Name TextField
                   SizedBox(
-                    height: 50,
-                    child: TextField(
-                      controller: _lastNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: TextField(
+                            controller: _lastNameController,
+                            onChanged: (_) => _signUpViewModel.clearLastNameError(),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              filled: true,
+                              fillColor: AppTheme.lightCard,
+                              hintText: 'Rackley',
+                              hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                            ),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        filled: true,
-                        fillColor: AppTheme.lightCard,
-                        hintText: 'Rackley',
-                        hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 24),
-                      ),
+                        if (_signUpViewModel.lastNameError != null) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            _signUpViewModel.lastNameError!,
+                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ]
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -182,12 +212,14 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                   ),
                   const SizedBox(height: 8),
-                  // Email TextField
+                  // Email TextField with VM-driven inline error
+                  const SizedBox(height: 8),
                   SizedBox(
                     height: 50,
                     child: TextField(
                       controller: _signUpViewModel.emailController,
                       keyboardType: TextInputType.emailAddress,
+                      onChanged: (_) => _signUpViewModel.clearEmailError(),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -206,6 +238,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         hintText: 'flex@flxinv.com',
                         hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
                         contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                        errorText: _signUpViewModel.emailError,
                       ),
                     ),
                   ),
@@ -260,7 +293,12 @@ class _SignupScreenState extends State<SignupScreen> {
                           label: _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
                           onPressed: () {
                             if (_signUpViewModel.loading) return;
-                            _performSignUp();
+                            final firstOk = _signUpViewModel.validateFirstName(_firstNameController.text);
+                            final lastOk = _signUpViewModel.validateLastName(_lastNameController.text);
+                            final emailOk = _signUpViewModel.validateEmail();
+                            if (firstOk && lastOk && emailOk) {
+                              _performSignUp();
+                            }
                           },
                         )
                       : DisabledButton(

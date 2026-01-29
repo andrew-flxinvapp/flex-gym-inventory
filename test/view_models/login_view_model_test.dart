@@ -43,7 +43,7 @@ void main() {
 
     await vm.sendMagicLink();
 
-    expect(vm.message, 'Please enter your email address.');
+    expect(vm.message?.title, 'Please enter your email address.');
     expect(repo.called, isFalse);
   });
 
@@ -55,7 +55,7 @@ void main() {
 
     await vm.sendMagicLink();
 
-    expect(vm.message, 'Magic link sent! Check your email.');
+    expect(vm.message?.title, 'Magic link sent! Check your email.');
     expect(vm.loading, isFalse);
     expect(repo.receivedEmail, 'user@example.com');
   });
@@ -69,6 +69,6 @@ void main() {
 
     await vm.sendMagicLink();
 
-    expect(vm.message, 'not found');
+    expect(vm.message?.title, 'not found');
   });
 }

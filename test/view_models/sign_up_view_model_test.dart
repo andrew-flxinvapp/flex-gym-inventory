@@ -40,7 +40,7 @@ void main() {
 
     await vm.signUp();
 
-    expect(vm.message, 'Please enter your email address.');
+    expect(vm.message?.title, 'Please enter your email address.');
     expect(repo.called, isFalse);
   });
 
@@ -52,7 +52,7 @@ void main() {
 
     await vm.signUp();
 
-    expect(vm.message, 'Please enter a valid email address.');
+    expect(vm.message?.title, 'Please enter a valid email address.');
     expect(repo.called, isFalse);
   });
 
@@ -66,8 +66,8 @@ void main() {
 
     expect(repo.called, isTrue);
     expect(repo.email, 'user@example.com');
-    expect(vm.message,
-        'Sign up successful! Please check your email to verify your account.');
+    expect(vm.message?.title,
+      'Sign up successful! Please check your email to verify your account.');
   });
   test('successful sign up calls repository and sets success message', () async {
     final repo = _SuccessfulAuthRepository();
@@ -77,8 +77,8 @@ void main() {
 
     await vm.signUp();
 
-    expect(vm.message,
-        'Sign up successful! Please check your email to verify your account.');
+    expect(vm.message?.title,
+      'Sign up successful! Please check your email to verify your account.');
     expect(vm.loading, isFalse);
     expect(repo.receivedEmail, 'user@example.com');
   });
@@ -92,6 +92,6 @@ void main() {
 
     await vm.signUp();
 
-    expect(vm.message, 'bad credentials');
+    expect(vm.message?.title, 'bad credentials');
   });
 }

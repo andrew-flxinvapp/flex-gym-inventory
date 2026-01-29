@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 
 class LoginViewModel extends ChangeNotifier {
@@ -10,36 +11,28 @@ class LoginViewModel extends ChangeNotifier {
       : _authRepository = authRepository ?? AuthRepository();
 
   bool _loading = false;
-  String? _message;
+  UiMessage? _message;
+  String? _emailError;
 
   bool get loading => _loading;
-  String? get message => _message;
+  UiMessage? get message => _message;
+  String? get emailError => _emailError;
 
   Future<void> sendMagicLink() async {
     final email = emailController.text.trim();
 
     // Basic validation before calling the network layer.
-    if (email.isEmpty) {
-      _setMessage('Please enter your email address.');
-      return;
-    }
-
-    // Simple email pattern — good enough for client-side validation.
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(email)) {
-      _setMessage('Please enter a valid email address.');
-      return;
-    }
+    if (!validateEmail()) return;
 
     _setLoading(true);
     _setMessage(null);
     try {
       await _authRepository.signInWithMagicLink(email);
-      _setMessage('Magic link sent! Check your email.');
+      _setMessage(UiMessage('Magic link sent! Check your email.', type: UiMessageType.success));
     } on AuthException catch (ae) {
-      _setMessage(ae.message ?? 'Failed to send magic link');
+      _setMessage(UiMessage(ae.message ?? 'Failed to send magic link', type: UiMessageType.error));
     } catch (e) {
-      _setMessage('Error: ${e.toString()}');
+      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
     } finally {
       _setLoading(false);
     }
@@ -50,8 +43,40 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setMessage(String? value) {
+  void _setMessage(UiMessage? value) {
     _message = value;
+    notifyListeners();
+  }
+
+  /// Validate current email and set _emailError when invalid.
+  bool validateEmail() {
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      _emailError = 'Please enter your email';
+      notifyListeners();
+      return false;
+    }
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
+    if (!emailRegex.hasMatch(email)) {
+      _emailError = 'Please enter a valid email';
+      notifyListeners();
+      return false;
+    }
+    _emailError = null;
+    notifyListeners();
+    return true;
+  }
+
+  void clearEmailError() {
+    if (_emailError != null) {
+      _emailError = null;
+      notifyListeners();
+    }
+  }
+
+  /// Clear the current message after the UI has consumed it.
+  void clearMessage() {
+    _message = null;
     notifyListeners();
   }
 

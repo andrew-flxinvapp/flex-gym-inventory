@@ -4,6 +4,7 @@ import '../widgets/onboarding_topappbar.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../../view_models/login_view_model.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import '../widgets/snackbar.dart';
 
 // LoginScreen
 // 
@@ -23,22 +24,24 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginViewModel _loginViewModel = LoginViewModel();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _loginViewModel.addListener(() {
-      if (mounted) setState(() {});
+      if (!mounted) return;
+      final msg = _loginViewModel.message;
+      if (msg != null) {
+        showFlexSnackbarFromUiMessage(context, msg);
+        _loginViewModel.clearMessage();
+      }
+      setState(() {});
     });
   }
 
   Future<void> _sendMagicLink() async {
     await _loginViewModel.sendMagicLink();
-    final message = _loginViewModel.message;
-    if (!mounted) return;
-    if (message != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-    }
   }
 
   @override
@@ -102,15 +105,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
                     child: TextField(
                       controller: _loginViewModel.emailController,
+                      onChanged: (_) => _loginViewModel.clearEmailError(),
                       decoration: InputDecoration(
                         hintText: 'flex@flxinv.com',
                         hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
+                        errorText: _loginViewModel.emailError,
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,
@@ -124,23 +128,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   PrimaryButton(
                     label: _loginViewModel.loading ? 'Sending...' : 'Sign In',
                     onPressed: () {
-                      if (!_loginViewModel.loading) {
+                      if (_loginViewModel.loading) return;
+                      if (_loginViewModel.validateEmail()) {
                         _sendMagicLink();
                       }
                     },
                   ),
-                  if (_loginViewModel.message != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      _loginViewModel.message!,
-                      style: TextStyle(
-                        color: _loginViewModel.message!.startsWith('Error') ? Colors.red : Colors.green,
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                  const SizedBox(height: 8),
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
