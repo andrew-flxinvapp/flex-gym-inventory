@@ -1,5 +1,8 @@
 import '../../theme/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import '../widgets/snackbar.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
@@ -155,6 +158,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
               ),
               const SizedBox(height: 24),
+              if (kDebugMode) ...[ //REMOVE IN PRODUCTION
+                PrimaryButton(
+                  label: 'Show Test Snackbar',
+                  onPressed: () {
+                    showFlexSnackbarFromUiMessage(
+                      context,
+                      UiMessage('Test Success', subtitle: 'This is a demo', type: UiMessageType.success),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+              ],
+              
             ],
           ),
         ),

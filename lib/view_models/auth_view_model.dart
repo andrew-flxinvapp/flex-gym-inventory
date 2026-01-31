@@ -31,9 +31,9 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.signInWithMagicLink(email);
       _setMessage(UiMessage('Magic link sent — check your email.', type: UiMessageType.info));
     } on AuthException catch (ae) {
-      _setMessage(ae.message ?? 'Unable to send magic link');
+      _setMessage(UiMessage(ae.message ?? 'Unable to send magic link', type: UiMessageType.error));
     } catch (e) {
-      _setMessage('Error: ${e.toString()}');
+      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
     } finally {
       _setLoading(false);
     }
@@ -48,9 +48,9 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.signUp(email);
       _setMessage(UiMessage('Sign up successful. Check your email to verify.', type: UiMessageType.success));
     } on AuthException catch (ae) {
-      _setMessage(ae.message ?? 'Sign up failed');
+      _setMessage(UiMessage(ae.message ?? 'Sign up failed', type: UiMessageType.error));
     } catch (e) {
-      _setMessage('Error: ${e.toString()}');
+      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
     } finally {
       _setLoading(false);
     }
@@ -64,9 +64,9 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.resendMagicLink(email);
       _setMessage(UiMessage('Magic link resent.', type: UiMessageType.info));
     } on AuthException catch (ae) {
-      _setMessage(ae.message ?? 'Unable to resend magic link');
+      _setMessage(UiMessage(ae.message ?? 'Unable to resend magic link', type: UiMessageType.error));
     } catch (e) {
-      _setMessage('Error: ${e.toString()}');
+      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
     } finally {
       _setLoading(false);
     }
@@ -79,9 +79,9 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.signOut();
       _setMessage(null);
     } on AuthException catch (ae) {
-      _setMessage(ae.message ?? 'Sign out failed');
+      _setMessage(UiMessage(ae.message ?? 'Sign out failed', type: UiMessageType.error));
     } catch (e) {
-      _setMessage('Error: ${e.toString()}');
+      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
     } finally {
       _setLoading(false);
     }

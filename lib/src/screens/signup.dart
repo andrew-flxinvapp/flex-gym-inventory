@@ -26,7 +26,6 @@ class _SignupScreenState extends State<SignupScreen> {
   // Optional local controllers for additional profile fields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// Kick off the sign-up flow using the view model.
   void _performSignUp() {

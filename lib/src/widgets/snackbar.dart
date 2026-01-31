@@ -13,27 +13,28 @@ void showFlexSnackbar(
   final overlay = Overlay.of(context);
   late OverlayEntry overlayEntry;
   overlayEntry = OverlayEntry(
-    builder: (context) => Positioned(
-      bottom: 40,
-      left: 24,
-      right: 24,
-      child: Material(
-        color: Colors.transparent,
-        child: FlexSnackbar(
-          title: title,
-          subtitle: subtitle,
-          type: type,
-          onClose: () {
-            overlayEntry.remove();
-          },
+    builder: (context) {
+      final topOffset = MediaQuery.of(context).padding.top + 16;
+      return Positioned(
+        top: topOffset,
+        left: 24,
+        right: 24,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedFlexSnackbar(
+            title: title,
+            subtitle: subtitle,
+            type: type,
+            duration: duration,
+            onDismissed: () {
+              if (overlayEntry.mounted) overlayEntry.remove();
+            },
+          ),
         ),
-      ),
-    ),
+      );
+    },
   );
   overlay.insert(overlayEntry);
-  Future.delayed(duration, () {
-    if (overlayEntry.mounted) overlayEntry.remove();
-  });
 }
 
 void showFlexSnackbarFromUiMessage(BuildContext context, UiMessage message,
@@ -51,7 +52,6 @@ void showFlexSnackbarFromUiMessage(BuildContext context, UiMessage message,
       type = SnackbarType.update;
       break;
     case UiMessageType.error:
-    default:
       type = SnackbarType.stop;
       break;
   }
@@ -174,6 +174,70 @@ class FlexSnackbar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
         ],
+      ),
+    );
+  }
+}
+
+class AnimatedFlexSnackbar extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final SnackbarType type;
+  final Duration duration;
+  final VoidCallback? onDismissed;
+
+  const AnimatedFlexSnackbar({
+    super.key,
+    required this.title,
+    this.subtitle,
+    required this.type,
+    this.duration = const Duration(seconds: 3),
+    this.onDismissed,
+  });
+
+  @override
+  State<AnimatedFlexSnackbar> createState() => _AnimatedFlexSnackbarState();
+}
+
+class _AnimatedFlexSnackbarState extends State<AnimatedFlexSnackbar>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 300),
+  );
+  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
+    begin: const Offset(0, -1),
+    end: Offset.zero,
+  ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.forward();
+    Future.delayed(widget.duration, () => _hide());
+  }
+
+  void _hide() async {
+    if (!mounted) return;
+    await _controller.reverse();
+    widget.onDismissed?.call();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _offsetAnimation,
+      child: FlexSnackbar(
+        title: widget.title,
+        subtitle: widget.subtitle,
+        type: widget.type,
+        onClose: _hide,
       ),
     );
   }

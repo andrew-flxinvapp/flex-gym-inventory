@@ -3,7 +3,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../../view_models/auth_view_model.dart';
 import '../widgets/snackbar.dart';
-import 'package:flex_gym_inventory/src/models/ui_message.dart';
+// import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 // Verify Email Screen
 // This screen instructs users to check their email for a magic link to continue sign in or sign up.
@@ -41,6 +41,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     _authViewModel.dispose();
     super.dispose();
   }
+  @override
   void initState() {
     super.initState();
     _authViewModel.addListener(() {
