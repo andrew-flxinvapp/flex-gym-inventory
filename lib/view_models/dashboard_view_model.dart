@@ -49,11 +49,20 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
   DashboardViewModel()
       : super(
           DashboardState(
+            // Ensure every `EquipmentCategory` has at least one item for
+            // demo purposes so the dashboard arc chart always displays all
+            // categories in the legend and slices.
             categoryCounts: {
-              EquipmentCategory.specialty: 5,
-              EquipmentCategory.weights: 12,
+              EquipmentCategory.weights: 23,
+              EquipmentCategory.specialty: 0,
               EquipmentCategory.machines: 2,
-              EquipmentCategory.other: 18,
+              EquipmentCategory.storage: 3,
+              EquipmentCategory.racks: 1,
+              EquipmentCategory.attachments: 10,
+              EquipmentCategory.benches: 1,
+              EquipmentCategory.accessories: 4,
+              EquipmentCategory.safety: 4,
+              EquipmentCategory.other: 3,
             },
             gyms: [
               DashboardGym(
