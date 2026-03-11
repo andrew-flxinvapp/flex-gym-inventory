@@ -1,5 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
+import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -27,6 +32,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  final TextEditingController linkController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +96,11 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 CustomTextInputField(
                   hintText: 'Name',
                   showAsterisk: true,
+                  controller: nameController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<WishlistType>(
-                  hintText: 'Item Type',
+                  hintText: 'Select Type',
                   items: WishlistType.values,
                   value: selectedItemType,
                   showAsterisk: true,
@@ -112,7 +119,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
-                  hintText: 'Category',
+                  hintText: 'Select Category',
                   items: EquipmentCategory.values,
                   value: selectedCategory,
                   showAsterisk: true,
@@ -133,10 +140,11 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 CustomTextInputField(
                   hintText: 'Brand',
                   showAsterisk: true,
+                  controller: brandController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<WishlistPriority>(
-                  hintText: 'Priority',
+                  hintText: 'Select Priority',
                   items: WishlistPriority.values,
                   value: selectedPriority,
                   showAsterisk: true,
@@ -157,17 +165,45 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 CustomTextInputField(
                   hintText: 'Link (URL)',
                   showAsterisk: false,
+                  controller: linkController,
                 ),
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Notes',
                   maxLines: 3,
+                  controller: notesController,
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
                   label: 'Save',
-                  onPressed: () {
-                    // TODO: Implement save logic
+                  onPressed: () async {
+                    if (!(_formKey.currentState?.validate() ?? false)) return;
+                    try {
+                      final user = Supabase.instance.client.auth.currentUser;
+                      final userId = user?.id ?? 'local';
+                      final repo = WishlistRepository();
+                      final created = await repo.createWishlist(
+                        userId: userId,
+                        name: nameController.text.trim(),
+                        wishlistType: selectedItemType ?? WishlistType.newItem,
+                        category: selectedCategory ?? EquipmentCategory.other,
+                        brand: brandController.text.trim(),
+                        priority: selectedPriority ?? WishlistPriority.medium,
+                        productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
+                        notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                      );
+
+                      showFlexSnackbarFromUiMessage(
+                        context,
+                        UiMessage('Wishlist item saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                      );
+                      Navigator.of(context).pop(created);
+                    } catch (e) {
+                      showFlexSnackbarFromUiMessage(
+                        context,
+                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(height: 16),

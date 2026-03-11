@@ -1,6 +1,3 @@
-import 'package:flex_gym_inventory/src/models/equipment_model.dart';
-import 'package:flex_gym_inventory/src/models/gym_model.dart';
-import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_theme.dart';
@@ -10,7 +7,7 @@ import 'routes/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'service/deeplink_service.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'service/isar_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import 'package:flex_gym_inventory/src/utils/pending_metadata_store.dart';
@@ -27,11 +24,8 @@ void main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  final dir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open(
-    [GymSchema,EquipmentSchema,WishlistSchema],
-    directory: dir.path,
-  );
+  // Initialize Isar via the central service so repositories can use IsarService.isar
+  await IsarService.openIsar();
 
   // Initialize deeplink handling and register a simple handler that
   // navigates to the verify-email screen and forwards parsed params.
@@ -95,7 +89,7 @@ void main() async {
   });
   await DeeplinkService.instance.init();
 
-  runApp(ProviderScope(child: MyApp(isar: isar)));
+  runApp(ProviderScope(child: MyApp(isar: IsarService.isar)));
 }
 
 class MyApp extends StatelessWidget {

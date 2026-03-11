@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/providers/auth_providers.dart';
 
 /// Small model used by the dashboard for gym summaries.
 class DashboardGym {
@@ -46,41 +49,90 @@ class DashboardState {
 /// StateNotifier that manages the dashboard data. Start with sample data and
 /// provide refresh() for later wiring to repositories.
 class DashboardViewModel extends StateNotifier<DashboardState> {
-  DashboardViewModel()
+  final Ref ref;
+
+  DashboardViewModel(this.ref)
       : super(
           DashboardState(
             // Ensure every `EquipmentCategory` has at least one item for
             // demo purposes so the dashboard arc chart always displays all
             // categories in the legend and slices.
             categoryCounts: {
-              EquipmentCategory.weights: 23,
+              EquipmentCategory.weights: 0,
               EquipmentCategory.specialty: 0,
-              EquipmentCategory.machines: 2,
-              EquipmentCategory.storage: 3,
-              EquipmentCategory.racks: 1,
-              EquipmentCategory.attachments: 10,
-              EquipmentCategory.benches: 1,
-              EquipmentCategory.accessories: 4,
-              EquipmentCategory.safety: 4,
-              EquipmentCategory.other: 3,
+              EquipmentCategory.machines: 0,
+              EquipmentCategory.storage: 0,
+              EquipmentCategory.racks: 0,
+              EquipmentCategory.attachments: 0,
+              EquipmentCategory.benches: 0,
+              EquipmentCategory.accessories: 0,
+              EquipmentCategory.safety: 0,
+              EquipmentCategory.other: 0,
             },
-            gyms: [
-              DashboardGym(
-                gymName: 'Flex Home Gym',
-                equipmentCount: 27,
-                lastUpdated: DateTime.now().subtract(const Duration(days: 3)),
-              ),
-            ],
+            gyms: [],
           ),
-        );
+        ) {
+    // Trigger a refresh after construction so the dashboard loads when the
+    // provider is first created (e.g., on app startup or when the dashboard
+    // view is first shown).
+    Future.microtask(() => refresh());
+  }
 
-  /// Simulate a refresh; later replace with a repository call.
+  /// Refresh dashboard data from repositories.
   Future<void> refresh() async {
     state = state.copyWith(loading: true, error: null);
     try {
-      await Future<void>.delayed(const Duration(milliseconds: 400));
-      // In a real implementation, load from a GymRepository and update state.
-      state = state.copyWith(loading: false);
+      final auth = ref.read(authServiceProvider);
+      final userId = auth.currentUser?.id;
+      if (userId == null) {
+        state = state.copyWith(loading: false, error: 'No authenticated user');
+        return;
+      }
+
+      final gymRepo = GymRepository();
+      final equipmentRepo = EquipmentRepository();
+
+      final gyms = await gymRepo.getAllForUser(userId);
+
+      // Initialize category counts with zero for every enum value
+      final Map<EquipmentCategory, int> counts = {
+        for (final c in EquipmentCategory.values) c: 0,
+      };
+
+      final List<DashboardGym> dashboardGyms = [];
+
+      for (final g in gyms) {
+        final items = await equipmentRepo.getAllForGym(g.gymId);
+        // Sum quantities (if quantity is not present, default to 1)
+        final equipmentCount = items.fold<int>(0, (acc, e) => acc + e.quantity);
+
+        // Increment category counts
+        for (final e in items) {
+          final existing = counts[e.category] ?? 0;
+          counts[e.category] = existing + e.quantity;
+        }
+
+        // Determine lastUpdated: newest purchaseDate among equipments, or gym.createdDate
+        DateTime lastUpdated = g.createdDate;
+        for (final e in items) {
+          if (e.purchaseDate != null && e.purchaseDate!.isAfter(lastUpdated)) {
+            lastUpdated = e.purchaseDate!;
+          }
+        }
+
+        dashboardGyms.add(DashboardGym(
+          gymName: g.name,
+          equipmentCount: equipmentCount,
+          lastUpdated: lastUpdated,
+        ));
+      }
+
+      state = state.copyWith(
+        loading: false,
+        categoryCounts: counts,
+        gyms: dashboardGyms,
+        error: null,
+      );
     } catch (e) {
       state = state.copyWith(loading: false, error: e.toString());
     }
@@ -90,5 +142,5 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
 /// Provider exposing the dashboard state and notifier.
 final dashboardProvider =
     StateNotifierProvider<DashboardViewModel, DashboardState>((ref) {
-  return DashboardViewModel();
+  return DashboardViewModel(ref);
 });

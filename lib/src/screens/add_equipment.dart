@@ -1,6 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/models/gym_model.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -24,7 +31,8 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
-  String? selectedGym;
+  Gym? selectedGym;
+  List<Gym> gyms = [];
   EquipmentCategory? selectedCategory;
   TrainingStyle? selectedTrainingStyle;
   EquipmentCondition? selectedCondition;
@@ -34,8 +42,28 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController(text: '1');
   final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
+  final TextEditingController valueController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGyms();
+  }
+
+  Future<void> _loadGyms() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      final userId = user?.id ?? 'local';
+      final repo = GymRepository();
+      final list = await repo.getAllForUser(userId);
+      setState(() {
+        gyms = list;
+      });
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,19 +130,19 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 ),
                 // ...existing code...
                 const SizedBox(height: 16),
-                CustomDropdownField<String>(
+                CustomDropdownField<Gym>(
                   hintText: 'Select Gym',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
+                  items: gyms,
                   value: selectedGym,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.name,
                   onChanged: (value) {
                     setState(() {
                       selectedGym = value;
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Gym selection is required';
                     }
                     return null;
@@ -124,10 +152,11 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 CustomTextInputField(
                   hintText: 'Name',
                   showAsterisk: true,
+                  controller: nameController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
-                  hintText: 'Category',
+                  hintText: 'Select Category',
                   items: EquipmentCategory.values,
                   value: selectedCategory,
                   showAsterisk: true,
@@ -148,15 +177,17 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 CustomTextInputField(
                   hintText: 'Brand',
                   showAsterisk: true,
+                  controller: brandController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Model',
                   showAsterisk: true,
+                  controller: modelController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<TrainingStyle>(
-                  hintText: 'Training Style',
+                  hintText: 'Select Training Style',
                   items: TrainingStyle.values,
                   value: selectedTrainingStyle,
                   showAsterisk: true,
@@ -178,14 +209,18 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   leftPlaceholder: 'Quantity',
                   showAsterisk: true,
                   rightLabel: 'Pair:',
-                  value: false, // TODO: Connect to state
+                  value: isPair,
+                  controller: quantityController,
+                  onTextChanged: (text) {},
                   onChanged: (val) {
-                    // TODO: Handle toggle change
+                    setState(() {
+                      isPair = val;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCondition>(
-                  hintText: 'Condition',
+                  hintText: 'Select Condition',
                   items: EquipmentCondition.values,
                   value: selectedCondition,
                   showAsterisk: true,
@@ -207,6 +242,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   hintText: 'Purchase Date',
                   onDateChanged: (date) {
                     // Handle selected date if needed
+                    selectedPurchaseDate = date;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -214,26 +250,66 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   leftPlaceholder: 'Value',
                   showAsterisk: false,
                   rightLabel: 'Estimate:',
-                  value: false, // TODO: Connect to state
+                  value: isEstimateValue,
+                  controller: valueController,
+                  onTextChanged: (text) {},
                   onChanged: (val) {
-                    // TODO: Handle toggle change
+                    setState(() {
+                      isEstimateValue = val;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Serial Number',
                   showAsterisk: false,
+                  controller: serialController,
                 ),
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Maintenance Notes',
                   maxLines: 3,
+                  controller: maintenanceNotesController,
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
                   label: 'Save',
-                  onPressed: () {
-                    // TODO: Implement save logic
+                  onPressed: () async {
+                    if (!(_formKey.currentState?.validate() ?? false)) return;
+                    try {
+                      final repo = EquipmentRepository();
+                      final qty = int.tryParse(quantityController.text) ?? 1;
+                      final val = double.tryParse(valueController.text);
+                      final gymId = selectedGym?.gymId ?? 'GYM-0001';
+
+                      final created = await repo.createEquipment(
+                        gymId: gymId,
+                        name: nameController.text.trim(),
+                        category: selectedCategory ?? EquipmentCategory.other,
+                        brand: brandController.text.trim(),
+                        model: modelController.text.trim(),
+                        trainingStyle: selectedTrainingStyle ?? TrainingStyle.general,
+                        quantity: qty,
+                        condition: selectedCondition ?? EquipmentCondition.good,
+                        purchaseDate: selectedPurchaseDate,
+                        value: val,
+                        isPair: isPair,
+                        isEstimate: isEstimateValue,
+                        serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
+                        maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
+                      );
+
+                      showFlexSnackbarFromUiMessage(
+                        context,
+                        UiMessage('Equipment saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                      );
+                      Navigator.of(context).pop(created);
+                    } catch (e) {
+                      showFlexSnackbarFromUiMessage(
+                        context,
+                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(height: 16),

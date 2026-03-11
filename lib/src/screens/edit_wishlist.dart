@@ -1,4 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
+import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -7,6 +12,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/snackbar.dart';
 
 
 class EditWishlistScreen extends StatefulWidget {
@@ -20,12 +26,13 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
-  String? selectedCategory;
-  String? selectedItemType;
-  String? selectedPriority;
+  EquipmentCategory? selectedCategory;
+  WishlistType? selectedItemType;
+  WishlistPriority? selectedPriority;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  final TextEditingController linkController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,34 +98,38 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     showAsterisk: true,
                   ),
                   const SizedBox(height: 20),
-                  CustomDropdownField<String>(
+                  CustomDropdownField<WishlistType>(
                     hintText: 'Item Type',
-                    items: const ['New Item', 'Replacement'], // TODO: Replace with dynamic gym list
-                    value: null,
+                    items: WishlistType.values,
+                    value: selectedItemType,
                     showAsterisk: true,
-                    getLabel: (item) => item,
+                    getLabel: (item) => item.label,
                     onChanged: (value) {
-                      // TODO: Handle gym selection
+                      setState(() {
+                        selectedItemType = value;
+                      });
                     },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null) {
                         return 'Item Type selection is required';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 20),
-                  CustomDropdownField<String>(
+                  CustomDropdownField<EquipmentCategory>(
                     hintText: 'Category',
-                    items: const ['Weight', 'Implement', 'Machine'], // TODO: Replace with dynamic equipment list
-                    value: null,
+                    items: EquipmentCategory.values,
+                    value: selectedCategory,
                     showAsterisk: true,
-                    getLabel: (item) => item,
+                    getLabel: (item) => item.label,
                     onChanged: (value) {
-                      // TODO: Handle equipment type selection
+                      setState(() {
+                        selectedCategory = value;
+                      });
                     },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null) {
                         return 'Category selection is required';
                       }
                       return null;
@@ -130,17 +141,19 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     showAsterisk: true,
                   ),
                   const SizedBox(height: 20),
-                  CustomDropdownField<String>(
+                  CustomDropdownField<WishlistPriority>(
                     hintText: 'Priority',
-                    items: const ['Low', 'Medium', 'High'], // TODO: Replace with dynamic equipment list
-                    value: null,
+                    items: WishlistPriority.values,
+                    value: selectedPriority,
                     showAsterisk: true,
-                    getLabel: (item) => item,
+                    getLabel: (item) => item.label,
                     onChanged: (value) {
-                      // TODO: Handle equipment type selection
+                      setState(() {
+                        selectedPriority = value;
+                      });
                     },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null) {
                         return 'Priority selection is required';
                       }
                       return null;
@@ -159,8 +172,62 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   const SizedBox(height: 32),
                   PrimaryButton(
                     label: 'Save',
-                    onPressed: () {
-                      // TODO: Implement save logic
+                    onPressed: () async {
+                      if (!(_formKey.currentState?.validate() ?? false)) return;
+                      final ctx = context;
+                      try {
+                        final repo = WishlistRepository();
+
+                        // Try to detect an existing Isar id from route args
+                        final args = ModalRoute.of(ctx)?.settings.arguments;
+                        int? isarId;
+                        if (args is int) isarId = args;
+                        if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+
+                        if (isarId != null) {
+                          final updated = await repo.updateWishlist(
+                            id: isarId,
+                            name: nameController.text.trim().isEmpty ? null : nameController.text.trim(),
+                            wishlistType: selectedItemType,
+                            category: selectedCategory,
+                            brand: brandController.text.trim().isEmpty ? null : brandController.text.trim(),
+                            priority: selectedPriority,
+                            productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
+                            notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                          );
+                          if (!mounted) return;
+                          showFlexSnackbarFromUiMessage(
+                            ctx,
+                            UiMessage('Wishlist item updated', subtitle: 'Updated ${updated?.name ?? ''}', type: UiMessageType.success),
+                          );
+                          Navigator.of(ctx).pop(updated);
+                        } else {
+                          final user = Supabase.instance.client.auth.currentUser;
+                          final userId = user?.id ?? 'local';
+                          final created = await repo.createWishlist(
+                            userId: userId,
+                            name: nameController.text.trim(),
+                            wishlistType: selectedItemType ?? WishlistType.newItem,
+                            category: selectedCategory ?? EquipmentCategory.other,
+                            brand: brandController.text.trim(),
+                            priority: selectedPriority ?? WishlistPriority.medium,
+                            productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
+                            notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                          );
+                          if (!mounted) return;
+                          showFlexSnackbarFromUiMessage(
+                            ctx,
+                            UiMessage('Wishlist item saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                          );
+                          Navigator.of(ctx).pop(created);
+                        }
+                      } catch (e) {
+                        if (!mounted) return;
+                        showFlexSnackbarFromUiMessage(
+                          ctx,
+                          UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                        );
+                      }
                     },
                   ),
                   const SizedBox(height: 16),

@@ -1,8 +1,8 @@
 import '../../theme/app_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import '../widgets/snackbar.dart';
-import 'package:flex_gym_inventory/src/models/ui_message.dart';
+// import 'package:flutter/foundation.dart';
+// import '../widgets/snackbar.dart';
+// import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
@@ -23,14 +23,31 @@ class DashboardScreen extends ConsumerStatefulWidget {
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
+    with WidgetsBindingObserver {
 
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // When the app resumes from background, refresh the dashboard data.
+      ref.read(dashboardProvider.notifier).refresh();
+    }
   }
 
   @override
@@ -75,16 +92,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Text('Add Wishlist Item', style: TextStyle(color: AppTheme.lightTextPrimary)),
               ),
             ],
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case DashboardMenuAction.addGym:
-                  Navigator.of(context).pushNamed(AppRoutes.addGym);
+                  await Navigator.of(context).pushNamed(AppRoutes.addGym);
+                  await ref.read(dashboardProvider.notifier).refresh();
                   break;
                 case DashboardMenuAction.addEquipment:
-                  Navigator.of(context).pushNamed(AppRoutes.addEquipment);
+                  await Navigator.of(context).pushNamed(AppRoutes.addEquipment);
+                  await ref.read(dashboardProvider.notifier).refresh();
                   break;
                 case DashboardMenuAction.addWishlist:
-                  Navigator.of(context).pushNamed(AppRoutes.addWishlist);
+                  await Navigator.of(context).pushNamed(AppRoutes.addWishlist);
+                  await ref.read(dashboardProvider.notifier).refresh();
                   break;
               }
             },
@@ -144,11 +164,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 16),
               PrimaryButton(
                 label: 'Add Gym',
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.addGym);
+                onPressed: () async {
+                  await Navigator.of(context).pushNamed(AppRoutes.addGym);
+                  await ref.read(dashboardProvider.notifier).refresh();
                 },
               ),
-              const SizedBox(height: 24),
+              /*const SizedBox(height: 24),
               PrimaryButton(
                 label: 'Component Gallery',
                 onPressed: () {
@@ -168,7 +189,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 const SizedBox(height: 24),
               ],
-              
+              */
             ],
           ),
         ),

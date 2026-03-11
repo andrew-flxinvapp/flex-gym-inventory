@@ -1,5 +1,13 @@
 import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flutter/material.dart';
+// ignore_for_file: use_build_context_synchronously
+import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/models/gym_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -22,10 +30,11 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
-  String? selectedGym;
-  String? selectedCategory;
-  String? selectedTrainingStyle;
-  String? selectedCondition;
+  Gym? selectedGym;
+  List<Gym> gyms = [];
+  EquipmentCategory? selectedCategory;
+  TrainingStyle? selectedTrainingStyle;
+  EquipmentCondition? selectedCondition;
   DateTime? selectedPurchaseDate;
   bool isPair = false;
   bool isEstimateValue = false;
@@ -34,6 +43,24 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   final TextEditingController modelController = TextEditingController();
   final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGyms();
+  }
+
+  Future<void> _loadGyms() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      final userId = user?.id ?? 'local';
+      final repo = GymRepository();
+      final list = await repo.getAllForUser(userId);
+      setState(() {
+        gyms = list;
+      });
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +127,19 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                 ),
                 // ...existing code...
                 const SizedBox(height: 16),
-                CustomDropdownField<String>(
+                CustomDropdownField<Gym>(
                   hintText: 'Select Gym',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
-                  value: null,
+                  items: gyms,
+                  value: selectedGym,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.name,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    setState(() {
+                      selectedGym = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Gym selection is required';
                     }
                     return null;
@@ -122,17 +151,19 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<EquipmentCategory>(
                   hintText: 'Category',
-                  items: const ['Flex Home Gym', 'Garage Gym', 'Studio Gym'], // TODO: Replace with dynamic gym list
-                  value: null,
+                  items: EquipmentCategory.values,
+                  value: selectedCategory,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle gym selection
+                    setState(() {
+                      selectedCategory = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Category selection is required';
                     }
                     return null;
@@ -149,17 +180,19 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   showAsterisk: true,
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<TrainingStyle>(
                   hintText: 'Training Style',
-                  items: const ['Dumbbell', 'Barbell', 'Bench'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: TrainingStyle.values,
+                  value: selectedTrainingStyle,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedTrainingStyle = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Training style selection is required';
                     }
                     return null;
@@ -176,17 +209,19 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                CustomDropdownField<String>(
+                CustomDropdownField<EquipmentCondition>(
                   hintText: 'Condition',
-                  items: const ['New', 'Used', 'Refurbished'], // TODO: Replace with dynamic equipment list
-                  value: null,
+                  items: EquipmentCondition.values,
+                  value: selectedCondition,
                   showAsterisk: true,
-                  getLabel: (item) => item,
+                  getLabel: (item) => item.label,
                   onChanged: (value) {
-                    // TODO: Handle equipment type selection
+                    setState(() {
+                      selectedCondition = value;
+                    });
                   },
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
+                    if (value == null) {
                       return 'Condition selection is required';
                     }
                     return null;
@@ -222,8 +257,68 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                 const SizedBox(height: 32),
                 PrimaryButton(
                   label: 'Save',
-                  onPressed: () {
-                    // TODO: Implement save logic
+                  onPressed: () async {
+                    if (!(_formKey.currentState?.validate() ?? false)) return;
+                    final ctx = context;
+                    try {
+                      final repo = EquipmentRepository();
+
+                      // Try to detect an existing Isar id from route args
+                      final args = ModalRoute.of(ctx)?.settings.arguments;
+                      int? isarId;
+                      if (args is int) isarId = args;
+                      if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+
+                      if (isarId != null) {
+                        final updated = await repo.updateEquipment(
+                          id: isarId,
+                          name: nameController.text.trim().isEmpty ? null : nameController.text.trim(),
+                          category: selectedCategory,
+                          brand: brandController.text.trim().isEmpty ? null : brandController.text.trim(),
+                          model: modelController.text.trim().isEmpty ? null : modelController.text.trim(),
+                          trainingStyle: selectedTrainingStyle,
+                          quantity: null,
+                          condition: selectedCondition,
+                          purchaseDate: selectedPurchaseDate,
+                          value: null,
+                          isPair: null,
+                          isEstimate: null,
+                          serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
+                          maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
+                        );
+                        if (!mounted) return;
+                        showFlexSnackbarFromUiMessage(
+                          ctx,
+                          UiMessage('Equipment updated', subtitle: 'Updated ${updated?.name ?? ''}', type: UiMessageType.success),
+                        );
+                        Navigator.of(ctx).pop(updated);
+                      } else {
+                        // Create new equipment (best-effort defaults)
+                        final gymId = selectedGym?.gymId ?? 'GYM-0001';
+                        final created = await repo.createEquipment(
+                          gymId: gymId,
+                          name: nameController.text.trim(),
+                          category: selectedCategory ?? EquipmentCategory.other,
+                          brand: brandController.text.trim(),
+                          model: modelController.text.trim(),
+                          trainingStyle: selectedTrainingStyle ?? TrainingStyle.general,
+                          quantity: 1,
+                          condition: selectedCondition ?? EquipmentCondition.good,
+                        );
+                        if (!mounted) return;
+                        showFlexSnackbarFromUiMessage(
+                          ctx,
+                          UiMessage('Equipment saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                        );
+                        Navigator.of(ctx).pop(created);
+                      }
+                    } catch (e) {
+                      if (!mounted) return;
+                      showFlexSnackbarFromUiMessage(
+                        ctx,
+                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(height: 16),

@@ -1,4 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -113,8 +118,34 @@ class _AddGymScreenState extends State<AddGymScreen> {
               const SizedBox(height: 32),
               PrimaryButton(
                 label: 'Save',
-                onPressed: () {
-                  // TODO: Implement save logic
+                onPressed: () async {
+                  if (!(_formKey.currentState?.validate() ?? false)) return;
+                  final ctx = context;
+                  try {
+                    final user = Supabase.instance.client.auth.currentUser;
+                    final userId = user?.id ?? 'local';
+                    final gymId = 'GYM-${DateTime.now().millisecondsSinceEpoch}';
+                    final repo = GymRepository();
+                    final created = await repo.createGym(
+                      gymId: gymId,
+                      name: nameController.text.trim(),
+                      userId: userId,
+                      location: locationController.text.trim().isEmpty ? null : locationController.text.trim(),
+                      gymNotes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                    );
+                    if (!mounted) return;
+                    showFlexSnackbarFromUiMessage(
+                      ctx,
+                      UiMessage('Gym saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                    );
+                    Navigator.of(ctx).pop(created);
+                  } catch (e) {
+                    if (!mounted) return;
+                    showFlexSnackbarFromUiMessage(
+                      ctx,
+                      UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 16),
