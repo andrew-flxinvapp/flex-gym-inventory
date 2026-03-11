@@ -27,63 +27,62 @@ Follow along:
 
 - Add and manage multiple gym locations
 - Track equipment with custom categories
-- View detailed equipment info and history
-- Export inventory to CSV
-- Light and dark mode UI
-- Adaptive UI for both iOS and Android
-- Designed with simplicity and speed in mind
+# Flex Gym Inventory
 
----
+Lightweight mobile app to track and manage gym equipment — built with Flutter for iOS and Android.
 
-## Getting Started
+Status: In development (public)
 
-### Installation
+What is this
+- Purpose: track equipment across multiple gym locations, view history, and export CSVs.
+- Target: small gyms, garage gyms, and individual owners who need a simple inventory tool.
 
-When realeased, download from the Apple AppStore or the Google Play Store.
-
-## Folder Structure
-
-- **`lib/`**: Main application code, organized as follows:
-  - **`config/`**: Configuration files (e.g., `size_config.dart` for responsive design).
-  - **`constant/`**: Centralized constants for consistency.
-  - **`enum/`**: Enumerations like `view_state.dart` for managing UI states.
-  - **`routes/`**: Navigation management with `routes.dart`.
-  - **`service/`**: Utility and service classes (e.g., `navigation_service.dart`).
-  - **`src/`**: Screen-specific components and widgets.
-    - **`screens/`**: Contains all screen files.
-    - **`widgets/`**: Contains all widget files.
-    - **`models/`**: Contains all model files.
-    - **`controllers/`**: Contains all controller files.
-  - **`themes/`**: Centralized theme files for consistent styling.
-    - **`app_theme.dart`**: Main theme file.
-  - **`view_models/`**: ViewModel classes for state management.
-  - **`assets/`**: Contains all assets like images and fonts.
-    - **`images/`**: Contains all image files.
-    - **`fonts/`**: Contains all font files.
-    - **`icons/`**: Contains all icon files.
-  - **`logging_handler.dart`**: Centralized logging handler for consistent logging practices.
-  - **`main.dart`**: Entry point of the application.
-  - **`pubspec.yaml`**: Dependency management and asset declaration.
-  - **`README.md`**: Project documentation and guidelines.
-
-### Requirements
-
-- Flutter SDK
-- Dart 3.x
-- Hive + hive_flutter
-- Run on iOS Simulator or Android Emulator
-
-### File Structure
-
-## License
-
-This project is shared for transparency and learning purposes only.
-All code, designs, and assets are copyrighted and not licensed for reuse, modification, or redistribution without explicit permission from the author.
-
-If you’re interested in contributing or collaborating, please reach out directly.
-
-### Run the App
+Quick start (development)
+1. Install Flutter (stable channel) and ensure Dart 3.
+2. From the project root:
 
 ```bash
+cd flex_gym_inventory
 flutter pub get
 flutter run
+```
+
+Prerequisites
+- Flutter SDK (stable)
+- Xcode (for iOS) or Android Studio (for Android)
+- Optional: Supabase project (for auth). Provide `SUPABASE_URL` and `SUPABASE_ANON_KEY` via environment variables for local testing.
+
+Project structure (high level)
+- `lib/` — app code (routes, screens, widgets, view_models)
+- `android/`, `ios/` — platform runners and configuration
+- `test/` — unit and widget tests
+- `docs/` — design notes and onboarding docs (see `docs/auth_onboarding_review.md`)
+
+Auth & onboarding
+- Uses Supabase magic-link authentication by default. See `docs/auth_onboarding_review.md` for flow, gaps, and recommended fixes.
+
+Notifications
+- The app requests runtime notification permission on iOS and Android. No push provider is configured by default — follow docs in `docs/` before enabling server push.
+
+Running tests
+```bash
+cd flex_gym_inventory
+flutter test
+# or run a specific test
+flutter test test/view_models/sign_up_view_model_test.dart
+```
+
+Development notes
+- iOS: enable the "Push Notifications" capability in Xcode when you integrate APNs.
+- Android: Android 13+ requires `POST_NOTIFICATIONS` runtime permission (already added to the manifest).
+- Keep secrets out of VCS; use environment variables or a local `.env` not checked into source control.
+
+Contributing
+- Open issues or PRs. Keep changes small and include tests for new behavior.
+
+License & contact
+- This repository is authored by the project owner. Contact via repository issues or the social links below for collaboration.
+
+Social
+- Bluesky: @heavydevco.bsky.social
+- X/Twitter: @heavydevco

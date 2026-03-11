@@ -1,11 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
 import 'package:flex_gym_inventory/view_models/sign_up_view_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
+
+class _MockSupabaseClient extends Mock implements supa.SupabaseClient {}
 
 class _RecordingAuthRepository extends AuthRepository {
   bool called = false;
   String? email;
-  _RecordingAuthRepository() : super(client: null);
+  _RecordingAuthRepository() : super(client: _MockSupabaseClient());
   @override
   Future<void> signUp(String email) async {
     called = true;
@@ -15,7 +19,7 @@ class _RecordingAuthRepository extends AuthRepository {
 
 class _SuccessfulAuthRepository extends AuthRepository {
   String? receivedEmail;
-  _SuccessfulAuthRepository() : super(client: null);
+  _SuccessfulAuthRepository() : super(client: _MockSupabaseClient());
   @override
   Future<void> signUp(String email) async {
     receivedEmail = email;
@@ -24,7 +28,7 @@ class _SuccessfulAuthRepository extends AuthRepository {
 
 class _ThrowingAuthRepository extends AuthRepository {
   final AuthException exception;
-  _ThrowingAuthRepository(this.exception) : super(client: null);
+  _ThrowingAuthRepository(this.exception) : super(client: _MockSupabaseClient());
   @override
   Future<void> signUp(String email) async {
     throw exception;

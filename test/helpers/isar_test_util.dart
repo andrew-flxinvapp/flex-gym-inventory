@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
@@ -11,7 +11,7 @@ import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 /// Usage: Call openIsarTestInstance() in setUpAll, and clearIsarTestInstance() in tearDown.
 Future<Isar> openIsarTestInstance() async {
   try {
-    final dir = await getTemporaryDirectory();
+    final dir = await Directory.systemTemp.createTemp('isar_test_');
     return await Isar.open(
       [
         GymSchema,

@@ -59,10 +59,10 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 6. Message handling inconsistency -COMPLETE-
 - Some screens rely on local `_message` variables, some use view model messages. Pick one approach for consistent SnackBar/inline feedback behavior.
 
-7. Notifications flow limited
+7. Notifications flow limited -COMPLETE-
 - `OptNotificationsScreen` writes `notificationsOn` metadata but does not request platform push notification permission or manage device tokens (FCM/APNs).
 
-8. Tests coverage gaps
+8. Test coverage gaps 
 - Unit tests exist for VMs but there are no widget or integration tests for the UI screens, deeplink handling, or `StartupRouterScreen` routing logic.
 
 
@@ -103,6 +103,7 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 - [ ] Run the app and confirm deeplink handler navigates to `VerifyEmailScreen` after a magic-link click.
 - [ ] Attempt sign-up and confirm whether email verification is expected (magic link) or immediate login (password flow).
 - [ ] For public testing, ensure `StartupRouterScreen` routes new users through onboarding.
+ - [ ] Pick a push provider (e.g., FCM, OneSignal, or native APNs) and integrate device-token retrieval and server-side delivery.
 
 Test commands (quick):
 

@@ -19,6 +19,7 @@ import '../src/screens/login.dart';
 import '../src/screens/app_details.dart';
 import '../src/screens/verify_email.dart';
 import '../src/screens/opt_notifications.dart';
+import '../src/screens/debug_device_token.dart';
 import '../src/screens/welcome.dart';
 import '../src/screens/onboarding_upgrade.dart';
 import '../src/screens/onboarding_complete.dart';
@@ -85,6 +86,7 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String aboutFlexRackley = '/about-flex-rackley';
   static const String defaultGymPicker = '/default-gym-picker';
+  static const String debugDeviceToken = '/debug-device-token';
 
   // Add more as needed
 }
@@ -137,6 +139,9 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),
   AppRoutes.defaultGymPicker: (context) => const DefaultGymScreen(),
+
+  // Debug / dev routes
+  AppRoutes.debugDeviceToken: (context) => const DebugDeviceTokenScreen(),
 
   // Add more as needed
 };

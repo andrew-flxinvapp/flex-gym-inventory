@@ -52,12 +52,14 @@ class SignUpViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     if (email.isEmpty) {
       _emailError = 'Please enter your email';
+      _setMessage(UiMessage('Please enter your email address.', type: UiMessageType.error));
       notifyListeners();
       return false;
     }
-    final emailRegex = RegExp(r"^[^@\\s]+@[^@\\s]+\.[^@\\s]+");
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
     if (!emailRegex.hasMatch(email)) {
       _emailError = 'Please enter a valid email';
+      _setMessage(UiMessage('Please enter a valid email address.', type: UiMessageType.error));
       notifyListeners();
       return false;
     }

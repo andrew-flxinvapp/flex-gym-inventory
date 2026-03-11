@@ -105,6 +105,53 @@ class AuthRepository {
     await localUserUpsert!(map);
   }
 
+  /// Register a device push notification token for the current user.
+  ///
+  /// This is a small helper used when the app integrates with a push
+  /// provider. For now it stores the token in user metadata under
+  /// `lastDeviceToken` and flips `notificationsOn` to true. Replace this
+  /// with a more robust server-side `device_tokens` table when ready.
+  Future<void> registerDeviceToken(String token, {String? platform}) async {
+    try {
+      final data = <String, dynamic>{'lastDeviceToken': token, 'notificationsOn': true};
+      if (platform != null) data['lastDevicePlatform'] = platform;
+      await _client.auth.updateUser(UserAttributes(data: data));
+    } catch (e, st) {
+      throw _mapToAuthException(e, st);
+    }
+  }
+
+  /// Upsert a device token row into a `device_tokens` table in Supabase.
+  ///
+  /// This is intentionally provider-agnostic: the app should obtain a
+  /// platform-specific token (APNs/FCM/OneSignal) and call this method to
+  /// persist it server-side. Later, your server or Supabase Function can use
+  /// these rows to send notifications through the provider of your choice.
+  Future<void> upsertDeviceToken({
+    required String token,
+    required String platform,
+    String? deviceId,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      final row = {
+        'user_id': user.id,
+        'token': token,
+        'platform': platform,
+        if (deviceId != null) 'device_id': deviceId,
+        'last_seen_at': DateTime.now().toUtc().toIso8601String(),
+      };
+
+      // Upsert using Supabase client. Assumes a `device_tokens` table exists
+      // with a unique constraint on (user_id, token) or similar.
+      await _client.from('device_tokens').upsert(row);
+    } catch (e, st) {
+      throw _mapToAuthException(e, st);
+    }
+  }
+
   /// Map low-level exceptions to a small AuthException domain type.
   AuthException _mapToAuthException(Object e, StackTrace st) {
     // supabase packages may throw objects with a `message` property. We

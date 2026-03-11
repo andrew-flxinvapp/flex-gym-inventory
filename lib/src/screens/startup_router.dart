@@ -32,14 +32,21 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
   }
 
   Future<void> _bootstrap() async {
-    final client = Supabase.instance.client;
-    final session = widget.testSession ?? client.auth.currentSession;
+    // Prefer an injected test session to avoid touching Supabase in tests.
+    Session? session = widget.testSession;
+    if (session == null) {
+      final client = Supabase.instance.client;
+      session = client.auth.currentSession;
+    }
 
     if (!mounted) return;
 
     if (session == null) {
       // No session → User not logged in → Go to Login / Sign Up screen
-      Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+      });
       return;
     }
 
@@ -48,10 +55,16 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     final onboardingComplete = onboardingRepo.isOnboardingComplete;
 
     if (onboardingComplete) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+      });
     } else {
       // Not complete — send the user into the onboarding flow.
-      Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingFeatureOne);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingFeatureOne);
+      });
     }
   }
 
