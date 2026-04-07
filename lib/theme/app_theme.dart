@@ -12,6 +12,7 @@ class AppTheme {
   static const Color lightTextSecondary = Color(0xFF94B0BE);
   static const Color lightAppBar = Color(0xFF023246);
   static const Color lightBottomNavBar = Color(0xFFFFFFFF);
+  static const Color dividers = Color(0xFFC4C4C9);
 
   static const Color darkPrimary = Color(0xFF287094);
   static const Color darkSecondary = Color(0xFF94B0BE);
@@ -45,9 +46,9 @@ class AppTheme {
       displayLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: lightTextPrimary),
       displayMedium: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: lightTextPrimary),
       displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.normal, color: lightTextPrimary),
+      titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: lightTextPrimary),
       titleMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      titleSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: lightTextPrimary),
+      titleSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: lightTextPrimary),
       bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: lightTextPrimary),
       bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: lightTextPrimary),
       bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: lightTextSecondary),

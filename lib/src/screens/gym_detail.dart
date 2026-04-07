@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import '../../enum/app_enums.dart';
 
 class GymDetailScreen extends StatelessWidget {
   const GymDetailScreen({super.key});
@@ -97,21 +98,24 @@ class GymDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     EquipmentCard(
-                      itemName: 'Rogue Ohio Bar',
+                      brand: 'Rogue Fitness',
+                      itemName: 'Ohio Bar',
                       quantity: 2,
-                      value: 325.00,
+                      category: EquipmentCategory.weights,
                     ),
                     const SizedBox(height: 16),
                     EquipmentCard(
-                      itemName: 'Rep PR-4000 Rack',
+                      brand: 'Rep Fitness',
+                      itemName: 'PR-4000 Rack',
                       quantity: 1,
-                      value: 1200.00,
+                      category: EquipmentCategory.racks,
                     ),
                     const SizedBox(height: 16),
                     EquipmentCard(
-                      itemName: 'Kabuki Strength Plates',
+                      brand: 'Kabuki Strength',
+                      itemName: 'Plates',
                       quantity: 8,
-                      value: 800.00,
+                      category: EquipmentCategory.weights,
                     ),
                   ],
                 ),

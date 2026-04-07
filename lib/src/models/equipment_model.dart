@@ -14,6 +14,9 @@ class Equipment {
   @Enumerated(EnumType.name)
   late EquipmentCategory category;
 
+  @Index()
+  String? imagePath;
+
   @Index(caseSensitive: false)
   late String name;
 
@@ -44,6 +47,7 @@ class Equipment {
   Equipment({
     required this.gymId,
     required this.name,
+    this.imagePath,
     required this.category,
     required this.brand,
     required this.model,

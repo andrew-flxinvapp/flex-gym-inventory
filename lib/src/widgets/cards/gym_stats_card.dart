@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
+import 'base_card.dart';
 
 class GymStatsCard extends StatelessWidget {
   final int itemCount;
@@ -15,87 +16,87 @@ class GymStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BaseCard(
       width: 370,
-      height: 168,
-      decoration: BoxDecoration(
-        color: AppTheme.lightCard,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+      color: AppTheme.lightCard,
+      header: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Total Equipment',
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              color: AppTheme.lightTextPrimary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            itemCount.toString(),
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+              color: AppTheme.lightTextPrimary,
+            ),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: IntrinsicHeight(
+        child: Row(
           children: [
-            Text(
-              'Current Number of Items',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppTheme.lightPrimary,
+            // Estimated Value Column
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Estimated Value',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '\$${estimatedValue.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              itemCount.toString(),
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+
+            const VerticalDivider(
+              width: 16,
+              thickness: 1,
+              indent: 4,
+              endIndent: 4,
+              color: AppTheme.dividers,
             ),
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Estimated Value Column
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Estimated Value',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightPrimary,
-                      ),
+
+            // Last Updated Column
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Last Updated',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '\$${estimatedValue.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatDate(lastUpdated),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: AppTheme.lightTextPrimary,
                     ),
-                  ],
-                ),
-                // Last Updated Column
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Last Updated Date',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _formatDate(lastUpdated),
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
   // Helper to format date as MM/dd/yyyy
   String _formatDate(DateTime date) {
     return "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}";

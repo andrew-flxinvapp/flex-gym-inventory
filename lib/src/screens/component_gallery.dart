@@ -218,9 +218,10 @@ class ComponentGallery extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               EquipmentCard(
-                itemName: 'Rogue Ohio Bar',
+                brand: 'Rogue',
+                itemName: 'Ohio Bar',
                 quantity: 2,
-                value: 325.00,
+                category: EquipmentCategory.weights,
               ),
               const SizedBox(height: 40),
               const Text(
@@ -342,6 +343,8 @@ class ComponentGallery extends StatelessWidget {
               WishlistItemCard(
                 itemName: 'Kabuki Trap Bar HD',
                 brand: 'Kabuki Strength',
+                price: 325.00,
+                priority: 'High',
               ),
               const SizedBox(height: 40),
               const Text(

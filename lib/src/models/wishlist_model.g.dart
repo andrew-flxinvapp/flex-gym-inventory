@@ -28,34 +28,44 @@ const WishlistSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _WishlistcategoryEnumValueMap,
     ),
-    r'name': PropertySchema(
+    r'imagePath': PropertySchema(
       id: 2,
+      name: r'imagePath',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'notes',
       type: IsarType.string,
     ),
+    r'price': PropertySchema(
+      id: 5,
+      name: r'price',
+      type: IsarType.string,
+    ),
     r'priority': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'priority',
       type: IsarType.string,
       enumMap: _WishlistpriorityEnumValueMap,
     ),
     r'productUrl': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'productUrl',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'userId',
       type: IsarType.string,
     ),
     r'wishlistType': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'wishlistType',
       type: IsarType.string,
       enumMap: _WishlistwishlistTypeEnumValueMap,
@@ -90,6 +100,19 @@ const WishlistSchema = CollectionSchema(
           name: r'name',
           type: IndexType.hash,
           caseSensitive: false,
+        )
+      ],
+    ),
+    r'imagePath': IndexSchema(
+      id: -9175562939963215800,
+      name: r'imagePath',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'imagePath',
+          type: IndexType.hash,
+          caseSensitive: true,
         )
       ],
     ),
@@ -162,9 +185,21 @@ int _wishlistEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.brand.length * 3;
   bytesCount += 3 + object.category.name.length * 3;
+  {
+    final value = object.imagePath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   {
     final value = object.notes;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.price;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -189,12 +224,14 @@ void _wishlistSerialize(
 ) {
   writer.writeString(offsets[0], object.brand);
   writer.writeString(offsets[1], object.category.name);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.notes);
-  writer.writeString(offsets[4], object.priority.name);
-  writer.writeString(offsets[5], object.productUrl);
-  writer.writeString(offsets[6], object.userId);
-  writer.writeString(offsets[7], object.wishlistType.name);
+  writer.writeString(offsets[2], object.imagePath);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.notes);
+  writer.writeString(offsets[5], object.price);
+  writer.writeString(offsets[6], object.priority.name);
+  writer.writeString(offsets[7], object.productUrl);
+  writer.writeString(offsets[8], object.userId);
+  writer.writeString(offsets[9], object.wishlistType.name);
 }
 
 Wishlist _wishlistDeserialize(
@@ -208,15 +245,17 @@ Wishlist _wishlistDeserialize(
     category:
         _WishlistcategoryValueEnumMap[reader.readStringOrNull(offsets[1])] ??
             EquipmentCategory.weights,
-    name: reader.readString(offsets[2]),
-    notes: reader.readStringOrNull(offsets[3]),
+    imagePath: reader.readStringOrNull(offsets[2]),
+    name: reader.readString(offsets[3]),
+    notes: reader.readStringOrNull(offsets[4]),
+    price: reader.readStringOrNull(offsets[5]),
     priority:
-        _WishlistpriorityValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+        _WishlistpriorityValueEnumMap[reader.readStringOrNull(offsets[6])] ??
             WishlistPriority.low,
-    productUrl: reader.readStringOrNull(offsets[5]),
-    userId: reader.readString(offsets[6]),
+    productUrl: reader.readStringOrNull(offsets[7]),
+    userId: reader.readString(offsets[8]),
     wishlistType: _WishlistwishlistTypeValueEnumMap[
-            reader.readStringOrNull(offsets[7])] ??
+            reader.readStringOrNull(offsets[9])] ??
         WishlistType.newItem,
   );
   object.id = id;
@@ -236,17 +275,21 @@ P _wishlistDeserializeProp<P>(
       return (_WishlistcategoryValueEnumMap[reader.readStringOrNull(offset)] ??
           EquipmentCategory.weights) as P;
     case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
     case 4:
-      return (_WishlistpriorityValueEnumMap[reader.readStringOrNull(offset)] ??
-          WishlistPriority.low) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (_WishlistpriorityValueEnumMap[reader.readStringOrNull(offset)] ??
+          WishlistPriority.low) as P;
     case 7:
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
       return (_WishlistwishlistTypeValueEnumMap[
               reader.readStringOrNull(offset)] ??
           WishlistType.newItem) as P;
@@ -467,6 +510,71 @@ extension WishlistQueryWhere on QueryBuilder<Wishlist, Wishlist, QWhereClause> {
               indexName: r'name',
               lower: [],
               upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> imagePathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'imagePath',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> imagePathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'imagePath',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> imagePathEqualTo(
+      String? imagePath) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'imagePath',
+        value: [imagePath],
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterWhereClause> imagePathNotEqualTo(
+      String? imagePath) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'imagePath',
+              lower: [],
+              upper: [imagePath],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'imagePath',
+              lower: [imagePath],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'imagePath',
+              lower: [imagePath],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'imagePath',
+              lower: [],
+              upper: [imagePath],
               includeUpper: false,
             ));
       }
@@ -968,6 +1076,153 @@ extension WishlistQueryFilter
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'imagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'imagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imagePath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'imagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'imagePath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> imagePathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition>
+      imagePathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'imagePath',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1239,6 +1494,152 @@ extension WishlistQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'notes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'price',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'price',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'price',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'price',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'price',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'price',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterFilterCondition> priceIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'price',
         value: '',
       ));
     });
@@ -1818,6 +2219,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1839,6 +2252,18 @@ extension WishlistQuerySortBy on QueryBuilder<Wishlist, Wishlist, QSortBy> {
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> sortByPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.desc);
     });
   }
 
@@ -1929,6 +2354,18 @@ extension WishlistQuerySortThenBy
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1950,6 +2387,18 @@ extension WishlistQuerySortThenBy
   QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QAfterSortBy> thenByPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'price', Sort.desc);
     });
   }
 
@@ -2018,6 +2467,13 @@ extension WishlistQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByImagePath(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imagePath', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2029,6 +2485,13 @@ extension WishlistQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Wishlist, Wishlist, QDistinct> distinctByPrice(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'price', caseSensitive: caseSensitive);
     });
   }
 
@@ -2082,6 +2545,12 @@ extension WishlistQueryProperty
     });
   }
 
+  QueryBuilder<Wishlist, String?, QQueryOperations> imagePathProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imagePath');
+    });
+  }
+
   QueryBuilder<Wishlist, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -2091,6 +2560,12 @@ extension WishlistQueryProperty
   QueryBuilder<Wishlist, String?, QQueryOperations> notesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'notes');
+    });
+  }
+
+  QueryBuilder<Wishlist, String?, QQueryOperations> priceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'price');
     });
   }
 

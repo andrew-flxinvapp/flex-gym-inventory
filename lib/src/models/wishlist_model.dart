@@ -17,6 +17,9 @@ class Wishlist {
   @Index(caseSensitive: false)
   late String name;
 
+  @Index()
+  String? imagePath;
+
   /// Filter by type
   @Index(caseSensitive: false)
   @Enumerated(EnumType.name)
@@ -37,16 +40,19 @@ class Wishlist {
   late WishlistPriority priority;
 
   /// Non-indexed fields (informational / secondary data)
+  String? price;
   String? productUrl;
   String? notes;
 
   Wishlist({
     required this.userId,
     required this.name,
+    this.imagePath,
     required this.wishlistType,
     required this.category,
     required this.brand,
     required this.priority,
+    this.price,
     this.productUrl,
     this.notes,
   });

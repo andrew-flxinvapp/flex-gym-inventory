@@ -1,18 +1,34 @@
+import 'package:flex_gym_inventory/src/screens/wishlist_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import 'base_card.dart';
+import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
+import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 class WishlistItemCard extends StatelessWidget {
   final String itemName;
   final String brand;
+  final double price;
+  final String priority;
 
   const WishlistItemCard({
     super.key,
     required this.itemName,
     required this.brand,
+    required this.price,
+    required this.priority,
   });
+
+  WishlistItemCard.fromWishlist(
+    Wishlist item, {
+    super.key,
+  })  : itemName = item.name,
+        brand = item.brand,
+        price = double.tryParse(item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '') ?? 0.0,
+        priority = item.priority.label;
 
   @override
   Widget build(BuildContext context) {
@@ -53,66 +69,91 @@ class WishlistItemCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Container(
-        width: 370,
-        height: 103,
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: AppTheme.lightCard,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+      child: BaseCard(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const WishlistDetailScreen(),
             ),
-          ],
-        ),
-        child: Row(
+          );
+        },
+        body: Row(
           children: [
+            // Image block
             Container(
-              width: 55,
-              height: 55,
+              width: 60,
+              height: 60,
               decoration: BoxDecoration(
-                color: AppTheme.lightSecondary.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Image.asset(
-                  AppIcons.round,
-                  width: 55,
-                  height: 55,
-                  fit: BoxFit.contain,
-                ),
+                color: AppTheme.lightBackground,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.dividers),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
+
+            // Text content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    itemName,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.lightTextPrimary,
-                          fontFamily: 'Roboto',
-                        ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    brand,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppTheme.dividers,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    brand,
+                    itemName,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.lightTextPrimary.withValues(alpha: 0.7),
-                          fontFamily: 'Roboto',
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        '\$${price.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.lightTextPrimary,
                         ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                              'Priority',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppTheme.lightTextPrimary,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              priority.toString(),
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppTheme.lightTextPrimary,
+                              ),
+                            ),
+                    ],
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: Image.asset(
+                AppIcons.forward,
+                color: AppTheme.dividers,
               ),
             ),
           ],

@@ -84,8 +84,10 @@ class WishlistScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   WishlistItemCard(
-                    itemName: 'Kabuki Trap Bar HD',
+                    itemName: 'Trap Bar HD',
                     brand: 'Kabuki Strength',
+                    price: 495.00,
+                    priority: 'High',
                   ),
                   const SizedBox(height: 16),
                   GestureDetector(
@@ -93,14 +95,18 @@ class WishlistScreen extends StatelessWidget {
                       Navigator.of(context).pushNamed('/wishlist-detail');
                     },
                     child: WishlistItemCard(
-                      itemName: 'Rogue Adjustable Bench 3.0',
+                      itemName: 'Adjustable Bench 3.0',
                       brand: 'Rogue Fitness',
+                      price: 310.00,
+                      priority: 'Medium',
                     ),
                   ),
                   const SizedBox(height: 16),
                   WishlistItemCard(
                     itemName: 'REP 80lb Dumbbells (Pair)',
                     brand: 'REP Fitness',
+                    price: 640.00,
+                    priority: 'Low',
                   ),
                 ],
               ),
