@@ -167,7 +167,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   const SizedBox(height: 20),
                   CustomMultilineTextInput(
                     hintText: 'Notes',
-                    maxLines: 3,
+                    maxLines: 5,
                   ),
                   const SizedBox(height: 32),
                   PrimaryButton(

@@ -39,8 +39,6 @@ class Equipment {
 
   late String model;
   late int quantity;
-  bool? isPair;
-  bool? isEstimate;
   String? serialNumber;
   String? maintenanceNotes;
 
@@ -53,11 +51,9 @@ class Equipment {
     required this.model,
     required this.trainingStyle,
     required this.quantity,
-    this.isPair,
     required this.condition,
     this.purchaseDate,
     this.value,
-    this.isEstimate,
     this.serialNumber,
     this.maintenanceNotes,
   });

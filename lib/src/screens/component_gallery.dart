@@ -21,7 +21,6 @@ import '../widgets/cards/equipment_card.dart';
 import '../widgets/cards/wishlist_item_card.dart';
 import '../widgets/cards/details_card.dart';
 import '../../enum/app_enums.dart';
-import '../widgets/inputs/toggle_input.dart';
 import '../widgets/inputs/gym_id_display_field.dart';
 
 class ComponentGallery extends StatelessWidget {
@@ -109,7 +108,7 @@ class ComponentGallery extends StatelessWidget {
                 style: TextStyle(fontFamily: 'Roboto'),
               ),
               const SizedBox(height: 8),
-              DemoToggleInput(),
+              // DemoToggleInput(),
               const SizedBox(height: 24),
 
               const Text(
@@ -433,24 +432,3 @@ class ComponentGallery extends StatelessWidget {
   }
 }
 
-class DemoToggleInput extends StatefulWidget {
-  const DemoToggleInput({super.key});
-
-  @override
-  State<DemoToggleInput> createState() => _DemoToggleInputState();
-}
-
-class _DemoToggleInputState extends State<DemoToggleInput> {
-  bool _value = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return ToggleInput(
-      leftPlaceholder: 'Toggle Label',
-      showAsterisk: true,
-      rightLabel: 'Text:',
-      value: _value,
-      onChanged: (val) => setState(() => _value = val),
-    );
-  }
-}

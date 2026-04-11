@@ -33,6 +33,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final TextEditingController linkController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
             nameController.clear();
             brandController.clear();
             notesController.clear();
+            priceController.clear();
           });
         },
       ),
@@ -163,6 +165,12 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
+                  hintText: 'Price',
+                  showAsterisk: true,
+                  controller: priceController,
+                ),
+                const SizedBox(height: 20),
+                CustomTextInputField(
                   hintText: 'Link (URL)',
                   showAsterisk: false,
                   controller: linkController,
@@ -170,7 +178,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Notes',
-                  maxLines: 3,
+                  maxLines: 5,
                   controller: notesController,
                 ),
                 const SizedBox(height: 32),

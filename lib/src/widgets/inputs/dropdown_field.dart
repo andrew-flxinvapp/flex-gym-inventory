@@ -41,26 +41,6 @@ class CustomDropdownField<T> extends StatelessWidget {
           // --- Label with optional asterisk (matches your current look) ---
           decoration: InputDecoration(
             hintText: null,
-            label: RichText(
-              text: TextSpan(
-                text: hintText,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                children: showAsterisk
-                    ? [
-                        TextSpan(
-                          text: ' *',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.stopColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ]
-                    : [],
-              ),
-            ),
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
             filled: true,
             fillColor: Colors.white,
             contentPadding:
@@ -80,9 +60,30 @@ class CustomDropdownField<T> extends StatelessWidget {
           ),
 
           // --- Field (closed button) presentation ---
+          // Provide a hint widget so the placeholder shows when `value` is null
+          hint: RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: hintText,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                  ),
+              children: showAsterisk
+                  ? [
+                      TextSpan(
+                        text: ' *',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppTheme.stopColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ]
+                  : [],
+            ),
+          ),
           buttonStyleData: ButtonStyleData(
             height: height,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),

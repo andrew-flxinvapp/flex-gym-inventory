@@ -40,7 +40,7 @@ class BaseCard extends StatelessWidget {
 			borderRadius: borderRadius,
 			boxShadow: boxShadow ?? [
 				BoxShadow(
-					color: Colors.black.withOpacity(0.04),
+					color: Colors.black.withValues(alpha: 0.04),
 					blurRadius: 8,
 					offset: const Offset(0, 2),
 				),
@@ -74,32 +74,30 @@ class BaseCard extends StatelessWidget {
 					// no fixed height by default
 					height: height,
 					decoration: decoration,
-					child: Padding(
-						padding: padding,
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: [
-								if (leading != null || header != null || trailing != null)
-									buildHeaderRow(),
-								if (body != null) ...[
-									if (header != null) const SizedBox(height: 12),
-									body!,
-								],
-								if (footer != null) ...[
-									const SizedBox(height: 12),
-									footer!,
-								],
-								if (extraSlots != null)
-									for (final slot in extraSlots!.values) ...[
-										const SizedBox(height: 8),
-										slot,
-									],
+					padding: padding,
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: [
+							if (leading != null || header != null || trailing != null)
+								buildHeaderRow(),
+							if (body != null) ...[
+								if (header != null) const SizedBox(height: 12),
+								body!,
 							],
-						),
+							if (footer != null) ...[
+								const SizedBox(height: 12),
+								footer!,
+							],
+							if (extraSlots != null)
+								for (final slot in extraSlots!.values) ...[
+									const SizedBox(height: 8),
+									slot,
+								],
+						],
 					),
 				),
 			),
 		);
+
 	}
 }
-

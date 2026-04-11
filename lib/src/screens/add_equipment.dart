@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flex_gym_inventory/enum/app_enums.dart';
-import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
@@ -42,7 +41,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController(text: '1');
+  final TextEditingController quantityController = TextEditingController();
   final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
   final TextEditingController valueController = TextEditingController();
@@ -205,18 +204,16 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Quantity',
+                CustomTextInputField(
+                  hintText: 'Quantity',
                   showAsterisk: true,
-                  rightLabel: 'Pair:',
-                  value: isPair,
                   controller: quantityController,
-                  onTextChanged: (text) {},
-                  onChanged: (val) {
-                    setState(() {
-                      isPair = val;
-                    });
-                  },
+                ),
+                const SizedBox(height: 20),
+                CustomTextInputField(
+                  hintText: 'Value',
+                  showAsterisk: false,
+                  controller: valueController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCondition>(
@@ -246,20 +243,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Value',
-                  showAsterisk: false,
-                  rightLabel: 'Estimate:',
-                  value: isEstimateValue,
-                  controller: valueController,
-                  onTextChanged: (text) {},
-                  onChanged: (val) {
-                    setState(() {
-                      isEstimateValue = val;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Serial Number',
                   showAsterisk: false,
@@ -268,7 +251,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Maintenance Notes',
-                  maxLines: 3,
+                  maxLines: 5,
                   controller: maintenanceNotesController,
                 ),
                 const SizedBox(height: 32),
@@ -293,8 +276,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                         condition: selectedCondition ?? EquipmentCondition.good,
                         purchaseDate: selectedPurchaseDate,
                         value: val,
-                        isPair: isPair,
-                        isEstimate: isEstimateValue,
                         serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
                         maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
                       );

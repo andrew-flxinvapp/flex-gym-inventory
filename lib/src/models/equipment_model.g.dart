@@ -49,54 +49,44 @@ const EquipmentSchema = CollectionSchema(
       name: r'imagePath',
       type: IsarType.string,
     ),
-    r'isEstimate': PropertySchema(
-      id: 6,
-      name: r'isEstimate',
-      type: IsarType.bool,
-    ),
-    r'isPair': PropertySchema(
-      id: 7,
-      name: r'isPair',
-      type: IsarType.bool,
-    ),
     r'maintenanceNotes': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'maintenanceNotes',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'model',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 10,
+      id: 8,
       name: r'name',
       type: IsarType.string,
     ),
     r'purchaseDate': PropertySchema(
-      id: 11,
+      id: 9,
       name: r'purchaseDate',
       type: IsarType.dateTime,
     ),
     r'quantity': PropertySchema(
-      id: 12,
+      id: 10,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'serialNumber': PropertySchema(
-      id: 13,
+      id: 11,
       name: r'serialNumber',
       type: IsarType.string,
     ),
     r'trainingStyle': PropertySchema(
-      id: 14,
+      id: 12,
       name: r'trainingStyle',
       type: IsarType.string,
       enumMap: _EquipmenttrainingStyleEnumValueMap,
     ),
     r'value': PropertySchema(
-      id: 15,
+      id: 13,
       name: r'value',
       type: IsarType.double,
     )
@@ -279,16 +269,14 @@ void _equipmentSerialize(
   writer.writeString(offsets[3], object.condition.name);
   writer.writeString(offsets[4], object.gymId);
   writer.writeString(offsets[5], object.imagePath);
-  writer.writeBool(offsets[6], object.isEstimate);
-  writer.writeBool(offsets[7], object.isPair);
-  writer.writeString(offsets[8], object.maintenanceNotes);
-  writer.writeString(offsets[9], object.model);
-  writer.writeString(offsets[10], object.name);
-  writer.writeDateTime(offsets[11], object.purchaseDate);
-  writer.writeLong(offsets[12], object.quantity);
-  writer.writeString(offsets[13], object.serialNumber);
-  writer.writeString(offsets[14], object.trainingStyle.name);
-  writer.writeDouble(offsets[15], object.value);
+  writer.writeString(offsets[6], object.maintenanceNotes);
+  writer.writeString(offsets[7], object.model);
+  writer.writeString(offsets[8], object.name);
+  writer.writeDateTime(offsets[9], object.purchaseDate);
+  writer.writeLong(offsets[10], object.quantity);
+  writer.writeString(offsets[11], object.serialNumber);
+  writer.writeString(offsets[12], object.trainingStyle.name);
+  writer.writeDouble(offsets[13], object.value);
 }
 
 Equipment _equipmentDeserialize(
@@ -307,18 +295,16 @@ Equipment _equipmentDeserialize(
             EquipmentCondition.brandNew,
     gymId: reader.readString(offsets[4]),
     imagePath: reader.readStringOrNull(offsets[5]),
-    isEstimate: reader.readBoolOrNull(offsets[6]),
-    isPair: reader.readBoolOrNull(offsets[7]),
-    maintenanceNotes: reader.readStringOrNull(offsets[8]),
-    model: reader.readString(offsets[9]),
-    name: reader.readString(offsets[10]),
-    purchaseDate: reader.readDateTimeOrNull(offsets[11]),
-    quantity: reader.readLong(offsets[12]),
-    serialNumber: reader.readStringOrNull(offsets[13]),
+    maintenanceNotes: reader.readStringOrNull(offsets[6]),
+    model: reader.readString(offsets[7]),
+    name: reader.readString(offsets[8]),
+    purchaseDate: reader.readDateTimeOrNull(offsets[9]),
+    quantity: reader.readLong(offsets[10]),
+    serialNumber: reader.readStringOrNull(offsets[11]),
     trainingStyle: _EquipmenttrainingStyleValueEnumMap[
-            reader.readStringOrNull(offsets[14])] ??
+            reader.readStringOrNull(offsets[12])] ??
         TrainingStyle.general,
-    value: reader.readDoubleOrNull(offsets[15]),
+    value: reader.readDoubleOrNull(offsets[13]),
   );
   object.id = id;
   return object;
@@ -347,26 +333,22 @@ P _equipmentDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 9:
-      return (reader.readString(offset)) as P;
-    case 10:
-      return (reader.readString(offset)) as P;
-    case 11:
       return (reader.readDateTimeOrNull(offset)) as P;
-    case 12:
+    case 10:
       return (reader.readLong(offset)) as P;
-    case 13:
+    case 11:
       return (reader.readStringOrNull(offset)) as P;
-    case 14:
+    case 12:
       return (_EquipmenttrainingStyleValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TrainingStyle.general) as P;
-    case 15:
+    case 13:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1893,59 +1875,6 @@ extension EquipmentQueryFilter
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> isEstimateIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'isEstimate',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      isEstimateIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'isEstimate',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> isEstimateEqualTo(
-      bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isEstimate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> isPairIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'isPair',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> isPairIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'isPair',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> isPairEqualTo(
-      bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isPair',
-        value: value,
-      ));
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       maintenanceNotesIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -2933,30 +2862,6 @@ extension EquipmentQuerySortBy on QueryBuilder<Equipment, Equipment, QSortBy> {
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByIsEstimate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isEstimate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByIsEstimateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isEstimate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByIsPair() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isPair', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByIsPairDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isPair', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByMaintenanceNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'maintenanceNotes', Sort.asc);
@@ -3141,30 +3046,6 @@ extension EquipmentQuerySortThenBy
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByIsEstimate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isEstimate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByIsEstimateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isEstimate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByIsPair() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isPair', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByIsPairDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isPair', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByMaintenanceNotes() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'maintenanceNotes', Sort.asc);
@@ -3306,18 +3187,6 @@ extension EquipmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QDistinct> distinctByIsEstimate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isEstimate');
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QDistinct> distinctByIsPair() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isPair');
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QDistinct> distinctByMaintenanceNotes(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3417,18 +3286,6 @@ extension EquipmentQueryProperty
   QueryBuilder<Equipment, String?, QQueryOperations> imagePathProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'imagePath');
-    });
-  }
-
-  QueryBuilder<Equipment, bool?, QQueryOperations> isEstimateProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isEstimate');
-    });
-  }
-
-  QueryBuilder<Equipment, bool?, QQueryOperations> isPairProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isPair');
     });
   }
 

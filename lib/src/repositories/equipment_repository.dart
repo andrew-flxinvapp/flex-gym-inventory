@@ -44,8 +44,6 @@ class EquipmentRepository {
     required EquipmentCondition condition,
     DateTime? purchaseDate,
     double? value,
-    bool? isPair,
-    bool? isEstimate,
     String? serialNumber,
     String? maintenanceNotes,
   }) async {
@@ -60,8 +58,6 @@ class EquipmentRepository {
       condition: condition,
       purchaseDate: purchaseDate,
       value: value,
-      isPair: isPair,
-      isEstimate: isEstimate,
       serialNumber: serialNumber,
       maintenanceNotes: maintenanceNotes,
     );
@@ -79,11 +75,8 @@ class EquipmentRepository {
     TrainingStyle? trainingStyle,
     int? quantity,
     EquipmentCondition? condition,
-    String? equipmentId,
     DateTime? purchaseDate,
     double? value,
-    bool? isPair,
-    bool? isEstimate,
     String? serialNumber,
     String? maintenanceNotes,
   }) async {
@@ -99,8 +92,6 @@ class EquipmentRepository {
     if (condition != null) equipment.condition = condition;
     if (purchaseDate != null) equipment.purchaseDate = purchaseDate;
     if (value != null) equipment.value = value;
-    if (isPair != null) equipment.isPair = isPair;
-    if (isEstimate != null) equipment.isEstimate = isEstimate;
     if (serialNumber != null) equipment.serialNumber = serialNumber;
     if (maintenanceNotes != null) equipment.maintenanceNotes = maintenanceNotes;
     await upsert(equipment);

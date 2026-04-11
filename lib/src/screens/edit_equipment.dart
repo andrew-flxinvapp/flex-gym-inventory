@@ -1,4 +1,3 @@
-import 'package:flex_gym_inventory/src/widgets/inputs/toggle_input.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously
@@ -43,6 +42,8 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   final TextEditingController modelController = TextEditingController();
   final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final TextEditingController valueController = TextEditingController();
 
   @override
   void initState() {
@@ -149,6 +150,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                 CustomTextInputField(
                   hintText: 'Name',
                   showAsterisk: true,
+                  controller: nameController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
@@ -173,11 +175,13 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                 CustomTextInputField(
                   hintText: 'Brand',
                   showAsterisk: true,
+                  controller: brandController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Model',
                   showAsterisk: true,
+                  controller: modelController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<TrainingStyle>(
@@ -199,14 +203,10 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Quantity',
+                CustomTextInputField(
+                  hintText: 'Quantity',
                   showAsterisk: true,
-                  rightLabel: 'Pair:',
-                  value: false, // TODO: Connect to state
-                  onChanged: (val) {
-                    // TODO: Handle toggle change
-                  },
+                  controller: quantityController,
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCondition>(
@@ -235,24 +235,22 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ToggleInput(
-                  leftPlaceholder: 'Value',
+                CustomTextInputField(
+                  hintText: 'Value',
                   showAsterisk: false,
-                  rightLabel: 'Estimate:',
-                  value: false, // TODO: Connect to state
-                  onChanged: (val) {
-                    // TODO: Handle toggle change
-                  },
+                  controller: valueController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Serial Number',
                   showAsterisk: false,
+                  controller: serialController,
                 ),
                 const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Maintenance Notes',
-                  maxLines: 3,
+                  maxLines: 5,
+                  controller: maintenanceNotesController,
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
@@ -277,12 +275,10 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                           brand: brandController.text.trim().isEmpty ? null : brandController.text.trim(),
                           model: modelController.text.trim().isEmpty ? null : modelController.text.trim(),
                           trainingStyle: selectedTrainingStyle,
-                          quantity: null,
+                          quantity: int.tryParse(quantityController.text.trim()),
                           condition: selectedCondition,
                           purchaseDate: selectedPurchaseDate,
-                          value: null,
-                          isPair: null,
-                          isEstimate: null,
+                          value: double.tryParse(valueController.text.trim()),
                           serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
                           maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
                         );
@@ -302,7 +298,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                           brand: brandController.text.trim(),
                           model: modelController.text.trim(),
                           trainingStyle: selectedTrainingStyle ?? TrainingStyle.general,
-                          quantity: 1,
+                          quantity: int.tryParse(quantityController.text.trim()) ?? 1,
                           condition: selectedCondition ?? EquipmentCondition.good,
                         );
                         if (!mounted) return;

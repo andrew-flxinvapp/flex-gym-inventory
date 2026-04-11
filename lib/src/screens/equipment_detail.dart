@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
+import '../widgets/placeholders/image_placeholder_large.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/cards/details_card.dart';
@@ -62,13 +63,8 @@ class EquipmentDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Center(
-                child: Image.asset(
-                  AppIcons.rectangle,
-                  width: 370,
-                  height: 208,
-                ),
+                child: ImagePlaceholderLarge(),
               ),
-              
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
