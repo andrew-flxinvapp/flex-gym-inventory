@@ -126,6 +126,7 @@ flutter:
     - lib/assets/icons/upgrade_account.png
     - lib/assets/icons/star.png
     - lib/assets/icons/apple.png
+    - lib/assets/icons/upload.png
 
 
 

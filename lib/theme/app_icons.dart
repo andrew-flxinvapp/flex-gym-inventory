@@ -27,6 +27,7 @@ class AppIcons {
   static const String forward = 'lib/assets/icons/arrow_small_right.png';
   static const String reset = 'lib/assets/icons/reset.png';
   static const String upgrade = 'lib/assets/icons/upgrade_account.png';
+  static const String upload = 'lib/assets/icons/upload.png';
 
   // Upgrade to PRO
   static const String pro = 'lib/assets/icons/crown.png';

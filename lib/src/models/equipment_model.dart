@@ -15,7 +15,7 @@ class Equipment {
   late EquipmentCategory category;
 
   @Index()
-  String? imagePath;
+  String? imageId;
 
   @Index(caseSensitive: false)
   late String name;
@@ -45,7 +45,7 @@ class Equipment {
   Equipment({
     required this.gymId,
     required this.name,
-    this.imagePath,
+    this.imageId,
     required this.category,
     required this.brand,
     required this.model,

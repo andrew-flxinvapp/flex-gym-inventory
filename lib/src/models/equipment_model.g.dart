@@ -44,9 +44,9 @@ const EquipmentSchema = CollectionSchema(
       name: r'gymId',
       type: IsarType.string,
     ),
-    r'imagePath': PropertySchema(
+    r'imageId': PropertySchema(
       id: 5,
-      name: r'imagePath',
+      name: r'imageId',
       type: IsarType.string,
     ),
     r'maintenanceNotes': PropertySchema(
@@ -123,14 +123,14 @@ const EquipmentSchema = CollectionSchema(
         )
       ],
     ),
-    r'imagePath': IndexSchema(
-      id: -9175562939963215800,
-      name: r'imagePath',
+    r'imageId': IndexSchema(
+      id: -2353151822101600380,
+      name: r'imageId',
       unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
-          name: r'imagePath',
+          name: r'imageId',
           type: IndexType.hash,
           caseSensitive: true,
         )
@@ -234,7 +234,7 @@ int _equipmentEstimateSize(
   bytesCount += 3 + object.condition.name.length * 3;
   bytesCount += 3 + object.gymId.length * 3;
   {
-    final value = object.imagePath;
+    final value = object.imageId;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -268,7 +268,7 @@ void _equipmentSerialize(
   writer.writeString(offsets[2], object.category.name);
   writer.writeString(offsets[3], object.condition.name);
   writer.writeString(offsets[4], object.gymId);
-  writer.writeString(offsets[5], object.imagePath);
+  writer.writeString(offsets[5], object.imageId);
   writer.writeString(offsets[6], object.maintenanceNotes);
   writer.writeString(offsets[7], object.model);
   writer.writeString(offsets[8], object.name);
@@ -294,7 +294,7 @@ Equipment _equipmentDeserialize(
         _EquipmentconditionValueEnumMap[reader.readStringOrNull(offsets[3])] ??
             EquipmentCondition.brandNew,
     gymId: reader.readString(offsets[4]),
-    imagePath: reader.readStringOrNull(offsets[5]),
+    imageId: reader.readStringOrNull(offsets[5]),
     maintenanceNotes: reader.readStringOrNull(offsets[6]),
     model: reader.readString(offsets[7]),
     name: reader.readString(offsets[8]),
@@ -612,19 +612,19 @@ extension EquipmentQueryWhere
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imagePathIsNull() {
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imageIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'imagePath',
+        indexName: r'imageId',
         value: [null],
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imagePathIsNotNull() {
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imageIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'imagePath',
+        indexName: r'imageId',
         lower: [null],
         includeLower: false,
         upper: [],
@@ -632,45 +632,45 @@ extension EquipmentQueryWhere
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imagePathEqualTo(
-      String? imagePath) {
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imageIdEqualTo(
+      String? imageId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'imagePath',
-        value: [imagePath],
+        indexName: r'imageId',
+        value: [imageId],
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imagePathNotEqualTo(
-      String? imagePath) {
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> imageIdNotEqualTo(
+      String? imageId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'imagePath',
+              indexName: r'imageId',
               lower: [],
-              upper: [imagePath],
+              upper: [imageId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'imagePath',
-              lower: [imagePath],
+              indexName: r'imageId',
+              lower: [imageId],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'imagePath',
-              lower: [imagePath],
+              indexName: r'imageId',
+              lower: [imageId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'imagePath',
+              indexName: r'imageId',
               lower: [],
-              upper: [imagePath],
+              upper: [imageId],
               includeUpper: false,
             ));
       }
@@ -1726,38 +1726,36 @@ extension EquipmentQueryFilter
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathIsNull() {
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'imagePath',
+        property: r'imageId',
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      imagePathIsNotNull() {
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'imagePath',
+        property: r'imageId',
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathEqualTo(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      imagePathGreaterThan(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1765,14 +1763,14 @@ extension EquipmentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathLessThan(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1780,14 +1778,14 @@ extension EquipmentQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathBetween(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1796,7 +1794,7 @@ extension EquipmentQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'imagePath',
+        property: r'imageId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1806,70 +1804,70 @@ extension EquipmentQueryFilter
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathStartsWith(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathEndsWith(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathContains(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'imagePath',
+        property: r'imageId',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathMatches(
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'imagePath',
+        property: r'imageId',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imagePathIsEmpty() {
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> imageIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'imagePath',
+        property: r'imageId',
         value: '',
       ));
     });
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      imagePathIsNotEmpty() {
+      imageIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'imagePath',
+        property: r'imageId',
         value: '',
       ));
     });
@@ -2850,15 +2848,15 @@ extension EquipmentQuerySortBy on QueryBuilder<Equipment, Equipment, QSortBy> {
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByImagePath() {
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByImageId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imagePath', Sort.asc);
+      return query.addSortBy(r'imageId', Sort.asc);
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByImagePathDesc() {
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByImageIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imagePath', Sort.desc);
+      return query.addSortBy(r'imageId', Sort.desc);
     });
   }
 
@@ -3034,15 +3032,15 @@ extension EquipmentQuerySortThenBy
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByImagePath() {
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByImageId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imagePath', Sort.asc);
+      return query.addSortBy(r'imageId', Sort.asc);
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByImagePathDesc() {
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByImageIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'imagePath', Sort.desc);
+      return query.addSortBy(r'imageId', Sort.desc);
     });
   }
 
@@ -3180,10 +3178,10 @@ extension EquipmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QDistinct> distinctByImagePath(
+  QueryBuilder<Equipment, Equipment, QDistinct> distinctByImageId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'imagePath', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'imageId', caseSensitive: caseSensitive);
     });
   }
 
@@ -3283,9 +3281,9 @@ extension EquipmentQueryProperty
     });
   }
 
-  QueryBuilder<Equipment, String?, QQueryOperations> imagePathProperty() {
+  QueryBuilder<Equipment, String?, QQueryOperations> imageIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'imagePath');
+      return query.addPropertyName(r'imageId');
     });
   }
 

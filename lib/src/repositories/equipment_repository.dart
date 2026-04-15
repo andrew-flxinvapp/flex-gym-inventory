@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
+import 'package:flex_gym_inventory/service/image_service.dart';
 
 /// Simple sort modes aligned to your fields.
 enum EquipmentSort {
@@ -36,6 +37,7 @@ class EquipmentRepository {
   Future<Equipment> createEquipment({
     required String gymId,
     required String name,
+    String? imageId,
     required EquipmentCategory category,
     required String brand,
     required String model,
@@ -50,6 +52,7 @@ class EquipmentRepository {
     final equipment = Equipment(
       gymId: gymId,
       name: name,
+      imageId: imageId,
       category: category,
       brand: brand,
       model: model,
@@ -69,6 +72,7 @@ class EquipmentRepository {
   Future<Equipment?> updateEquipment({
     required int id,
     String? name,
+    String? imageId,
     EquipmentCategory? category,
     String? brand,
     String? model,
@@ -94,6 +98,7 @@ class EquipmentRepository {
     if (value != null) equipment.value = value;
     if (serialNumber != null) equipment.serialNumber = serialNumber;
     if (maintenanceNotes != null) equipment.maintenanceNotes = maintenanceNotes;
+    if (imageId != null) equipment.imageId = imageId;
     await upsert(equipment);
     return equipment;
   }
@@ -103,6 +108,13 @@ class EquipmentRepository {
     final isar = IsarService.isar;
     final equipment = await isar.equipments.get(id);
     if (equipment == null) return null;
+    // Delete associated image first (best-effort)
+    try {
+      if (equipment.imageId != null) {
+        await ImageService.instance.deleteImage(equipment.imageId!);
+      }
+    } catch (_) {}
+
     await isar.writeTxn(() async {
       await isar.equipments.delete(id);
     });

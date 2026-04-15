@@ -12,6 +12,7 @@ import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
+import '../widgets/inputs/image_input.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
@@ -153,6 +154,8 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   showAsterisk: true,
                   controller: nameController,
                 ),
+                const SizedBox(height: 20),
+                ImageInput(),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
                   hintText: 'Select Category',
