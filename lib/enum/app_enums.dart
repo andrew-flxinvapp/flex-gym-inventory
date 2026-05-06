@@ -202,3 +202,21 @@ enum DashboardMenuAction {
   addEquipment,
   addWishlist,
 }
+
+/// Menu options for adding an image
+enum ImageSource {
+  camera,
+  gallery,
+}
+
+extension ImageSourceLabel on ImageSource {
+  String get label {
+    switch (this) {
+      case ImageSource.camera:
+        return 'Take Photo';
+      case ImageSource.gallery:
+        return 'Choose from Gallery';
+    }
+  }
+}
+  

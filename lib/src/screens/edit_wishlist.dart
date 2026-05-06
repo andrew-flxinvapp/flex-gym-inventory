@@ -33,6 +33,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final TextEditingController linkController = TextEditingController();
+  ImageSource? selectedImageSource;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,8 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
             nameController.clear();
             brandController.clear();
             notesController.clear();
+            linkController.clear();
+            selectedImageSource = null;
           });
         },
       ),
@@ -139,6 +142,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   CustomTextInputField(
                     hintText: 'Brand',
                     showAsterisk: true,
+                    controller: brandController,
                   ),
                   const SizedBox(height: 20),
                   CustomDropdownField<WishlistPriority>(
@@ -164,6 +168,25 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     hintText: 'Link (URL)',
                     showAsterisk: false,
                   ),
+                  const SizedBox(height: 20),
+                CustomDropdownField<ImageSource>(
+                  hintText: 'Upload Image',
+                  items: ImageSource.values,
+                  value: selectedImageSource,
+                  showAsterisk: false,
+                  getLabel: (item) => item.label,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedImageSource = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Image source selection is required';
+                    }
+                    return null;
+                  },
+                ),
                   const SizedBox(height: 20),
                   CustomMultilineTextInput(
                     hintText: 'Notes',

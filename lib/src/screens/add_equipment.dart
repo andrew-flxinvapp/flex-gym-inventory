@@ -12,7 +12,7 @@ import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
-import '../widgets/inputs/image_input.dart';
+// import '../widgets/inputs/image_input.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
@@ -33,12 +33,11 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
   // Controllers for all input fields
   Gym? selectedGym;
   List<Gym> gyms = [];
+  ImageSource? selectedImageSource;
   EquipmentCategory? selectedCategory;
   TrainingStyle? selectedTrainingStyle;
   EquipmentCondition? selectedCondition;
   DateTime? selectedPurchaseDate;
-  bool isPair = false;
-  bool isEstimateValue = false;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
@@ -78,12 +77,11 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
           _formKey.currentState?.reset();
           setState(() {
             selectedGym = null;
+            selectedImageSource = null;
             selectedCategory = null;
             selectedTrainingStyle = null;
             selectedCondition = null;
             selectedPurchaseDate = null;
-            isPair = false;
-            isEstimateValue = false;
             nameController.clear();
             brandController.clear();
             modelController.clear();
@@ -155,7 +153,24 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                   controller: nameController,
                 ),
                 const SizedBox(height: 20),
-                ImageInput(),
+                CustomDropdownField<ImageSource>(
+                  hintText: 'Upload Image',
+                  items: ImageSource.values,
+                  value: selectedImageSource,
+                  showAsterisk: false,
+                  getLabel: (item) => item.label,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedImageSource = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Image source selection is required';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
                   hintText: 'Select Category',

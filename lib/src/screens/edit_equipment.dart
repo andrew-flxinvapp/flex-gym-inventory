@@ -31,6 +31,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   // Controllers for all input fields
   Gym? selectedGym;
   List<Gym> gyms = [];
+  ImageSource? selectedImageSource;
   EquipmentCategory? selectedCategory;
   TrainingStyle? selectedTrainingStyle;
   EquipmentCondition? selectedCondition;
@@ -80,13 +81,14 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
             selectedTrainingStyle = null;
             selectedCondition = null;
             selectedPurchaseDate = null;
-            isPair = false;
-            isEstimateValue = false;
             nameController.clear();
             brandController.clear();
             modelController.clear();
             serialController.clear();
             maintenanceNotesController.clear();
+            quantityController.clear();
+            valueController.clear();
+            selectedImageSource = null;
           });
         },
       ),
@@ -151,6 +153,25 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   hintText: 'Name',
                   showAsterisk: true,
                   controller: nameController,
+                ),
+                const SizedBox(height: 20),
+                CustomDropdownField<ImageSource>(
+                  hintText: 'Upload Image',
+                  items: ImageSource.values,
+                  value: selectedImageSource,
+                  showAsterisk: false,
+                  getLabel: (item) => item.label,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedImageSource = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Image source selection is required';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
