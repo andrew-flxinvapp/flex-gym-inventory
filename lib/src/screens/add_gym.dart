@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
@@ -15,14 +17,14 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
 
-class AddGymScreen extends StatefulWidget {
+class AddGymScreen extends ConsumerStatefulWidget {
   const AddGymScreen({super.key});
 
   @override
-  State<AddGymScreen> createState() => _AddGymScreenState();
+  ConsumerState<AddGymScreen> createState() => _AddGymScreenState();
 }
 
-class _AddGymScreenState extends State<AddGymScreen> {
+class _AddGymScreenState extends ConsumerState<AddGymScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
@@ -31,6 +33,13 @@ class _AddGymScreenState extends State<AddGymScreen> {
   final TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    locationController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -90,6 +99,7 @@ class _AddGymScreenState extends State<AddGymScreen> {
               CustomTextInputField(
                 hintText: 'Gym Name',
                 showAsterisk: true,
+                controller: nameController,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Gym name is required';
@@ -101,16 +111,21 @@ class _AddGymScreenState extends State<AddGymScreen> {
               CustomTextInputField(
                 hintText: 'Location',
                 showAsterisk: false,
+                controller: locationController,
               ),
               const SizedBox(height: 20),
               CustomMultilineTextInput(
                 hintText: 'Gym Notes',
+                controller: notesController,
               ),
               const SizedBox(height: 20),
               CustomDateInput(
                 hintText: 'Date Created',
+                initialDate: selectedDate,
                 onDateChanged: (date) {
-                  // Handle selected date if needed
+                  setState(() {
+                    selectedDate = date;
+                  });
                 },
               ),
               const SizedBox(height: 24),
@@ -138,6 +153,8 @@ class _AddGymScreenState extends State<AddGymScreen> {
                       ctx,
                       UiMessage('Gym saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
                     );
+                    // Refresh dashboard data so the new gym appears when returning
+                    await ref.read(dashboardProvider.notifier).refresh();
                     Navigator.of(ctx).pop(created);
                   } catch (e) {
                     if (!mounted) return;

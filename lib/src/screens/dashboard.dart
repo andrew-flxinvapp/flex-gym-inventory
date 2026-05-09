@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
+import 'package:flex_gym_inventory/service/active_gym_service.dart';
+import 'package:flex_gym_inventory/service/isar_service.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/buttons/primary_button.dart';
 //import '../widgets/dashboard_piechart.dart';
@@ -144,23 +146,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ),
               ),
               const SizedBox(height: 16),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRoutes.gymDetail);
-                },
-                borderRadius: BorderRadius.circular(16),
-                child: gyms.isNotEmpty
-                    ? DashboardGymCard(
-                        gymName: gyms[0].gymName,
-                        equipmentCount: gyms[0].equipmentCount,
-                        lastUpdated: gyms[0].lastUpdated,
-                      )
-                    : DashboardGymCard(
-                        gymName: 'No gyms yet',
-                        equipmentCount: 0,
-                        lastUpdated: DateTime.now(),
-                      ),
-              ),
+              if (gyms.isNotEmpty)
+                InkWell(
+                  onTap: () async {
+                    final service = ActiveGymService(IsarService.isar);
+                    await service.setActiveGymId(gyms[0].gymId);
+                    Navigator.of(context).pushNamed(AppRoutes.gymDetail);
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: DashboardGymCard(
+                    gymName: gyms[0].gymName,
+                    equipmentCount: gyms[0].equipmentCount,
+                    lastUpdated: gyms[0].lastUpdated,
+                  ),
+                ),
               const SizedBox(height: 16),
               PrimaryButton(
                 label: 'Add Gym',

@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
@@ -20,14 +22,14 @@ import '../widgets/inputs/dropdown_field.dart';
 
 
 
-class AddEquipmentScreen extends StatefulWidget {
+class AddEquipmentScreen extends ConsumerStatefulWidget {
   const AddEquipmentScreen({super.key});
 
   @override
-  State<AddEquipmentScreen> createState() => _AddEquipmentScreenState();
+  ConsumerState<AddEquipmentScreen> createState() => _AddEquipmentScreenState();
 }
 
-class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
+class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for all input fields
@@ -164,12 +166,6 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                       selectedImageSource = value;
                     });
                   },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Image source selection is required';
-                    }
-                    return null;
-                  },
                 ),
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
@@ -255,9 +251,11 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                 const SizedBox(height: 20),
                 CustomDateInput(
                   hintText: 'Purchase Date',
+                  initialDate: selectedPurchaseDate,
                   onDateChanged: (date) {
-                    // Handle selected date if needed
-                    selectedPurchaseDate = date;
+                    setState(() {
+                      selectedPurchaseDate = date;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
@@ -302,6 +300,7 @@ class _AddEquipmentScreenState extends State<AddEquipmentScreen> {
                         context,
                         UiMessage('Equipment saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
                       );
+                      await ref.read(dashboardProvider.notifier).refresh();
                       Navigator.of(context).pop(created);
                     } catch (e) {
                       showFlexSnackbarFromUiMessage(

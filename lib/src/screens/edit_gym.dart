@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
@@ -14,14 +16,14 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
 
-class EditGymScreen extends StatefulWidget {
+class EditGymScreen extends ConsumerStatefulWidget {
   const EditGymScreen({super.key});
 
   @override
-  State<EditGymScreen> createState() => _EditGymScreenState();
+  ConsumerState<EditGymScreen> createState() => _EditGymScreenState();
 }
 
-class _EditGymScreenState extends State<EditGymScreen> {
+class _EditGymScreenState extends ConsumerState<EditGymScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
@@ -127,6 +129,7 @@ class _EditGymScreenState extends State<EditGymScreen> {
                           ctx,
                           UiMessage('Gym updated', subtitle: 'Updated ${updated?.name ?? ''}', type: UiMessageType.success),
                         );
+                        await ref.read(dashboardProvider.notifier).refresh();
                         Navigator.of(ctx).pop(updated);
                       } else {
                         final user = Supabase.instance.client.auth.currentUser;
@@ -144,6 +147,7 @@ class _EditGymScreenState extends State<EditGymScreen> {
                           ctx,
                           UiMessage('Gym saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
                         );
+                        await ref.read(dashboardProvider.notifier).refresh();
                         Navigator.of(ctx).pop(created);
                       }
                     } catch (e) {

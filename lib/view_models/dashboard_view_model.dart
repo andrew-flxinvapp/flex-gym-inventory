@@ -6,11 +6,13 @@ import 'package:flex_gym_inventory/providers/auth_providers.dart';
 
 /// Small model used by the dashboard for gym summaries.
 class DashboardGym {
+  final String gymId;
   final String gymName;
   final int equipmentCount;
   final DateTime lastUpdated;
 
   DashboardGym({
+    required this.gymId,
     required this.gymName,
     required this.equipmentCount,
     required this.lastUpdated,
@@ -83,11 +85,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     state = state.copyWith(loading: true, error: null);
     try {
       final auth = ref.read(authServiceProvider);
-      final userId = auth.currentUser?.id;
-      if (userId == null) {
-        state = state.copyWith(loading: false, error: 'No authenticated user');
-        return;
-      }
+      final userId = auth.currentUser?.id ?? 'local';
 
       final gymRepo = GymRepository();
       final equipmentRepo = EquipmentRepository();
@@ -121,6 +119,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
         }
 
         dashboardGyms.add(DashboardGym(
+          gymId: g.gymId,
           gymName: g.name,
           equipmentCount: equipmentCount,
           lastUpdated: lastUpdated,
