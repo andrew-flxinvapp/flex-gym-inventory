@@ -114,42 +114,108 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                       ),
                       const SizedBox(height: 40),
                       // Upgrade Option Selector
-                      Center(
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 370),
-                          height: 73,
-                          decoration: BoxDecoration(
-                            color: AppTheme.lightCard,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppTheme.lightTextPrimary,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                height: 20,
+                      RadioGroup<int>(
+                        groupValue: _selectedPlan,
+                        onChanged: (int? value) {
+                          if (value != null) _onPlanChanged(value);
+                        },
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Container(
+                                width: double.infinity,
+                                constraints: const BoxConstraints(maxWidth: 370),
+                                height: 73,
                                 decoration: BoxDecoration(
-                                  color: AppTheme.lightTextPrimary,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(14),
-                                    topRight: Radius.circular(14),
+                                  color: AppTheme.lightCard,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: AppTheme.lightTextPrimary,
+                                    width: 1.5,
                                   ),
                                 ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Save 25%',
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.lightCard,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Roboto',
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.lightTextPrimary,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(14),
+                                          topRight: Radius.circular(14),
+                                        ),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Save 25%',
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                          color: AppTheme.lightCard,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 16.0, right: 4.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Yearly Plan',
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: AppTheme.lightTextPrimary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Roboto',
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '\$44.99 per year',
+                                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                    color: AppTheme.lightTextPrimary,
+                                                    fontFamily: 'Roboto',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Theme(
+                                              data: Theme.of(context).copyWith(
+                                                unselectedWidgetColor: AppTheme.lightTextPrimary,
+                                              ),
+                                              child: Radio<int>(
+                                                value: 1,
+                                                activeColor: AppTheme.lightTextPrimary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded(
+                            ),
+                            const SizedBox(height: 16),
+                            Center(
+                              child: Container(
+                                width: double.infinity,
+                                constraints: const BoxConstraints(maxWidth: 370),
+                                height: 57,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.lightCard,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: AppTheme.lightTextPrimary,
+                                    width: 1.5,
+                                  ),
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 16.0, right: 4.0),
                                   child: Row(
@@ -161,7 +227,7 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Yearly Plan',
+                                            'Monthly Plan',
                                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               color: AppTheme.lightTextPrimary,
                                               fontWeight: FontWeight.bold,
@@ -170,7 +236,7 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            '\$44.99 per year',
+                                            '\$4.99 per month',
                                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                               color: AppTheme.lightTextPrimary,
                                               fontFamily: 'Roboto',
@@ -183,80 +249,16 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                           unselectedWidgetColor: AppTheme.lightTextPrimary,
                                         ),
                                         child: Radio<int>(
-                                          value: 1,
-                                          groupValue: _selectedPlan,
+                                          value: 0,
                                           activeColor: AppTheme.lightTextPrimary,
-                                          onChanged: (int? value) {
-                                            if (value != null) _onPlanChanged(value);
-                                          },
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 370),
-                          height: 57,
-                          decoration: BoxDecoration(
-                            color: AppTheme.lightCard,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppTheme.lightTextPrimary,
-                              width: 1.5,
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Monthly Plan',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: AppTheme.lightTextPrimary,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Roboto',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '\$4.99 per month',
-                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                        color: AppTheme.lightTextPrimary,
-                                        fontFamily: 'Roboto',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Theme(
-                                  data: Theme.of(context).copyWith(
-                                    unselectedWidgetColor: AppTheme.lightTextPrimary,
-                                  ),
-                                  child: Radio<int>(
-                                    value: 0,
-                                    groupValue: _selectedPlan,
-                                    activeColor: AppTheme.lightTextPrimary,
-                                    onChanged: (int? value) {
-                                      if (value != null) _onPlanChanged(value);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),

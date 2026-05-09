@@ -7,7 +7,7 @@ import '../../../theme/app_theme.dart';
 class ImageInput extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const ImageInput({Key? key, this.onTap}) : super(key: key);
+  const ImageInput({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {

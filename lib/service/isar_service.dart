@@ -3,6 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import '../src/models/gym_model.dart';
 import '../src/models/equipment_model.dart';
 import '../src/models/wishlist_model.dart';
+import '../src/models/user_prefs_model.dart';
+import '../src/models/app_state_model.dart';
 
 /// Service to initialize and provide a singleton Isar instance.
 class IsarService {
@@ -16,6 +18,8 @@ class IsarService {
       GymSchema,
       EquipmentSchema,
       WishlistSchema,
+      UserPrefsSchema,
+      AppStateSchema,
     ], directory: dir.path);
     return _isar!;
   }

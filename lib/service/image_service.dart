@@ -73,7 +73,7 @@ class ImageService {
 	Future<ImageItem> addImage(Uint8List bytes, {String? filename, String? title}) async {
 		final id = _uuid.v4();
 		final ext = filename != null ? p.extension(filename) : '.jpg';
-		final fname = '${id}${ext.isEmpty ? '.jpg' : ext}';
+		final fname = ext.isEmpty ? '$id.jpg' : '$id$ext';
 		final dir = await _imagesDir();
 		final filePath = p.join(dir.path, fname);
 		final file = File(filePath);

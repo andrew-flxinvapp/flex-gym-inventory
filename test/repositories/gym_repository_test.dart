@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 
@@ -11,9 +13,9 @@ void main() {
   // Skip Isar native tests in this environment where the native library
   // may not be available. Set to `false` to enable when running locally
   // with the Isar native library present.
-  const _skipIsarTests = true;
-  if (_skipIsarTests) {
-    print('Skipping Isar tests (native library not available in test environment)');
+  const skipIsarTests = true;
+  if (skipIsarTests) {
+    stderr.writeln('Skipping Isar tests (native library not available in test environment)');
     return;
   }
   TestWidgetsFlutterBinding.ensureInitialized();

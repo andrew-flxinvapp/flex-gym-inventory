@@ -16,8 +16,12 @@ class _FakeAuth {
   _FakeAuth(this.currentUser);
 
   Future<void> updateUser(UserAttributes attrs) async {
-    final Map<String, dynamic> data = (attrs.data as Map<String, dynamic>?) ?? {};
-    final Map<String, dynamic> existing = (currentUser.userMetadata as Map<String, dynamic>?) ?? {};
+    final Map<String, dynamic> data = attrs.data is Map
+      ? Map<String, dynamic>.from(attrs.data as Map)
+      : <String, dynamic>{};
+    final Map<String, dynamic> existing = currentUser.userMetadata != null
+      ? Map<String, dynamic>.from(currentUser.userMetadata!)
+      : <String, dynamic>{};
     currentUser.userMetadata = {...existing, ...data};
   }
 }
@@ -33,12 +37,12 @@ void main() {
     final fakeAuth = _FakeAuth(fakeUser);
     final fakeClient = _FakeClient(fakeAuth);
 
-    final binding = TestWidgetsFlutterBinding.ensureInitialized() as TestWidgetsFlutterBinding;
-    binding.window.physicalSizeTestValue = const Size(800, 1400);
-    binding.window.devicePixelRatioTestValue = 1.0;
+    TestWidgetsFlutterBinding.ensureInitialized();
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
-      binding.window.clearPhysicalSizeTestValue();
-      binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     await tester.pumpWidget(
@@ -72,12 +76,12 @@ void main() {
     final fakeAuth = _FakeAuth(fakeUser);
     final fakeClient = _FakeClient(fakeAuth);
 
-    final binding = TestWidgetsFlutterBinding.ensureInitialized() as TestWidgetsFlutterBinding;
-    binding.window.physicalSizeTestValue = const Size(800, 1400);
-    binding.window.devicePixelRatioTestValue = 1.0;
+    TestWidgetsFlutterBinding.ensureInitialized();
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
-      binding.window.clearPhysicalSizeTestValue();
-      binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     await tester.pumpWidget(

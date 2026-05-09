@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
@@ -7,9 +9,9 @@ import '../helpers/isar_test_util.dart';
 
 void main() {
   // Skip Isar native tests in CI/test env where native library may be missing.
-  const _skipIsarTests = true;
-  if (_skipIsarTests) {
-    print('Skipping Isar tests (native library not available in test environment)');
+  const skipIsarTests = true;
+  if (skipIsarTests) {
+    stderr.writeln('Skipping Isar tests (native library not available in test environment)');
     return;
   }
   TestWidgetsFlutterBinding.ensureInitialized();

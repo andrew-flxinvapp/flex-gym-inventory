@@ -30,8 +30,7 @@ void main() async {
   // Initialize deeplink handling and register a simple handler that
   // navigates to the verify-email screen and forwards parsed params.
   DeeplinkService.instance.registerHandler((uri, params) async {
-    // ignore: avoid_print
-    print('Deeplink received: $uri params: $params');
+    LogHandler.info('Deeplink', 'Deeplink received: $uri params: $params');
     try {
       // If the link contains Supabase auth tokens (fragment) or an auth code
       // (query param `code`), ask the Supabase client to parse & restore the
@@ -44,8 +43,7 @@ void main() async {
           await Supabase.instance.client.auth.getSessionFromUrl(uri);
         } catch (e, st) {
           // Log and fall through to show verify screen
-          // ignore: avoid_print
-          print('Deeplink: getSessionFromUrl failed: $e\n$st');
+          LogHandler.warning('Deeplink', 'getSessionFromUrl failed: $e', e, st);
         }
 
         final user = Supabase.instance.client.auth.currentUser;
@@ -60,8 +58,7 @@ void main() async {
             }
           } catch (e) {
             // Don't block navigation on reconciliation failures – log and continue.
-            // ignore: avoid_print
-            print('Metadata reconciliation failed: $e');
+            LogHandler.warning('Deeplink', 'Metadata reconciliation failed: $e', e, null);
           }
 
           // Successful sign-in — navigate into the app (startup router will
@@ -80,8 +77,7 @@ void main() async {
         arguments: params,
       );
     } catch (e) {
-      // ignore: avoid_print
-      print('Error handling deeplink: $e');
+          LogHandler.error('Deeplink', 'Error handling deeplink: $e', e, null);
       try {
         navigatorKey.currentState?.pushNamed(AppRoutes.verifiyEmail, arguments: params);
       } catch (_) {}

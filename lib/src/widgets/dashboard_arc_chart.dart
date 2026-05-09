@@ -177,7 +177,7 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
 
       Widget buildLegendItem(MapEntry<EquipmentCategory, int>? entry, int i) {
         final bool hasEntry = entry != null;
-        final color = hasEntry ? entry.key.color : AppTheme.lightTextPrimary.withOpacity(0.12);
+        final color = hasEntry ? entry.key.color : AppTheme.lightTextPrimary.withValues(alpha: 0.12);
         final label = hasEntry ? entry.key.label : '';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -196,7 +196,7 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: hasEntry ? AppTheme.lightTextPrimary : AppTheme.lightTextPrimary.withOpacity(0.35),
+                    color: hasEntry ? AppTheme.lightTextPrimary : AppTheme.lightTextPrimary.withValues(alpha: 0.35),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),

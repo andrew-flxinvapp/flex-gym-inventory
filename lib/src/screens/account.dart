@@ -1,4 +1,5 @@
 import 'package:flex_gym_inventory/theme/app_icons.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 import '../widgets/displays/account_greeting.dart';
 import '../widgets/displays/display_field.dart';
 import '../widgets/displays/display_field_upgrade.dart';
@@ -76,7 +77,7 @@ class AccountScreen extends StatelessWidget {
 										const SizedBox(height: 16),
 										DisplayFieldUpgrade(
 											onPressed: () {
-												Navigator.of(context).pushNamed('/upgrade-account');
+												Navigator.of(context).pushNamed(AppRoutes.upgradeAccount);
 											},
 										),
 										const SizedBox(height: 16),

@@ -3,6 +3,7 @@ import 'package:flex_gym_inventory/src/widgets/top_app_bar.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/src/widgets/cards/settings_item.dart';
 import '../widgets/buttons/primary_button.dart';
+import 'package:flex_gym_inventory/routes/routes.dart';
 
 class SettingsScreen extends StatelessWidget {
 	const SettingsScreen({super.key});
@@ -47,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
 													SettingsItem(
 														title: 'Upgrade Account',
 														onTap: () {
-															Navigator.of(context).pushNamed('/upgrade-account');
+															Navigator.of(context).pushNamed(AppRoutes.upgradeAccount);
 														},
 													),
 													const SizedBox(height: 12),

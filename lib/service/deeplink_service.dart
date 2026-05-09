@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 
 // Wrap AppLinks so the rest of the app can remain unchanged (handler API still
 // uses Uri and a params map).
@@ -30,8 +31,7 @@ class DeeplinkService {
       }
     } catch (e, st) {
       // swallow errors but allow higher-level logging if needed
-      // ignore: avoid_print
-      print('DeeplinkService: error getting initial uri: $e\n$st');
+      LogHandler.warning('DeeplinkService', 'error getting initial uri: $e', e, st);
     }
 
     // Listen for subsequent incoming links while the app is running.
@@ -39,8 +39,7 @@ class DeeplinkService {
       _handleUri(uri);
     }, onError: (err, st) {
       // ignore errors here, but log for diagnostics
-      // ignore: avoid_print
-      print('DeeplinkService: uri link stream error: $err\n$st');
+      LogHandler.warning('DeeplinkService', 'uri link stream error: $err', err, st);
     });
   }
 
@@ -75,13 +74,11 @@ class DeeplinkService {
       try {
         await _handler!(uri, merged);
       } catch (e, st) {
-        // ignore: avoid_print
-        print('DeeplinkService: handler threw: $e\n$st');
+        LogHandler.error('DeeplinkService', 'handler threw', e, st);
       }
     } else {
       // No handler registered — log for debugging
-      // ignore: avoid_print
-      print('DeeplinkService: received uri but no handler registered: $uri');
+      LogHandler.info('DeeplinkService', 'received uri but no handler registered: $uri');
     }
   }
 

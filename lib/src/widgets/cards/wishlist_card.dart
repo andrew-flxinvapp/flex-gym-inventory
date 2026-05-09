@@ -50,16 +50,20 @@ class _WishlistLinkRow extends StatelessWidget {
 
   Future<void> _launchUrl(BuildContext context) async {
     final uri = Uri.tryParse(url);
+    final overlay = Overlay.of(context);
+    final mq = MediaQuery.of(context);
+    final left = mq.size.width / 2 - 193;
+    final bottom = mq.padding.bottom + 32;
+
     if (uri != null && await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       // Show custom FlexSnackbar as a warning
-      final overlay = Overlay.of(context);
       late OverlayEntry overlayEntry;
       overlayEntry = OverlayEntry(
         builder: (ctx) => Positioned(
-          left: MediaQuery.of(context).size.width / 2 - 193,
-          bottom: MediaQuery.of(context).padding.bottom + 32,
+          left: left,
+          bottom: bottom,
           child: Material(
             color: Colors.transparent,
             child: FlexSnackbar(

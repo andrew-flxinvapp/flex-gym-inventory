@@ -26,7 +26,7 @@ import '../src/screens/onboarding_complete.dart';
 import '../src/screens/support.dart';
 import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
-import '../src/screens/upgrade_account.dart';
+// Use the onboarding screen for both onboarding and upgrade flows.
 import '../src/screens/delete_account.dart';
 import '../src/screens/notifications.dart';
 import '../src/screens/onboarding_feature_one.dart';
@@ -134,7 +134,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.support: (context) => const SupportScreen(),
   AppRoutes.feedback: (context) => const FeedbackScreen(),
   AppRoutes.account: (context) => const AccountScreen(),
-  AppRoutes.upgradeAccount: (context) => const UpgradeAccountScreen(),
+  AppRoutes.upgradeAccount: (context) => const OnboardingUpgradeScreen(),
   AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),

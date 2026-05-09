@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:flutter/foundation.dart';
 
 class LogHandler {
   static final Logger _logger = Logger('FlexGymApp');
@@ -7,9 +8,9 @@ class LogHandler {
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((record) {
       final timestamp = record.time.toIso8601String();
-      print('[${record.level.name}][$timestamp] ${record.loggerName}: ${record.message}');
-      if (record.error != null) print('Error details: ${record.error}');
-      if (record.stackTrace != null) print('Stack: ${record.stackTrace}');
+      debugPrint('[${record.level.name}][$timestamp] ${record.loggerName}: ${record.message}');
+      if (record.error != null) debugPrint('Error details: ${record.error}');
+      if (record.stackTrace != null) debugPrint('Stack: ${record.stackTrace}');
     });
   }
 

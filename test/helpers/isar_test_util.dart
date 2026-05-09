@@ -22,7 +22,7 @@ Future<Isar> openIsarTestInstance() async {
       name: 'test_isar',
     );
   } catch (e) {
-    print('Error opening Isar test instance: $e');
+    stderr.writeln('Error opening Isar test instance: $e');
     rethrow;
   }
 }
@@ -37,7 +37,7 @@ Future<void> clearIsarTestInstance(Isar isar) async {
       await isar.wishlists.clear();
     });
   } catch (e) {
-    print('Error clearing Isar test instance: $e');
+    stderr.writeln('Error clearing Isar test instance: $e');
     rethrow;
   }
 }
@@ -47,7 +47,7 @@ Future<void> closeIsarTestInstance(Isar isar) async {
   try {
     await isar.close();
   } catch (e) {
-    print('Error closing Isar test instance: $e');
+    stderr.writeln('Error closing Isar test instance: $e');
     rethrow;
   }
 }

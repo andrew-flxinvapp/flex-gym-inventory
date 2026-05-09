@@ -19,11 +19,10 @@ class DeleteAccountSelector extends StatelessWidget {
 			onTap: onTap,
 			child: Row(
 				children: [
-					Radio<bool>(
-						value: true,
-						groupValue: selected,
-						onChanged: (_) => onTap?.call(),
-					),
+								Checkbox(
+									value: selected,
+									onChanged: (_) => onTap?.call(),
+								),
 								const SizedBox(width: 8),
 						Expanded(
 							child: Text(
