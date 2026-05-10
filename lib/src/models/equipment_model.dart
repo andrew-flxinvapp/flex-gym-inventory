@@ -39,7 +39,6 @@ class Equipment {
 
   late String model;
   late int quantity;
-  String? serialNumber;
   String? maintenanceNotes;
 
   Equipment({
@@ -54,7 +53,6 @@ class Equipment {
     required this.condition,
     this.purchaseDate,
     this.value,
-    this.serialNumber,
     this.maintenanceNotes,
   });
 

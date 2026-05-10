@@ -46,7 +46,6 @@ class EquipmentRepository {
     required EquipmentCondition condition,
     DateTime? purchaseDate,
     double? value,
-    String? serialNumber,
     String? maintenanceNotes,
   }) async {
     final equipment = Equipment(
@@ -61,7 +60,6 @@ class EquipmentRepository {
       condition: condition,
       purchaseDate: purchaseDate,
       value: value,
-      serialNumber: serialNumber,
       maintenanceNotes: maintenanceNotes,
     );
     await upsert(equipment);
@@ -81,7 +79,6 @@ class EquipmentRepository {
     EquipmentCondition? condition,
     DateTime? purchaseDate,
     double? value,
-    String? serialNumber,
     String? maintenanceNotes,
   }) async {
     final isar = IsarService.isar;
@@ -96,7 +93,6 @@ class EquipmentRepository {
     if (condition != null) equipment.condition = condition;
     if (purchaseDate != null) equipment.purchaseDate = purchaseDate;
     if (value != null) equipment.value = value;
-    if (serialNumber != null) equipment.serialNumber = serialNumber;
     if (maintenanceNotes != null) equipment.maintenanceNotes = maintenanceNotes;
     if (imageId != null) equipment.imageId = imageId;
     await upsert(equipment);

@@ -36,12 +36,9 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   TrainingStyle? selectedTrainingStyle;
   EquipmentCondition? selectedCondition;
   DateTime? selectedPurchaseDate;
-  bool isPair = false;
-  bool isEstimateValue = false;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
-  final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController valueController = TextEditingController();
@@ -84,7 +81,6 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
             nameController.clear();
             brandController.clear();
             modelController.clear();
-            serialController.clear();
             maintenanceNotesController.clear();
             quantityController.clear();
             valueController.clear();
@@ -154,7 +150,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   showAsterisk: true,
                   controller: nameController,
                 ),
-                const SizedBox(height: 20),
+                /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -172,7 +168,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                     }
                     return null;
                   },
-                ),
+                ),*/
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
                   hintText: 'Category',
@@ -262,12 +258,6 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                   controller: valueController,
                 ),
                 const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Serial Number',
-                  showAsterisk: false,
-                  controller: serialController,
-                ),
-                const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Maintenance Notes',
                   maxLines: 5,
@@ -300,7 +290,6 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                           condition: selectedCondition,
                           purchaseDate: selectedPurchaseDate,
                           value: double.tryParse(valueController.text.trim()),
-                          serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
                           maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
                         );
                         if (!mounted) return;

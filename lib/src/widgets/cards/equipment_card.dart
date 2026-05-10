@@ -13,6 +13,7 @@ class EquipmentCard extends StatelessWidget {
   final int quantity;
   final EquipmentCategory category;
   final String brand;
+  final int? isarId;
 
   const EquipmentCard({
     super.key,
@@ -20,6 +21,7 @@ class EquipmentCard extends StatelessWidget {
     required this.quantity,
     required this.category,
     required this.brand,
+    this.isarId,
   });
 
   @override
@@ -61,13 +63,17 @@ class EquipmentCard extends StatelessWidget {
           ),
         ],
       ),
-      child: BaseCard(
+        child: BaseCard(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const EquipmentDetailScreen(),
-            ),
-          );
+          if (isarId != null) {
+            Navigator.of(context).pushNamed(AppRoutes.equipmentDetail, arguments: isarId);
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const EquipmentDetailScreen(),
+              ),
+            );
+          }
         },
         body: Row(
           children: [

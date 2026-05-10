@@ -173,6 +173,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       itemName: e.name,
                       quantity: e.quantity,
                       category: e.category,
+                      isarId: e.id,
                     ),
                     const SizedBox(height: 16),
                   ],

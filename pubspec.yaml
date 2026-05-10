@@ -128,6 +128,7 @@ flutter:
     - lib/assets/icons/star.png
     - lib/assets/icons/apple.png
     - lib/assets/icons/upload.png
+    - lib/assets/icons/more.png
 
 
 

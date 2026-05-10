@@ -219,4 +219,9 @@ extension ImageSourceLabel on ImageSource {
     }
   }
 }
-  
+
+/// Menu actions for equipment detail screen
+enum ImageAction {
+  edit,
+  delete,
+}

@@ -74,19 +74,14 @@ const EquipmentSchema = CollectionSchema(
       name: r'quantity',
       type: IsarType.long,
     ),
-    r'serialNumber': PropertySchema(
-      id: 11,
-      name: r'serialNumber',
-      type: IsarType.string,
-    ),
     r'trainingStyle': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'trainingStyle',
       type: IsarType.string,
       enumMap: _EquipmenttrainingStyleEnumValueMap,
     ),
     r'value': PropertySchema(
-      id: 13,
+      id: 12,
       name: r'value',
       type: IsarType.double,
     )
@@ -247,12 +242,6 @@ int _equipmentEstimateSize(
   }
   bytesCount += 3 + object.model.length * 3;
   bytesCount += 3 + object.name.length * 3;
-  {
-    final value = object.serialNumber;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   bytesCount += 3 + object.trainingStyle.name.length * 3;
   return bytesCount;
 }
@@ -274,9 +263,8 @@ void _equipmentSerialize(
   writer.writeString(offsets[8], object.name);
   writer.writeDateTime(offsets[9], object.purchaseDate);
   writer.writeLong(offsets[10], object.quantity);
-  writer.writeString(offsets[11], object.serialNumber);
-  writer.writeString(offsets[12], object.trainingStyle.name);
-  writer.writeDouble(offsets[13], object.value);
+  writer.writeString(offsets[11], object.trainingStyle.name);
+  writer.writeDouble(offsets[12], object.value);
 }
 
 Equipment _equipmentDeserialize(
@@ -300,11 +288,10 @@ Equipment _equipmentDeserialize(
     name: reader.readString(offsets[8]),
     purchaseDate: reader.readDateTimeOrNull(offsets[9]),
     quantity: reader.readLong(offsets[10]),
-    serialNumber: reader.readStringOrNull(offsets[11]),
     trainingStyle: _EquipmenttrainingStyleValueEnumMap[
-            reader.readStringOrNull(offsets[12])] ??
+            reader.readStringOrNull(offsets[11])] ??
         TrainingStyle.general,
-    value: reader.readDoubleOrNull(offsets[13]),
+    value: reader.readDoubleOrNull(offsets[12]),
   );
   object.id = id;
   return object;
@@ -343,12 +330,10 @@ P _equipmentDeserializeProp<P>(
     case 10:
       return (reader.readLong(offset)) as P;
     case 11:
-      return (reader.readStringOrNull(offset)) as P;
-    case 12:
       return (_EquipmenttrainingStyleValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TrainingStyle.general) as P;
-    case 13:
+    case 12:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2414,159 +2399,6 @@ extension EquipmentQueryFilter
   }
 
   QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'serialNumber',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'serialNumber',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> serialNumberEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> serialNumberBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'serialNumber',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'serialNumber',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> serialNumberMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'serialNumber',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'serialNumber',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
-      serialNumberIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'serialNumber',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
       trainingStyleEqualTo(
     TrainingStyle value, {
     bool caseSensitive = true,
@@ -2921,18 +2753,6 @@ extension EquipmentQuerySortBy on QueryBuilder<Equipment, Equipment, QSortBy> {
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortBySerialNumber() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serialNumber', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortBySerialNumberDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serialNumber', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByTrainingStyle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'trainingStyle', Sort.asc);
@@ -3105,18 +2925,6 @@ extension EquipmentQuerySortThenBy
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenBySerialNumber() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serialNumber', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenBySerialNumberDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serialNumber', Sort.desc);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByTrainingStyle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'trainingStyle', Sort.asc);
@@ -3219,13 +3027,6 @@ extension EquipmentQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Equipment, Equipment, QDistinct> distinctBySerialNumber(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'serialNumber', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Equipment, Equipment, QDistinct> distinctByTrainingStyle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3315,12 +3116,6 @@ extension EquipmentQueryProperty
   QueryBuilder<Equipment, int, QQueryOperations> quantityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'quantity');
-    });
-  }
-
-  QueryBuilder<Equipment, String?, QQueryOperations> serialNumberProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'serialNumber');
     });
   }
 

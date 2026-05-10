@@ -44,7 +44,6 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  final TextEditingController serialController = TextEditingController();
   final TextEditingController maintenanceNotesController = TextEditingController();
   final TextEditingController valueController = TextEditingController();
 
@@ -87,8 +86,9 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
             nameController.clear();
             brandController.clear();
             modelController.clear();
-            serialController.clear();
             maintenanceNotesController.clear();
+            quantityController.clear();
+            valueController.clear();
           });
         },
       ),
@@ -154,7 +154,7 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                   showAsterisk: true,
                   controller: nameController,
                 ),
-                const SizedBox(height: 20),
+                /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -166,7 +166,7 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                       selectedImageSource = value;
                     });
                   },
-                ),
+                ),*/
                 const SizedBox(height: 20),
                 CustomDropdownField<EquipmentCategory>(
                   hintText: 'Select Category',
@@ -259,12 +259,6 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Serial Number',
-                  showAsterisk: false,
-                  controller: serialController,
-                ),
-                const SizedBox(height: 20),
                 CustomMultilineTextInput(
                   hintText: 'Maintenance Notes',
                   maxLines: 5,
@@ -292,7 +286,6 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                         condition: selectedCondition ?? EquipmentCondition.good,
                         purchaseDate: selectedPurchaseDate,
                         value: val,
-                        serialNumber: serialController.text.trim().isEmpty ? null : serialController.text.trim(),
                         maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
                       );
 

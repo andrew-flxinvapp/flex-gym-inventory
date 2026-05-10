@@ -168,7 +168,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     hintText: 'Link (URL)',
                     showAsterisk: false,
                   ),
-                  const SizedBox(height: 20),
+                  /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -186,7 +186,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     }
                     return null;
                   },
-                ),
+                ),*/
                   const SizedBox(height: 20),
                   CustomMultilineTextInput(
                     hintText: 'Notes',

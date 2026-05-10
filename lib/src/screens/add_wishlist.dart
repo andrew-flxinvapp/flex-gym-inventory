@@ -172,7 +172,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                   showAsterisk: true,
                   controller: priceController,
                 ),
-                const SizedBox(height: 20),
+                /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -190,7 +190,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                     }
                     return null;
                   },
-                ),
+                ),*/
                 const SizedBox(height: 20),
                 CustomTextInputField(
                   hintText: 'Link (URL)',
