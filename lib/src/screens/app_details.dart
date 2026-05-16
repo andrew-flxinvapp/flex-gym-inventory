@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
@@ -92,9 +93,12 @@ class AppDetailsScreen extends StatelessWidget {
                                     color: AppTheme.lightTextPrimary,
                                   )),
                           GestureDetector(
-                            onTap: () {
-                              // TODO: Implement privacy policy navigation
-                            },
+                            onTap: () async {
+												final url = Uri.parse('https://flexgyminventory.app/privacy-policy');
+												if (await canLaunchUrl(url)) {
+													await launchUrl(url, mode: LaunchMode.externalApplication);
+												}
+											},
                             child: Text('Here',
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                       color: AppTheme.lightSecondary,
@@ -118,9 +122,12 @@ class AppDetailsScreen extends StatelessWidget {
                                     color: AppTheme.lightTextPrimary,
                                   )),
                           GestureDetector(
-                            onTap: () {
-                              // TODO: Implement terms navigation
-                            },
+                            onTap: () async {
+												final url = Uri.parse('https://flexgyminventory.app/terms-and-conditions');
+												if (await canLaunchUrl(url)) {
+													await launchUrl(url, mode: LaunchMode.externalApplication);
+												}
+											},
                             child: Text('Here',
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                       color: AppTheme.lightSecondary,
@@ -141,7 +148,12 @@ class AppDetailsScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                               )),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
+                      Text('KDC - IX-XXV-MMXXV',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.lightTextPrimary,
+                              )),        
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
