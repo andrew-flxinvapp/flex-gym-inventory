@@ -73,13 +73,13 @@ void main() async {
 
       // No tokens/code or session restore failed — navigate to verify email
       navigatorKey.currentState?.pushNamed(
-        AppRoutes.verifiyEmail,
+        AppRoutes.verifyEmail,
         arguments: params,
       );
     } catch (e) {
           LogHandler.error('Deeplink', 'Error handling deeplink: $e', e, null);
       try {
-        navigatorKey.currentState?.pushNamed(AppRoutes.verifiyEmail, arguments: params);
+        navigatorKey.currentState?.pushNamed(AppRoutes.verifyEmail, arguments: params);
       } catch (_) {}
     }
   });
@@ -96,6 +96,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig.init(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flex Gym Inventory',
       navigatorKey: navigatorKey,
       theme: AppTheme.lightTheme,

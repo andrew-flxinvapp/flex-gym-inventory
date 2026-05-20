@@ -23,8 +23,8 @@ class SecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppTheme.lightPrimary,
-          side: BorderSide(color: AppTheme.lightPrimary, width: 2),
+          foregroundColor: AppTheme.lightTextPrimary,
+          side: BorderSide(color: AppTheme.lightTextPrimary, width: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -32,7 +32,7 @@ class SecondaryButton extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppTheme.lightPrimary,
+                color: AppTheme.lightTextPrimary,
                 fontWeight: FontWeight.bold,
               ),
         ),

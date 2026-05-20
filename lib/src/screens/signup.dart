@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
         showFlexSnackbarFromUiMessage(context, msg);
         // If sign-up succeeded, go to verify email screen.
         if (msg.type == UiMessageType.success) {
-          Navigator.of(context).pushNamed(AppRoutes.verifiyEmail);
+          Navigator.of(context).pushNamed(AppRoutes.verifyEmail);
         }
         _signUpViewModel.clearMessage();
       }

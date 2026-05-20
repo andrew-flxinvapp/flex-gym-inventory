@@ -67,7 +67,7 @@ class AppRoutes {
   // Auth routes
   static const String signup = '/signup';
   static const String login = '/login';
-  static const String verifiyEmail = '/verify-email';
+  static const String verifyEmail = '/verify-email';
   static const String optNotifications = '/opt-notifications';
   static const String onboardingFeatureOne = '/onboarding-feature-one';
   static const String onboardingFeatureTwo = '/onboarding-feature-two';
@@ -120,7 +120,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   // Auth routes
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),
-  AppRoutes.verifiyEmail: (context) => const VerifyEmailScreen(),
+  AppRoutes.verifyEmail: (context) => const VerifyEmailScreen(),
   AppRoutes.optNotifications: (context) => const OptNotificationsScreen(),
   AppRoutes.onboardingFeatureOne: (context) => const OnboardingFeatureOneScreen(),
   AppRoutes.onboardingFeatureTwo: (context) => const OnboardingFeatureTwoScreen(),

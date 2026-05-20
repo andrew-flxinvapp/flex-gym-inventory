@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import '../../enum/app_enums.dart';
 import 'package:flex_gym_inventory/service/active_gym_service.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
@@ -119,7 +118,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       const SizedBox(height: 6),
                       Text(
                         'Add equipment below',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: AppTheme.lightTextPrimary,
                         ),
                         textAlign: TextAlign.center,
@@ -188,7 +187,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       WarningButton(
                         label: 'Delete Gym',
                         onPressed: () {
-                          final deleteAction = () async {
+                          Future<void> deleteAction() async {
                             final service = ActiveGymService(IsarService.isar);
                             final gym = await service.getActiveGym();
                             if (gym != null) {
@@ -196,8 +195,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                               await repo.deleteGym(gym.id);
                               await service.clearActiveGym();
                             }
-                            if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
-                          };
+                            if (!mounted) return;
+                            Navigator.of(context).popUntil((route) => route.isFirst);
+                          }
 
                           showDialog(
                             context: context,
