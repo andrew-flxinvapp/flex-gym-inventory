@@ -1,4 +1,3 @@
-import 'package:flex_gym_inventory/src/screens/wishlist_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../theme/app_theme.dart';
@@ -13,6 +12,8 @@ class WishlistItemCard extends StatelessWidget {
   final String brand;
   final double price;
   final String priority;
+  final int? isarId;
+  final ValueChanged<int?>? onTapCallback;
 
   const WishlistItemCard({
     super.key,
@@ -20,15 +21,19 @@ class WishlistItemCard extends StatelessWidget {
     required this.brand,
     required this.price,
     required this.priority,
+    this.isarId,
+    this.onTapCallback,
   });
 
   WishlistItemCard.fromWishlist(
     Wishlist item, {
     super.key,
+    this.onTapCallback,
   })  : itemName = item.name,
         brand = item.brand,
         price = double.tryParse(item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '') ?? 0.0,
-        priority = item.priority.label;
+        priority = item.priority.label,
+        isarId = item.id;
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +74,17 @@ class WishlistItemCard extends StatelessWidget {
           ),
         ],
       ),
-      child: BaseCard(
+        child: BaseCard(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const WishlistDetailScreen(),
-            ),
-          );
+          if (onTapCallback != null) {
+            onTapCallback!(isarId);
+            return;
+          }
+          if (isarId != null) {
+            Navigator.of(context).pushNamed(AppRoutes.wishlistDetail, arguments: isarId);
+          } else {
+            Navigator.of(context).pushNamed(AppRoutes.wishlistDetail);
+          }
         },
         body: Row(
           children: [

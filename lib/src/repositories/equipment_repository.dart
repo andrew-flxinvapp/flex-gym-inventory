@@ -47,6 +47,7 @@ class EquipmentRepository {
     DateTime? purchaseDate,
     double? value,
     String? maintenanceNotes,
+    DateTime? createdDate,
   }) async {
     final equipment = Equipment(
       gymId: gymId,
@@ -58,6 +59,7 @@ class EquipmentRepository {
       trainingStyle: trainingStyle,
       quantity: quantity,
       condition: condition,
+      createdDate: createdDate ?? DateTime.now(),
       purchaseDate: purchaseDate,
       value: value,
       maintenanceNotes: maintenanceNotes,

@@ -9,6 +9,8 @@ import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:flex_gym_inventory/service/active_gym_service.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import '../widgets/top_app_bar.dart';
+import '../widgets/dialogs/confirm_dialog.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
 import '../widgets/buttons/primary_button.dart';
 //import '../widgets/dashboard_piechart.dart';
 import '../widgets/dashboard_arc_chart.dart';
@@ -155,10 +157,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   },
                   borderRadius: BorderRadius.circular(16),
                   child: DashboardGymCard(
-                    gymName: gyms[0].gymName,
-                    equipmentCount: gyms[0].equipmentCount,
-                    lastUpdated: gyms[0].lastUpdated,
-                  ),
+                      gymName: gyms[0].gymName,
+                      equipmentCount: gyms[0].equipmentCount,
+                      lastUpdated: gyms[0].lastUpdated,
+                      onDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => ConfirmDialog(
+                            title: 'Delete Gym',
+                            content: 'Are you sure you want to delete this gym and all its equipment?',
+                            confirmText: 'Delete',
+                            onConfirm: () async {
+                              // Resolve gym by gymId then delete
+                              final repo = GymRepository();
+                              final g = await repo.getByGymId(gyms[0].gymId);
+                              if (g != null) {
+                                await repo.deleteGym(g.id);
+                              }
+                              await ref.read(dashboardProvider.notifier).refresh();
+                            },
+                          ),
+                        );
+                      },
+                    ),
                 ),
               const SizedBox(height: 16),
               PrimaryButton(

@@ -14,6 +14,7 @@ class EquipmentCard extends StatelessWidget {
   final EquipmentCategory category;
   final String brand;
   final int? isarId;
+  final VoidCallback? onTapCallback;
 
   const EquipmentCard({
     super.key,
@@ -22,6 +23,7 @@ class EquipmentCard extends StatelessWidget {
     required this.category,
     required this.brand,
     this.isarId,
+    this.onTapCallback,
   });
 
   @override
@@ -64,7 +66,7 @@ class EquipmentCard extends StatelessWidget {
         ],
       ),
         child: BaseCard(
-        onTap: () {
+        onTap: onTapCallback ?? () {
           if (isarId != null) {
             Navigator.of(context).pushNamed(AppRoutes.equipmentDetail, arguments: isarId);
           } else {

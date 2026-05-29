@@ -39,49 +39,54 @@ const EquipmentSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _EquipmentconditionEnumValueMap,
     ),
-    r'gymId': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 4,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'gymId': PropertySchema(
+      id: 5,
       name: r'gymId',
       type: IsarType.string,
     ),
     r'imageId': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'imageId',
       type: IsarType.string,
     ),
     r'maintenanceNotes': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'maintenanceNotes',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'model',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'name',
       type: IsarType.string,
     ),
     r'purchaseDate': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'purchaseDate',
       type: IsarType.dateTime,
     ),
     r'quantity': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'quantity',
       type: IsarType.long,
     ),
     r'trainingStyle': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'trainingStyle',
       type: IsarType.string,
       enumMap: _EquipmenttrainingStyleEnumValueMap,
     ),
     r'value': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'value',
       type: IsarType.double,
     )
@@ -128,6 +133,19 @@ const EquipmentSchema = CollectionSchema(
           name: r'imageId',
           type: IndexType.hash,
           caseSensitive: true,
+        )
+      ],
+    ),
+    r'createdDate': IndexSchema(
+      id: 7275501510556639048,
+      name: r'createdDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'createdDate',
+          type: IndexType.value,
+          caseSensitive: false,
         )
       ],
     ),
@@ -256,15 +274,16 @@ void _equipmentSerialize(
   writer.writeString(offsets[1], object.brand);
   writer.writeString(offsets[2], object.category.name);
   writer.writeString(offsets[3], object.condition.name);
-  writer.writeString(offsets[4], object.gymId);
-  writer.writeString(offsets[5], object.imageId);
-  writer.writeString(offsets[6], object.maintenanceNotes);
-  writer.writeString(offsets[7], object.model);
-  writer.writeString(offsets[8], object.name);
-  writer.writeDateTime(offsets[9], object.purchaseDate);
-  writer.writeLong(offsets[10], object.quantity);
-  writer.writeString(offsets[11], object.trainingStyle.name);
-  writer.writeDouble(offsets[12], object.value);
+  writer.writeDateTime(offsets[4], object.createdDate);
+  writer.writeString(offsets[5], object.gymId);
+  writer.writeString(offsets[6], object.imageId);
+  writer.writeString(offsets[7], object.maintenanceNotes);
+  writer.writeString(offsets[8], object.model);
+  writer.writeString(offsets[9], object.name);
+  writer.writeDateTime(offsets[10], object.purchaseDate);
+  writer.writeLong(offsets[11], object.quantity);
+  writer.writeString(offsets[12], object.trainingStyle.name);
+  writer.writeDouble(offsets[13], object.value);
 }
 
 Equipment _equipmentDeserialize(
@@ -281,17 +300,18 @@ Equipment _equipmentDeserialize(
     condition:
         _EquipmentconditionValueEnumMap[reader.readStringOrNull(offsets[3])] ??
             EquipmentCondition.brandNew,
-    gymId: reader.readString(offsets[4]),
-    imageId: reader.readStringOrNull(offsets[5]),
-    maintenanceNotes: reader.readStringOrNull(offsets[6]),
-    model: reader.readString(offsets[7]),
-    name: reader.readString(offsets[8]),
-    purchaseDate: reader.readDateTimeOrNull(offsets[9]),
-    quantity: reader.readLong(offsets[10]),
+    createdDate: reader.readDateTimeOrNull(offsets[4]),
+    gymId: reader.readString(offsets[5]),
+    imageId: reader.readStringOrNull(offsets[6]),
+    maintenanceNotes: reader.readStringOrNull(offsets[7]),
+    model: reader.readString(offsets[8]),
+    name: reader.readString(offsets[9]),
+    purchaseDate: reader.readDateTimeOrNull(offsets[10]),
+    quantity: reader.readLong(offsets[11]),
     trainingStyle: _EquipmenttrainingStyleValueEnumMap[
-            reader.readStringOrNull(offsets[11])] ??
+            reader.readStringOrNull(offsets[12])] ??
         TrainingStyle.general,
-    value: reader.readDoubleOrNull(offsets[12]),
+    value: reader.readDoubleOrNull(offsets[13]),
   );
   object.id = id;
   return object;
@@ -316,24 +336,26 @@ P _equipmentDeserializeProp<P>(
               reader.readStringOrNull(offset)] ??
           EquipmentCondition.brandNew) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
       return (reader.readString(offset)) as P;
     case 9:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 11:
+      return (reader.readLong(offset)) as P;
+    case 12:
       return (_EquipmenttrainingStyleValueEnumMap[
               reader.readStringOrNull(offset)] ??
           TrainingStyle.general) as P;
-    case 12:
+    case 13:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -420,6 +442,14 @@ extension EquipmentQueryWhereSort
   QueryBuilder<Equipment, Equipment, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhere> anyCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'createdDate'),
+      );
     });
   }
 
@@ -659,6 +689,116 @@ extension EquipmentQueryWhere
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdDate',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateEqualTo(
+      DateTime? createdDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdDate',
+        value: [createdDate],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateNotEqualTo(
+      DateTime? createdDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [],
+              upper: [createdDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [createdDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [createdDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdDate',
+              lower: [],
+              upper: [createdDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateGreaterThan(
+    DateTime? createdDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [createdDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateLessThan(
+    DateTime? createdDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [],
+        upper: [createdDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterWhereClause> createdDateBetween(
+    DateTime? lowerCreatedDate,
+    DateTime? upperCreatedDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdDate',
+        lower: [lowerCreatedDate],
+        includeLower: includeLower,
+        upper: [upperCreatedDate],
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1524,6 +1664,78 @@ extension EquipmentQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'condition',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
+      createdDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'createdDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
+      createdDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'createdDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> createdDateEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition>
+      createdDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> createdDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterFilterCondition> createdDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2668,6 +2880,18 @@ extension EquipmentQuerySortBy on QueryBuilder<Equipment, Equipment, QSortBy> {
     });
   }
 
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Equipment, Equipment, QAfterSortBy> sortByGymId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gymId', Sort.asc);
@@ -2828,6 +3052,18 @@ extension EquipmentQuerySortThenBy
     });
   }
 
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Equipment, Equipment, QAfterSortBy> thenByGymId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gymId', Sort.asc);
@@ -2979,6 +3215,12 @@ extension EquipmentQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Equipment, Equipment, QDistinct> distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
   QueryBuilder<Equipment, Equipment, QDistinct> distinctByGymId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3073,6 +3315,12 @@ extension EquipmentQueryProperty
       conditionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'condition');
+    });
+  }
+
+  QueryBuilder<Equipment, DateTime?, QQueryOperations> createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
     });
   }
 

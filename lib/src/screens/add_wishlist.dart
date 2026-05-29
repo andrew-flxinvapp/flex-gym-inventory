@@ -219,6 +219,7 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                         category: selectedCategory ?? EquipmentCategory.other,
                         brand: brandController.text.trim(),
                         priority: selectedPriority ?? WishlistPriority.medium,
+                        price: priceController.text.trim().isEmpty ? null : priceController.text.trim(),
                         productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
                         notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
                       );

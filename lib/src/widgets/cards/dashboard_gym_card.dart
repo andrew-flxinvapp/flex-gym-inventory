@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../theme/app_theme.dart';
 import '../../../theme/app_icons.dart';
 import 'base_card.dart';
@@ -7,19 +8,43 @@ class DashboardGymCard extends StatelessWidget {
   final String gymName;
   final int equipmentCount;
   final DateTime lastUpdated;
+  final VoidCallback? onDelete;
 
   const DashboardGymCard({
     super.key,
     required this.gymName,
     required this.equipmentCount,
     required this.lastUpdated,
+    this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
     final int daysAgo = DateTime.now().difference(lastUpdated).inDays;
 
-    return BaseCard(
+    return Slidable(
+      key: ValueKey(gymName),
+      endActionPane: ActionPane(
+        motion: const BehindMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (ctx) {
+              if (onDelete != null) onDelete!();
+            },
+            backgroundColor: AppTheme.stopColor,
+            foregroundColor: AppTheme.lightBackground,
+            icon: Icons.delete,
+            label: 'Delete',
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(0),
+              topRight: Radius.circular(16),
+              bottomLeft: Radius.circular(0),
+              bottomRight: Radius.circular(16),
+            ),
+          ),
+        ],
+      ),
+      child: BaseCard(
       borderRadius: BorderRadius.circular(16),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       body: Column(
@@ -105,6 +130,7 @@ class DashboardGymCard extends StatelessWidget {
           // Removed equipment/update row to simplify card
         ],
       ),
-    );
+    ),
+  );
   }
 }

@@ -11,7 +11,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/cards/details_card.dart';
 import '../widgets/cards/purchase_card.dart';
 import '../widgets/cards/notes_card.dart';
-import '../widgets/buttons/primary_button.dart';
+import '../widgets/buttons/warning_button.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
 
 class EquipmentDetailScreen extends StatefulWidget {
@@ -198,7 +198,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                         const SizedBox(height: 32),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: PrimaryButton(
+                          child: WarningButton(
                             label: 'Delete Item',
                             onPressed: () {
                               showDialog(
@@ -208,7 +208,6 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                                   content: 'Are you sure you want to delete this item? This action cannot be undone.',
                                   confirmText: 'Delete',
                                   onConfirm: () async {
-                                    Navigator.of(ctx).pop();
                                     await _deleteEquipment();
                                   },
                                 ),

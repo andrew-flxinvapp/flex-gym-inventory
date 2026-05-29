@@ -29,6 +29,40 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
   final TextEditingController locationController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
+  String gymId = 'GYM-0001';
+  bool _loadingExisting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadExistingGym());
+  }
+
+  Future<void> _loadExistingGym() async {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    int? isarId;
+    if (args is int) isarId = args;
+    if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+    if (isarId == null) return;
+    setState(() => _loadingExisting = true);
+    try {
+      final repo = GymRepository();
+      final gym = await repo.getByIsarId(isarId);
+      if (gym == null) return;
+      if (!mounted) return;
+      setState(() {
+        nameController.text = gym.name;
+        locationController.text = gym.location ?? '';
+        notesController.text = gym.gymNotes ?? '';
+        selectedDate = gym.createdDate;
+        gymId = gym.gymId;
+      });
+    } catch (_) {
+      // ignore errors here; form stays empty
+    } finally {
+      if (mounted) setState(() => _loadingExisting = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +135,7 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
                 const SizedBox(height: 20),
                 DateDisplayField(date: selectedDate != null ? selectedDate!.toIso8601String().split('T').first : '2025-08-05'),
                 const SizedBox(height: 24),
-                GymIdDisplayField(gymId: 'GYM-0001'),
+                GymIdDisplayField(gymId: gymId),
                 const SizedBox(height: 32),
                 PrimaryButton(
                   label: 'Save',

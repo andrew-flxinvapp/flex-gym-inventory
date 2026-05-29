@@ -30,8 +30,8 @@ class EquipmentImage extends StatelessWidget {
         children: [
           ImagePlaceholderLarge(width: width, height: height),
           Positioned(
-            top: 8,
-            right: 8,
+            top: 12,
+            right: 12,
             child: PopupMenuButton<ImageAction>(
               icon: const ImageIcon(
                 AssetImage(AppIcons.more),
@@ -69,8 +69,8 @@ class EquipmentImage extends StatelessWidget {
                 child: const Center(child: CircularProgressIndicator()),
               ),
               Positioned(
-                top: 8,
-                right: 8,
+                top: 12,
+                right: 12,
                 child: PopupMenuButton<ImageAction>(
                   icon: const ImageIcon(
                     AssetImage(AppIcons.more),

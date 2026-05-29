@@ -36,6 +36,7 @@ class WishlistRepository {
     required WishlistPriority priority,
     String? productUrl,
     String? notes,
+    String? price,
   }) async {
     final item = Wishlist(
       userId: userId,
@@ -46,6 +47,7 @@ class WishlistRepository {
       priority: priority,
       productUrl: productUrl,
       notes: notes,
+      price: price,
     );
     await upsert(item);
     return item;
@@ -61,6 +63,7 @@ class WishlistRepository {
     WishlistPriority? priority,
     String? productUrl,
     String? notes,
+    String? price,
   }) async {
     final isar = IsarService.isar;
     final item = await isar.wishlists.get(id);
@@ -72,6 +75,7 @@ class WishlistRepository {
     if (priority != null) item.priority = priority;
     if (productUrl != null) item.productUrl = productUrl;
     if (notes != null) item.notes = notes;
+    if (price != null) item.price = price;
     await upsert(item);
     return item;
   }

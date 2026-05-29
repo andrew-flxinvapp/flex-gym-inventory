@@ -36,6 +36,37 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
   ImageSource? selectedImageSource;
 
   @override
+  @override
+  void initState() {
+    super.initState();
+    // Load any existing wishlist item if opened for edit
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadExistingWishlist();
+    });
+  }
+
+  Future<void> _loadExistingWishlist() async {
+    try {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      int? isarId;
+      if (args is int) isarId = args;
+      if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+      if (isarId == null) return;
+      final repo = WishlistRepository();
+      final item = await repo.getByIsarId(isarId);
+      if (item == null) return;
+      setState(() {
+        selectedItemType = item.wishlistType;
+        selectedCategory = item.category;
+        selectedPriority = item.priority;
+        nameController.text = item.name;
+        brandController.text = item.brand;
+        linkController.text = item.productUrl ?? '';
+        notesController.text = item.notes ?? '';
+      });
+    } catch (_) {}
+  }
+
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
@@ -99,6 +130,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   CustomTextInputField(
                     hintText: 'Name',
                     showAsterisk: true,
+                    controller: nameController,
                   ),
                   const SizedBox(height: 20),
                   CustomDropdownField<WishlistType>(
@@ -167,6 +199,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   CustomTextInputField(
                     hintText: 'Link (URL)',
                     showAsterisk: false,
+                    controller: linkController,
                   ),
                   /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
@@ -191,6 +224,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                   CustomMultilineTextInput(
                     hintText: 'Notes',
                     maxLines: 5,
+                    controller: notesController,
                   ),
                   const SizedBox(height: 32),
                   PrimaryButton(

@@ -3,73 +3,96 @@ import '../widgets/buttons/secondary_button.dart';
 import '../widgets/cards/wishlist_item_card.dart';
 import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
+import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
+import '../widgets/buttons/primary_button.dart';
 
-class WishlistScreen extends StatelessWidget {
+class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
+
+  @override
+  State<WishlistScreen> createState() => _WishlistScreenState();
+}
+
+class _WishlistScreenState extends State<WishlistScreen> {
+  Future<List<Wishlist>> _fetchData() async {
+    final repo = WishlistRepository();
+    return await repo.getAll();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopAppBar(
         title: 'Wishlist',
-        showBackArrow: true,
-        showRightIcon: false,
-        onBackArrowPressed: () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).maybePop();
-          } else {
-            Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
-          }
+        titleWidget: const Padding(
+          padding: EdgeInsets.only(left: 16.0),
+          child: Text('Wishlist'),
+        ),
+        showBackArrow: false,
+        showRightIcon: true,
+        rightIcon: AppIcons.plus,
+        onRightIconPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.addWishlist).then((_) => setState(() {}));
         },
       ),
-      body: Builder(
-        builder: (context) {
-          // TODO: Replace with real itemCount from database
-          final int itemCount = 3; // Change to >0 to test filled state
-          if (itemCount == 0) {
-            // Empty State
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'lib/assets/images/empty_gym.png',
-                      height: 350,
-                      fit: BoxFit.contain,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Looks like your wishlist is empty.",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+      body: SafeArea(
+        child: FutureBuilder<List<Wishlist>>(
+          future: _fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            final items = snapshot.data ?? [];
+
+            if (items.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'lib/assets/images/empty_gym.png',
+                        height: 350,
+                        fit: BoxFit.contain,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Got anything in mind?',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                      const SizedBox(height: 8),
+                      Text(
+                        "Looks like your wishlist is empty.",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    SecondaryButton(
-                      label: 'Add Item',
-                      onPressed: () {
-                        // TODO: Implement add equipment action
-                      },
-                    ),
-                  ],
+                      const SizedBox(height: 6),
+                      Text(
+                        'Got anything in mind?',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      SecondaryButton(
+                        label: 'Add Item',
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(AppRoutes.addWishlist).then((_) => setState(() {}));
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          } else {
-            // Filled State
+              );
+            }
+
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
               child: Column(
@@ -83,38 +106,20 @@ class WishlistScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  WishlistItemCard(
-                    itemName: 'Trap Bar HD',
-                    brand: 'Kabuki Strength',
-                    price: 495.00,
-                    priority: 'High',
-                  ),
-                  const SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/wishlist-detail');
-                    },
-                    child: WishlistItemCard(
-                      itemName: 'Adjustable Bench 3.0',
-                      brand: 'Rogue Fitness',
-                      price: 310.00,
-                      priority: 'Medium',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  WishlistItemCard(
-                    itemName: 'REP 80lb Dumbbells (Pair)',
-                    brand: 'REP Fitness',
-                    price: 640.00,
-                    priority: 'Low',
-                  ),
+                  for (final w in items) ...[
+                    WishlistItemCard.fromWishlist(w, onTapCallback: (id) async {
+                      await Navigator.of(context).pushNamed(AppRoutes.wishlistDetail, arguments: id);
+                      setState(() {});
+                    }),
+                    const SizedBox(height: 16),
+                  ],
+                  const SizedBox(height: 8),
                 ],
               ),
             );
-          }
-        },
+          },
+        ),
       ),
-      // bottomNavigationBar removed; now managed by HomeScreen
     );
   }
 }

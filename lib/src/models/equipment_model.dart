@@ -17,6 +17,9 @@ class Equipment {
   @Index()
   String? imageId;
 
+  @Index()
+  DateTime? createdDate;
+
   @Index(caseSensitive: false)
   late String name;
 
@@ -45,6 +48,7 @@ class Equipment {
     required this.gymId,
     required this.name,
     this.imageId,
+    DateTime? createdDate,
     required this.category,
     required this.brand,
     required this.model,
@@ -54,7 +58,9 @@ class Equipment {
     this.purchaseDate,
     this.value,
     this.maintenanceNotes,
-  });
+  }) {
+    this.createdDate = createdDate ?? DateTime.now();
+  }
 
   int? get age {
     if (purchaseDate == null) return null;

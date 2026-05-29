@@ -14,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
 								appBar: TopAppBar(
 									title: 'Settings',
 									titleWidget: const Padding(
-										padding: EdgeInsets.only(left: 24.0),
+										padding: EdgeInsets.only(left: 16.0),
 										child: Text('Settings'),
 									),
 									showBackArrow: false,

@@ -139,6 +139,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
             // Filled state
             final int itemCount = items.fold<int>(0, (acc, e) => acc + e.quantity);
             final double estimatedValue = items.fold<double>(0, (acc, e) => acc + (e.value ?? 0) * e.quantity);
+            final DateTime lastUpdated = items.map((e) => e.createdDate).whereType<DateTime>().fold<DateTime?>(null, (prev, d) => prev == null || d.isAfter(prev) ? d : prev) ?? gym.createdDate;
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
@@ -156,14 +157,30 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                   GymStatsCard(
                     itemCount: itemCount,
                     estimatedValue: estimatedValue,
-                    lastUpdated: items.map((e) => e.purchaseDate).whereType<DateTime>().fold<DateTime?>(null, (prev, d) => prev == null || d.isAfter(prev) ? d : prev) ?? gym.createdDate,
+                    lastUpdated: lastUpdated,
                   ),
                   const SizedBox(height: 32),
-                  Text(
-                    'Equipment List',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Equipment List',
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Image.asset(AppIcons.plus, height: 22, width: 22),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   for (final e in items) ...[
@@ -173,17 +190,14 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       quantity: e.quantity,
                       category: e.category,
                       isarId: e.id,
+                      onTapCallback: () async {
+                        await Navigator.of(context).pushNamed(AppRoutes.equipmentDetail, arguments: e.id);
+                        if (mounted) setState(() {});
+                      },
                     ),
                     const SizedBox(height: 16),
                   ],
                   const SizedBox(height: 8),
-                  PrimaryButton(
-                    label: 'Add Equipment',
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
-                    },
-                  ),
-                  const SizedBox(height: 12),
                       WarningButton(
                         label: 'Delete Gym',
                         onPressed: () {
@@ -206,9 +220,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                               content: 'Are you sure you want to delete this gym and all its equipment?',
                               confirmText: 'Delete',
                               cancelText: 'Cancel',
-                              onConfirm: () {
-                                // fire-and-forget the async deletion
-                                deleteAction();
+                              onConfirm: () async {
+                                await deleteAction();
                               },
                             ),
                           );

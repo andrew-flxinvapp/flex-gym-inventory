@@ -46,7 +46,41 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
   @override
   void initState() {
     super.initState();
-    _loadGyms();
+    _loadGyms().then((_) => _loadExistingEquipment());
+  }
+
+  Future<void> _loadExistingEquipment() async {
+    try {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      int? isarId;
+      if (args is int) isarId = args;
+      if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+      if (isarId == null) return;
+      final repo = EquipmentRepository();
+      final equipment = await repo.getByIsarId(isarId);
+      if (equipment == null) return;
+      // Find gym object if available
+      Gym? foundGym;
+      for (final g in gyms) {
+        if (g.gymId == equipment.gymId) {
+          foundGym = g;
+          break;
+        }
+      }
+      setState(() {
+        selectedGym = foundGym;
+        selectedCategory = equipment.category;
+        selectedTrainingStyle = equipment.trainingStyle;
+        selectedCondition = equipment.condition;
+        selectedPurchaseDate = equipment.purchaseDate;
+        nameController.text = equipment.name;
+        brandController.text = equipment.brand;
+        modelController.text = equipment.model;
+        maintenanceNotesController.text = equipment.maintenanceNotes ?? '';
+        quantityController.text = equipment.quantity.toString();
+        valueController.text = equipment.value?.toString() ?? '';
+      });
+    } catch (_) {}
   }
 
   Future<void> _loadGyms() async {
@@ -247,8 +281,11 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                 const SizedBox(height: 20),
                 CustomDateInput(
                   hintText: 'Purchase Date',
+                  initialDate: selectedPurchaseDate,
                   onDateChanged: (date) {
-                    // Handle selected date if needed
+                    setState(() {
+                      selectedPurchaseDate = date;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
