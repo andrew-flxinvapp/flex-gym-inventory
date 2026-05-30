@@ -30,7 +30,7 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
   final TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
   String gymId = 'GYM-0001';
-  bool _loadingExisting = false;
+  
 
   @override
   void initState() {
@@ -44,7 +44,6 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
     if (args is int) isarId = args;
     if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
     if (isarId == null) return;
-    setState(() => _loadingExisting = true);
     try {
       final repo = GymRepository();
       final gym = await repo.getByIsarId(isarId);
@@ -60,7 +59,7 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
     } catch (_) {
       // ignore errors here; form stays empty
     } finally {
-      if (mounted) setState(() => _loadingExisting = false);
+      // finished loading
     }
   }
 

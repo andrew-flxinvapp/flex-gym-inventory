@@ -12,7 +12,7 @@ import 'package:flex_gym_inventory/service/active_gym_service.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
-import '../widgets/buttons/primary_button.dart';
+// import '../widgets/buttons/primary_button.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 
@@ -143,15 +143,29 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
                 children: [
                   const SizedBox(height: 24),
-                  Text(
-                    'Overview',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Overview',
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Image.asset(AppIcons.plus, height: 22, width: 22),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   GymStatsCard(
@@ -170,14 +184,6 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                             color: AppTheme.lightTextPrimary,
                           ),
                         ),
-                      ),
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: Image.asset(AppIcons.plus, height: 22, width: 22),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
-                        },
                       ),
                       const SizedBox(width: 8),
                     ],

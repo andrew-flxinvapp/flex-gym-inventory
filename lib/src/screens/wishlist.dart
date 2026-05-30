@@ -7,7 +7,7 @@ import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
-import '../widgets/buttons/primary_button.dart';
+// import '../widgets/buttons/primary_button.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -95,8 +95,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
                 children: [
                   const SizedBox(height: 24),
                   Text(
