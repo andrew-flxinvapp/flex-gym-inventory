@@ -203,7 +203,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  const SizedBox(height: 8),
+                    const SizedBox(height: 8),
                       WarningButton(
                         label: 'Delete Gym',
                         onPressed: () {
