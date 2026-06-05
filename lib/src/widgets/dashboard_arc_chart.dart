@@ -255,7 +255,7 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
                 child: ExpansionTile(
                 title: Text(
                   'Legend',
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: theme.textTheme.bodyLarge?.copyWith(
                     color: AppTheme.lightTextPrimary,
                     fontWeight: FontWeight.w600,
                   ),
