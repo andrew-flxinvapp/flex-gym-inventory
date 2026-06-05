@@ -228,7 +228,6 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
     return Center(
       child: Container(
         width: 420,
-        height: 600,
         decoration: BoxDecoration(
           color: AppTheme.lightCard,
           borderRadius: BorderRadius.circular(16),
@@ -244,14 +243,35 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
                 fontFamily: 'Roboto',
               ),
             ),
-            const SizedBox(height: 40),
-            Expanded(
-              child: Center(
-                child: chartWidget(),
+            SizedBox(height: 80),
+            Center(
+              child: chartWidget(),
+            ),
+            const SizedBox(height: 24),
+            Theme(
+              data: theme.copyWith(dividerColor: Colors.transparent),
+              child: Material(
+                color: Colors.transparent,
+                child: ExpansionTile(
+                title: Text(
+                  'Legend',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                initiallyExpanded: false,
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(top: 8),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: legend(),
+                  ),
+                ],
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            legend(),
           ],
         ),
       ),
