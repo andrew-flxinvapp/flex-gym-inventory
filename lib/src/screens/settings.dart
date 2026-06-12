@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
 													SettingsItem(
 														title: 'Delete Account',
 														onTap: () {
-															Navigator.of(context).pushNamed('/delete-account');
+															Navigator.of(context).pushNamed(AppRoutes.deleteAccount);
 														},
 													),
 													const SizedBox(height: 32),
@@ -69,25 +69,28 @@ class SettingsScreen extends StatelessWidget {
 													SettingsItem(
 														title: 'Set Default Gym',
 														onTap: () {
-															Navigator.of(context).pushNamed('/default-gym-picker');
+															Navigator.of(context).pushNamed(AppRoutes.defaultGymPicker);
 														},
 													),
-													/*const SizedBox(height: 16),
+													const SizedBox(height: 16),
 													SettingsItem(
 														title: 'Export Data',
-													),*/
+														onTap: () {
+															Navigator.of(context).pushNamed(AppRoutes.export);
+														},
+													),
 													const SizedBox(height: 12),
 													SettingsItem(
 														title: 'Notification Settings',
 														onTap: () {
-															Navigator.of(context).pushNamed('/notifications');
+															Navigator.of(context).pushNamed(AppRoutes.notifications);
 														},
 													),
 													const SizedBox(height: 12),
 													SettingsItem(
 														title: 'About Flex Rackley',
 														onTap: () {
-															Navigator.of(context).pushNamed('/about-flex-rackley');
+															Navigator.of(context).pushNamed(AppRoutes.aboutFlexRackley);
 														},
 													),
 													const SizedBox(height: 32),
@@ -101,21 +104,21 @@ class SettingsScreen extends StatelessWidget {
 													SettingsItem(
 														title: 'App Info',
 														onTap: () {
-															Navigator.of(context).pushNamed('/app-details');
+															Navigator.of(context).pushNamed(AppRoutes.appDetails);
 														},
 													),
 													const SizedBox(height: 12),
 													SettingsItem(
 														title: 'Contact Support',
 														onTap: () {
-															Navigator.of(context).pushNamed('/support');
+															Navigator.of(context).pushNamed(AppRoutes.support);
 														},
 													),
 													const SizedBox(height: 12),
 													SettingsItem(
 														title: 'App Feedback',
 														onTap: () {
-															Navigator.of(context).pushNamed('/feedback');
+															Navigator.of(context).pushNamed(AppRoutes.feedback);
 														},
 													),
 													const SizedBox(height: 32),

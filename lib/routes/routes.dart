@@ -26,6 +26,7 @@ import '../src/screens/onboarding_complete.dart';
 import '../src/screens/support.dart';
 import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
+import '../src/screens/export.dart';
 // Use the onboarding screen for both onboarding and upgrade flows.
 import '../src/screens/delete_account.dart';
 import '../src/screens/notifications.dart';
@@ -87,6 +88,7 @@ class AppRoutes {
   static const String aboutFlexRackley = '/about-flex-rackley';
   static const String defaultGymPicker = '/default-gym-picker';
   static const String debugDeviceToken = '/debug-device-token';
+  static const String export = '/export';
 
   // Add more as needed
 }
@@ -139,7 +141,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),
   AppRoutes.defaultGymPicker: (context) => const DefaultGymScreen(),
-
+  AppRoutes.export: (context) => const ExportScreen(),
   // Debug / dev routes
   AppRoutes.debugDeviceToken: (context) => const DebugDeviceTokenScreen(),
 
