@@ -4,7 +4,6 @@ import 'package:flex_gym_inventory/enum/app_enums.dart';
 part 'wishlist_model.g.dart';
 
 @Collection()
-
 class Wishlist {
   Id id = Isar.autoIncrement;
 

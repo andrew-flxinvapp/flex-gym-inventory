@@ -24,26 +24,33 @@ class BottomNavigationBarModern extends StatelessWidget {
       height: 84,
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(40, 0, 40, 16),
-      decoration: const BoxDecoration(
-        color: AppTheme.lightBackground,
-      ),
+      decoration: const BoxDecoration(color: AppTheme.lightBackground),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _NavTab(
-            icon: currentIndex == 0 ? AppIcons.dashboardSelected : AppIcons.dashboard,
+            icon:
+                currentIndex == 0
+                    ? AppIcons.dashboardSelected
+                    : AppIcons.dashboard,
             label: 'Dashboard',
             selected: currentIndex == 0,
             onTap: () => _handleNavigation(context, 0),
           ),
           _NavTab(
-            icon: currentIndex == 1 ? AppIcons.wishlistSelected : AppIcons.wishlist,
+            icon:
+                currentIndex == 1
+                    ? AppIcons.wishlistSelected
+                    : AppIcons.wishlist,
             label: 'Wishlist',
             selected: currentIndex == 1,
             onTap: () => _handleNavigation(context, 1),
           ),
           _NavTab(
-            icon: currentIndex == 2 ? AppIcons.settingsSelected : AppIcons.settings,
+            icon:
+                currentIndex == 2
+                    ? AppIcons.settingsSelected
+                    : AppIcons.settings,
             label: 'Settings',
             selected: currentIndex == 2,
             onTap: () => _handleNavigation(context, 2),
@@ -82,14 +89,20 @@ class _NavTab extends StatelessWidget {
               icon,
               height: 24,
               width: 24,
-              color: selected ? AppTheme.lightTextPrimary : AppTheme.lightTextPrimary,
+              color:
+                  selected
+                      ? AppTheme.lightTextPrimary
+                      : AppTheme.lightTextPrimary,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 10,
-                color: selected ? AppTheme.lightTextPrimary : AppTheme.lightTextPrimary,
+                color:
+                    selected
+                        ? AppTheme.lightTextPrimary
+                        : AppTheme.lightTextPrimary,
                 fontFamily: 'Roboto',
                 fontWeight: selected ? FontWeight.bold : FontWeight.normal,
               ),

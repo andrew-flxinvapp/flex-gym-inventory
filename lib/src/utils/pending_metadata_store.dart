@@ -18,7 +18,9 @@ class PendingMetadataStore {
     final raw = prefs.getString(_key);
     if (raw == null) return null;
     try {
-      final Map<String, dynamic> map = Map<String, dynamic>.from(jsonDecode(raw));
+      final Map<String, dynamic> map = Map<String, dynamic>.from(
+        jsonDecode(raw),
+      );
       return map;
     } catch (_) {
       return null;

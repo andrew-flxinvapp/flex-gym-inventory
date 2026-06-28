@@ -30,7 +30,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         _authViewModel.emailController.text = args['email']?.toString() ?? '';
       } else if (args is String) {
         _authViewModel.emailController.text = args;
-      } else if (args is Map<String, String> && args.containsKey('user_email')) {
+      } else if (args is Map<String, String> &&
+          args.containsKey('user_email')) {
         _authViewModel.emailController.text = args['user_email']!;
       }
     }
@@ -41,6 +42,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     _authViewModel.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
@@ -61,9 +63,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final emailLabel = _authViewModel.emailController.text.isNotEmpty
-        ? _authViewModel.emailController.text
-        : '(user-email)';
+    final emailLabel =
+        _authViewModel.emailController.text.isNotEmpty
+            ? _authViewModel.emailController.text
+            : '(user-email)';
 
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
@@ -71,7 +74,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,10 +87,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Text(
                   'Verify Email',
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Roboto',
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -102,9 +108,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Text(
                   'We just emailed a magic link to $emailLabel. Check your email on this device to continue',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                        fontWeight: FontWeight.normal,
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.normal,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
@@ -112,10 +118,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Text(
                   "Didn't receive a link?",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'Roboto',
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Roboto',
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
@@ -123,7 +129,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 TextButton(
                   onPressed: _authViewModel.loading ? null : _resend,
                   child: Text(
-                    _authViewModel.loading ? 'Resending...' : 'Resend magic link',
+                    _authViewModel.loading
+                        ? 'Resending...'
+                        : 'Resend magic link',
                     style: TextStyle(
                       color: AppTheme.lightTextPrimary,
                       fontWeight: FontWeight.bold,

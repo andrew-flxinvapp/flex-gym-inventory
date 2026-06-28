@@ -8,10 +8,9 @@ class AuthViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
 
   AuthViewModel({AuthRepository? authRepository})
-      : _authRepository = authRepository ?? AuthRepository();
+    : _authRepository = authRepository ?? AuthRepository();
 
   final TextEditingController emailController = TextEditingController();
-  
 
   bool _loading = false;
   UiMessage? _message;
@@ -29,11 +28,23 @@ class AuthViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     try {
       await _authRepository.signInWithMagicLink(email);
-      _setMessage(UiMessage('Magic link sent — check your email.', type: UiMessageType.info));
+      _setMessage(
+        UiMessage(
+          'Magic link sent — check your email.',
+          type: UiMessageType.info,
+        ),
+      );
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Unable to send magic link', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          ae.message ?? 'Unable to send magic link',
+          type: UiMessageType.error,
+        ),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }
@@ -46,11 +57,20 @@ class AuthViewModel extends ChangeNotifier {
     try {
       // Magic-link only signup
       await _authRepository.signUp(email);
-      _setMessage(UiMessage('Sign up successful. Check your email to verify.', type: UiMessageType.success));
+      _setMessage(
+        UiMessage(
+          'Sign up successful. Check your email to verify.',
+          type: UiMessageType.success,
+        ),
+      );
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Sign up failed', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(ae.message ?? 'Sign up failed', type: UiMessageType.error),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }
@@ -64,9 +84,16 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.resendMagicLink(email);
       _setMessage(UiMessage('Magic link resent.', type: UiMessageType.info));
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Unable to resend magic link', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          ae.message ?? 'Unable to resend magic link',
+          type: UiMessageType.error,
+        ),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }
@@ -79,9 +106,13 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.signOut();
       _setMessage(null);
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Sign out failed', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(ae.message ?? 'Sign out failed', type: UiMessageType.error),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }

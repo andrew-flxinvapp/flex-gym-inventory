@@ -1,9 +1,6 @@
 class GymIdGenerator {
-  GymIdGenerator({
-    this.prefix = 'GYM',
-    this.width = 3,
-    int? startAt,
-  }) : _lastNumber = startAt ?? 0;
+  GymIdGenerator({this.prefix = 'GYM', this.width = 3, int? startAt})
+    : _lastNumber = startAt ?? 0;
 
   final String prefix;
   final int width;
@@ -11,7 +8,7 @@ class GymIdGenerator {
   int _lastNumber;
 
   String next() {
-    _lastNumber ++;
+    _lastNumber++;
     final padded = _lastNumber.toString().padLeft(width, '0');
     return '$prefix-$padded';
   }

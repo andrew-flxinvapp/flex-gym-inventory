@@ -14,7 +14,6 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 
-
 class AddWishlistScreen extends StatefulWidget {
   const AddWishlistScreen({super.key});
 
@@ -63,116 +62,119 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                const SizedBox(height: 8),
-                Text(
-                  'Enter Wishlist Item information below.',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(height: 8),
+                  Text(
+                    'Enter Wishlist Item information below.',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      '*',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.stopColor,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        '*',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.stopColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Required field',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                      const SizedBox(width: 4),
+                      Text(
+                        'Required field',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                // ...existing code...
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Name',
-                  showAsterisk: true,
-                  controller: nameController,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<WishlistType>(
-                  hintText: 'Select Type',
-                  items: WishlistType.values,
-                  value: selectedItemType,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedItemType = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Item Type selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<EquipmentCategory>(
-                  hintText: 'Select Category',
-                  items: EquipmentCategory.values,
-                  value: selectedCategory,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCategory = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Category selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Brand',
-                  showAsterisk: true,
-                  controller: brandController,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<WishlistPriority>(
-                  hintText: 'Select Priority',
-                  items: WishlistPriority.values,
-                  value: selectedPriority,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPriority = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Priority selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Price',
-                  showAsterisk: true,
-                  controller: priceController,
-                ),
-                /*const SizedBox(height: 20),
+                    ],
+                  ),
+                  // ...existing code...
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Name',
+                    showAsterisk: true,
+                    controller: nameController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<WishlistType>(
+                    hintText: 'Select Type',
+                    items: WishlistType.values,
+                    value: selectedItemType,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedItemType = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Item Type selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<EquipmentCategory>(
+                    hintText: 'Select Category',
+                    items: EquipmentCategory.values,
+                    value: selectedCategory,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCategory = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Category selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Brand',
+                    showAsterisk: true,
+                    controller: brandController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<WishlistPriority>(
+                    hintText: 'Select Priority',
+                    items: WishlistPriority.values,
+                    value: selectedPriority,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPriority = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Priority selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Price',
+                    showAsterisk: true,
+                    controller: priceController,
+                  ),
+                  /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -191,64 +193,83 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                     return null;
                   },
                 ),*/
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Link (URL)',
-                  showAsterisk: false,
-                  controller: linkController,
-                ),
-                const SizedBox(height: 20),
-                CustomMultilineTextInput(
-                  hintText: 'Notes',
-                  maxLines: 5,
-                  controller: notesController,
-                ),
-                const SizedBox(height: 32),
-                PrimaryButton(
-                  label: 'Save',
-                  onPressed: () async {
-                    if (!(_formKey.currentState?.validate() ?? false)) return;
-                    try {
-                      final user = Supabase.instance.client.auth.currentUser;
-                      final userId = user?.id ?? 'local';
-                      final repo = WishlistRepository();
-                      final created = await repo.createWishlist(
-                        userId: userId,
-                        name: nameController.text.trim(),
-                        wishlistType: selectedItemType ?? WishlistType.newItem,
-                        category: selectedCategory ?? EquipmentCategory.other,
-                        brand: brandController.text.trim(),
-                        priority: selectedPriority ?? WishlistPriority.medium,
-                        price: priceController.text.trim().isEmpty ? null : priceController.text.trim(),
-                        productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
-                        notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
-                      );
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Link (URL)',
+                    showAsterisk: false,
+                    controller: linkController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomMultilineTextInput(
+                    hintText: 'Notes',
+                    maxLines: 5,
+                    controller: notesController,
+                  ),
+                  const SizedBox(height: 32),
+                  PrimaryButton(
+                    label: 'Save',
+                    onPressed: () async {
+                      if (!(_formKey.currentState?.validate() ?? false)) return;
+                      try {
+                        final user = Supabase.instance.client.auth.currentUser;
+                        final userId = user?.id ?? 'local';
+                        final repo = WishlistRepository();
+                        final created = await repo.createWishlist(
+                          userId: userId,
+                          name: nameController.text.trim(),
+                          wishlistType:
+                              selectedItemType ?? WishlistType.newItem,
+                          category: selectedCategory ?? EquipmentCategory.other,
+                          brand: brandController.text.trim(),
+                          priority: selectedPriority ?? WishlistPriority.medium,
+                          price:
+                              priceController.text.trim().isEmpty
+                                  ? null
+                                  : priceController.text.trim(),
+                          productUrl:
+                              linkController.text.trim().isEmpty
+                                  ? null
+                                  : linkController.text.trim(),
+                          notes:
+                              notesController.text.trim().isEmpty
+                                  ? null
+                                  : notesController.text.trim(),
+                        );
 
-                      showFlexSnackbarFromUiMessage(
-                        context,
-                        UiMessage('Wishlist item saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
-                      );
-                      Navigator.of(context).pop(created);
-                    } catch (e) {
-                      showFlexSnackbarFromUiMessage(
-                        context,
-                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                SecondaryButton(
-                  label: 'Cancel',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+                        showFlexSnackbarFromUiMessage(
+                          context,
+                          UiMessage(
+                            'Wishlist item saved',
+                            subtitle: 'Created ${created.name}',
+                            type: UiMessageType.success,
+                          ),
+                        );
+                        Navigator.of(context).pop(created);
+                      } catch (e) {
+                        showFlexSnackbarFromUiMessage(
+                          context,
+                          UiMessage(
+                            'Save failed',
+                            subtitle: e.toString(),
+                            type: UiMessageType.error,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  SecondaryButton(
+                    label: 'Cancel',
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

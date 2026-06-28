@@ -28,7 +28,6 @@ class GymRepository {
     return gym;
   }
 
-
   /// Update an existing gym by Isar id.
   Future<Gym?> updateGym({
     required int id,
@@ -68,21 +67,19 @@ class GymRepository {
   /// Get by your human-readable gymId (e.g., "GYM-0001").
   Future<Gym?> getByGymId(String gymId) async {
     final isar = IsarService.isar;
-    return isar.gyms
-        .filter()
-        .gymIdEqualTo(gymId)
-        .findFirst();
+    return isar.gyms.filter().gymIdEqualTo(gymId).findFirst();
   }
 
   /// True if a gym with this gymId exists for the user (helps validate selection).
   Future<bool> existsForUser(String userId, String gymId) async {
     final isar = IsarService.isar;
-    final count = await isar.gyms
-        .filter()
-        .userIdEqualTo(userId)
-        .and()
-        .gymIdEqualTo(gymId)
-        .count();
+    final count =
+        await isar.gyms
+            .filter()
+            .userIdEqualTo(userId)
+            .and()
+            .gymIdEqualTo(gymId)
+            .count();
     return count > 0;
   }
 
@@ -99,19 +96,17 @@ class GymRepository {
     final isar = IsarService.isar;
 
     // Base fetch (fast due to your userId index)
-    var items = await isar.gyms
-        .filter()
-        .userIdEqualTo(userId)
-        .findAll();
+    var items = await isar.gyms.filter().userIdEqualTo(userId).findAll();
 
     // Local, case-insensitive search
     if (search != null && search.trim().isNotEmpty) {
       final q = search.toLowerCase().trim();
-      items = items.where((g) {
-        final n = g.name.toLowerCase();
-        final loc = (g.location ?? '').toLowerCase();
-        return n.contains(q) || loc.contains(q);
-      }).toList();
+      items =
+          items.where((g) {
+            final n = g.name.toLowerCase();
+            final loc = (g.location ?? '').toLowerCase();
+            return n.contains(q) || loc.contains(q);
+          }).toList();
     }
 
     // Dart-side sorting (avoids relying on generated sort helpers)
@@ -119,10 +114,14 @@ class GymRepository {
 
     switch (sort) {
       case GymSort.nameAsc:
-        items.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        items.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
         break;
       case GymSort.nameDesc:
-        items.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+        items.sort(
+          (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
+        );
         break;
       case GymSort.newest:
         items.sort((a, b) => cmpDate(b.createdDate, a.createdDate));

@@ -35,7 +35,9 @@ void main() async {
       // If the link contains Supabase auth tokens (fragment) or an auth code
       // (query param `code`), ask the Supabase client to parse & restore the
       // session. `getSessionFromUrl` will extract tokens and set the session.
-      final hasToken = params.containsKey('access_token') || params.containsKey('refresh_token');
+      final hasToken =
+          params.containsKey('access_token') ||
+          params.containsKey('refresh_token');
       final hasCode = uri.queryParameters.containsKey('code');
 
       if (hasToken || hasCode) {
@@ -58,7 +60,12 @@ void main() async {
             }
           } catch (e) {
             // Don't block navigation on reconciliation failures – log and continue.
-            LogHandler.warning('Deeplink', 'Metadata reconciliation failed: $e', e, null);
+            LogHandler.warning(
+              'Deeplink',
+              'Metadata reconciliation failed: $e',
+              e,
+              null,
+            );
           }
 
           // Successful sign-in — navigate into the app (startup router will
@@ -77,9 +84,12 @@ void main() async {
         arguments: params,
       );
     } catch (e) {
-          LogHandler.error('Deeplink', 'Error handling deeplink: $e', e, null);
+      LogHandler.error('Deeplink', 'Error handling deeplink: $e', e, null);
       try {
-        navigatorKey.currentState?.pushNamed(AppRoutes.verifyEmail, arguments: params);
+        navigatorKey.currentState?.pushNamed(
+          AppRoutes.verifyEmail,
+          arguments: params,
+        );
       } catch (_) {}
     }
   });
@@ -109,12 +119,15 @@ class MyApp extends StatelessWidget {
         final builder = appRoutes[settings.name];
         if (builder != null) {
           return PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
+            pageBuilder:
+                (context, animation, secondaryAnimation) => builder(context),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
             },
             settings: settings,
           );
@@ -132,12 +145,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flex Gym Inventory'),
-      ),
-      body: const Center(
-        child: Text('Welcome to Flex Gym Inventory!'),
-      ),
+      appBar: AppBar(title: const Text('Flex Gym Inventory')),
+      body: const Center(child: Text('Welcome to Flex Gym Inventory!')),
     );
   }
 }

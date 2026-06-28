@@ -17,17 +17,21 @@ class OptNotificationsScreen extends StatefulWidget {
   /// Optional injection for permission requester to make tests deterministic.
   final Future<PermissionStatus> Function()? permissionRequest;
 
-  const OptNotificationsScreen({super.key, this.supabaseClient, this.permissionRequest});
+  const OptNotificationsScreen({
+    super.key,
+    this.supabaseClient,
+    this.permissionRequest,
+  });
 
   @override
   State<OptNotificationsScreen> createState() => _OptNotificationsScreenState();
 }
 
 class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
-
   // whether notifications are allowed
   bool _allowNotifications = false;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -37,15 +41,21 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
   }
 
   Future<void> _initLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     final iosSettings = DarwinInitializationSettings();
-    final settings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    final settings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
     try {
       await _localNotifications.initialize(settings: settings);
     } catch (_) {
       // ignore initialization errors for now
     }
   }
+
   Future<void> _loadNotificationsPreference() async {
     final client = widget.supabaseClient ?? Supabase.instance.client;
     final user = client.auth.currentUser;
@@ -63,9 +73,7 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
     try {
       final client = widget.supabaseClient ?? Supabase.instance.client;
       await client.auth.updateUser(
-        UserAttributes(
-          data: {'notificationsOn': _allowNotifications},
-        ),
+        UserAttributes(data: {'notificationsOn': _allowNotifications}),
       );
     } catch (e) {
       // ignore errors for now; could log or show a message
@@ -81,7 +89,9 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
     }
 
     // Request runtime notification permission (Android 13+, iOS)
-    final status = await (widget.permissionRequest?.call() ?? Permission.notification.request());
+    final status =
+        await (widget.permissionRequest?.call() ??
+            Permission.notification.request());
 
     if (status.isGranted) {
       setState(() => _allowNotifications = true);
@@ -102,14 +112,23 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
         if (!mounted) return;
         final open = await showDialog<bool>(
           context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Enable notifications'),
-            content: const Text('Notifications are blocked. Open app settings to enable them.'),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-              TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Open Settings')),
-            ],
-          ),
+          builder:
+              (_) => AlertDialog(
+                title: const Text('Enable notifications'),
+                content: const Text(
+                  'Notifications are blocked. Open app settings to enable them.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Open Settings'),
+                  ),
+                ],
+              ),
         );
 
         if (open == true) {
@@ -128,7 +147,10 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
       priority: Priority.high,
     );
     const iosDetails = DarwinNotificationDetails();
-    const platformDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    const platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
     await _localNotifications.show(
       id: 0,
       title: 'Notifications enabled',
@@ -141,14 +163,13 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      appBar: const OnboardingLogoAppBar(
-        showBackArrow: true,
-      ),
+      appBar: const OnboardingLogoAppBar(showBackArrow: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Changed from center to start
+            mainAxisAlignment:
+                MainAxisAlignment.start, // Changed from center to start
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 32), // Added controlled top spacing
@@ -201,7 +222,9 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
               PrimaryButton(
                 label: 'Continue',
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureOne);
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoutes.onboardingFeatureOne);
                 },
               ),
             ],
@@ -211,4 +234,3 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
     );
   }
 }
-

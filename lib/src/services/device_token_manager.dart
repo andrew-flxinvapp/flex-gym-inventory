@@ -11,7 +11,9 @@ class DeviceTokenManager {
 
   final AuthRepository _authRepository;
 
-  static final DeviceTokenManager instance = DeviceTokenManager._(AuthRepository());
+  static final DeviceTokenManager instance = DeviceTokenManager._(
+    AuthRepository(),
+  );
 
   /// Register a token for the currently authenticated user.
   ///
@@ -25,7 +27,11 @@ class DeviceTokenManager {
     if (token.isEmpty) return;
 
     // Upsert into device_tokens table for backend delivery later.
-    await _authRepository.upsertDeviceToken(token: token, platform: platform, deviceId: deviceId);
+    await _authRepository.upsertDeviceToken(
+      token: token,
+      platform: platform,
+      deviceId: deviceId,
+    );
 
     // Also persist a lightweight lastDeviceToken in user metadata as a
     // fallback for debugging or simple checks.

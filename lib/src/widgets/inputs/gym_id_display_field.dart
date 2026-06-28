@@ -5,10 +5,7 @@ import '../../../theme/app_theme.dart';
 class GymIdDisplayField extends StatelessWidget {
   final String gymId;
 
-  const GymIdDisplayField({
-    super.key,
-    required this.gymId,
-  });
+  const GymIdDisplayField({super.key, required this.gymId});
 
   @override
   Widget build(BuildContext context) {

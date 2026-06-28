@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
-
 class LoginViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final AuthRepository _authRepository;
 
   LoginViewModel({AuthRepository? authRepository})
-      : _authRepository = authRepository ?? AuthRepository();
+    : _authRepository = authRepository ?? AuthRepository();
 
   bool _loading = false;
   UiMessage? _message;
@@ -28,11 +27,23 @@ class LoginViewModel extends ChangeNotifier {
     _setMessage(null);
     try {
       await _authRepository.signInWithMagicLink(email);
-      _setMessage(UiMessage('Magic link sent! Check your email.', type: UiMessageType.success));
+      _setMessage(
+        UiMessage(
+          'Magic link sent! Check your email.',
+          type: UiMessageType.success,
+        ),
+      );
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Failed to send magic link', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          ae.message ?? 'Failed to send magic link',
+          type: UiMessageType.error,
+        ),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }
@@ -53,14 +64,24 @@ class LoginViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     if (email.isEmpty) {
       _emailError = 'Please enter your email';
-      _setMessage(UiMessage('Please enter your email address.', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          'Please enter your email address.',
+          type: UiMessageType.error,
+        ),
+      );
       notifyListeners();
       return false;
     }
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
     if (!emailRegex.hasMatch(email)) {
       _emailError = 'Please enter a valid email';
-      _setMessage(UiMessage('Please enter a valid email address.', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          'Please enter a valid email address.',
+          type: UiMessageType.error,
+        ),
+      );
       notifyListeners();
       return false;
     }

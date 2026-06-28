@@ -37,8 +37,11 @@ void showFlexSnackbar(
   overlay.insert(overlayEntry);
 }
 
-void showFlexSnackbarFromUiMessage(BuildContext context, UiMessage message,
-    {Duration duration = const Duration(seconds: 3)}) {
+void showFlexSnackbarFromUiMessage(
+  BuildContext context,
+  UiMessage message, {
+  Duration duration = const Duration(seconds: 3),
+}) {
   // Map UiMessageType -> SnackbarType
   SnackbarType type;
   switch (message.type) {
@@ -130,10 +133,7 @@ class FlexSnackbar extends StatelessWidget {
           SizedBox(
             width: 32,
             height: 32,
-            child: Image.asset(
-              _iconAsset,
-              color: _iconColor,
-            ),
+            child: Image.asset(_iconAsset, color: _iconColor),
           ),
           const SizedBox(width: 16),
           // Texts

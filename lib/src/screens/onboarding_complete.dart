@@ -6,16 +6,15 @@ import 'package:flex_gym_inventory/routes/routes.dart';
 import '../repositories/onboarding_repository.dart';
 
 class OnboardingCompleteScreen extends StatefulWidget {
-  const OnboardingCompleteScreen({
-    super.key,
-    this.notificationsOn = false,
-  });
+  const OnboardingCompleteScreen({super.key, this.notificationsOn = false});
 
   final bool notificationsOn;
 
   @override
-  State<OnboardingCompleteScreen> createState() => _OnboardingCompleteScreenState();
+  State<OnboardingCompleteScreen> createState() =>
+      _OnboardingCompleteScreenState();
 }
+
 class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
   // Keep the repository as a per-state instance so it can be mocked in tests
   final OnboardingRepository _onboardingRepository = OnboardingRepository();
@@ -48,7 +47,6 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const OnboardingLogoAppBar(),
@@ -56,7 +54,8 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Changed from center to start
+            mainAxisAlignment:
+                MainAxisAlignment.start, // Changed from center to start
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 32), // Added controlled top spacing
@@ -86,14 +85,14 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
                 ),
               ),
               const SizedBox(height: 82),
-                PrimaryButton(
-                  label: 'To Dashboard',
-                  // keep a non-null callback (PrimaryButton requires it) but guard inside
-                  onPressed: () {
-                    if (_isSubmitting) return;
-                    _handleContinue();
-                  },
-                ),
+              PrimaryButton(
+                label: 'To Dashboard',
+                // keep a non-null callback (PrimaryButton requires it) but guard inside
+                onPressed: () {
+                  if (_isSubmitting) return;
+                  _handleContinue();
+                },
+              ),
             ],
           ),
         ),

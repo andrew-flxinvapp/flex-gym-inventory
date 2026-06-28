@@ -7,12 +7,7 @@ class ImagePlaceholderLarge extends StatelessWidget {
   final double? height;
   final Widget? child;
 
-  const ImagePlaceholderLarge({
-    super.key,
-    this.width,
-    this.height,
-    this.child,
-  });
+  const ImagePlaceholderLarge({super.key, this.width, this.height, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +21,28 @@ class ImagePlaceholderLarge extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
-          child: child ?? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.image_outlined,
-              size: 48,
-              color: AppTheme.lightTextPrimary,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'No image',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextSecondary,
+          child:
+              child ??
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.image_outlined,
+                    size: 48,
+                    color: AppTheme.lightTextPrimary,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'No image',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.lightTextSecondary,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-          ),
         ),
       ),
     );

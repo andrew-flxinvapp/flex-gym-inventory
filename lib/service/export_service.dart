@@ -10,7 +10,10 @@ import '../src/models/equipment_model.dart';
 /// Service for exporting and importing Isar database data.
 class ExportService {
   /// Export the Isar database to a backup file (e.g., for user download or cloud backup).
-  static Future<File> exportIsarBackup(Isar isar, {String fileName = 'isar_backup.isar'}) async {
+  static Future<File> exportIsarBackup(
+    Isar isar, {
+    String fileName = 'isar_backup.isar',
+  }) async {
     final dir = await getApplicationDocumentsDirectory();
     final backupFile = File('${dir.path}/$fileName');
     await isar.copyToFile(backupFile.path);
@@ -18,10 +21,15 @@ class ExportService {
   }
 
   /// Generate a PDF summary for a gym and save it to disk.
-  static Future<File> exportPdfSummary(Isar isar, String gymId, {String? fileName}) async {
+  static Future<File> exportPdfSummary(
+    Isar isar,
+    String gymId, {
+    String? fileName,
+  }) async {
     // Query gym and its equipment
     final gym = await isar.gyms.filter().gymIdEqualTo(gymId).findFirst();
-    final equipments = await isar.equipments.filter().gymIdEqualTo(gymId).findAll();
+    final equipments =
+        await isar.equipments.filter().gymIdEqualTo(gymId).findAll();
 
     final doc = pw.Document();
 
@@ -34,19 +42,23 @@ class ExportService {
             pw.SizedBox(height: 8),
             pw.Text('Generated: ${DateTime.now()}'),
             pw.SizedBox(height: 12),
-            pw.Text('Equipment', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.Text(
+              'Equipment',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
             pw.SizedBox(height: 8),
             pw.TableHelper.fromTextArray(
               context: context,
               headers: ['Name', 'Qty', 'Condition', 'Value'],
-              data: equipments.map((e) {
-                return [
-                  e.name,
-                  e.quantity.toString(),
-                  e.condition.toString().split('.').last,
-                  e.value?.toStringAsFixed(2) ?? '-',
-                ];
-              }).toList(),
+              data:
+                  equipments.map((e) {
+                    return [
+                      e.name,
+                      e.quantity.toString(),
+                      e.condition.toString().split('.').last,
+                      e.value?.toStringAsFixed(2) ?? '-',
+                    ];
+                  }).toList(),
             ),
           ];
         },
@@ -55,14 +67,25 @@ class ExportService {
 
     final bytes = await doc.save();
     final dir = await getApplicationDocumentsDirectory();
-    final outName = fileName ?? 'gym_${gymId}_summary.pdf';
-    final outFile = File('${dir.path}/$outName');
+    // Use the gym name in the filename when available. Sanitize to remove
+    // unsafe characters and replace spaces with underscores.
+    final rawName = gym?.name ?? gymId;
+    final safeBase = rawName
+      .replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '')
+      .replaceAll(RegExp(r'\s+'), '_');
+    final outName = fileName ?? '${safeBase}_summary.pdf';
+    final outFile = File(p.join(dir.path, outName));
     await outFile.writeAsBytes(bytes);
     return outFile;
   }
 
   /// Generate and share a PDF summary for a gym.
-  static Future<void> exportPdfAndShare(Isar isar, String gymId, {String? fileName, String? shareText}) async {
+  static Future<void> exportPdfAndShare(
+    Isar isar,
+    String gymId, {
+    String? fileName,
+    String? shareText,
+  }) async {
     final file = await exportPdfSummary(isar, gymId, fileName: fileName);
     final bytes = await file.readAsBytes();
     final filename = p.basename(file.path);
@@ -74,6 +97,8 @@ class ExportService {
     // Note: Isar does not support direct import/restore, so you may need to handle this manually.
     // This is a placeholder for custom import logic.
     // You could read the backup file and manually insert data into the current Isar instance.
-    throw UnimplementedError('Import functionality must be implemented based on your data model.');
+    throw UnimplementedError(
+      'Import functionality must be implemented based on your data model.',
+    );
   }
 }

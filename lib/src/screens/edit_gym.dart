@@ -15,7 +15,6 @@ import '../widgets/inputs/gym_id_display_field.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
-
 class EditGymScreen extends ConsumerStatefulWidget {
   const EditGymScreen({super.key});
 
@@ -30,7 +29,6 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
   final TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
   String gymId = 'GYM-0001';
-  
 
   @override
   void initState() {
@@ -132,7 +130,12 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
                   controller: notesController,
                 ),
                 const SizedBox(height: 20),
-                DateDisplayField(date: selectedDate != null ? selectedDate!.toIso8601String().split('T').first : '2025-08-05'),
+                DateDisplayField(
+                  date:
+                      selectedDate != null
+                          ? selectedDate!.toIso8601String().split('T').first
+                          : '2025-08-05',
+                ),
                 const SizedBox(height: 24),
                 GymIdDisplayField(gymId: gymId),
                 const SizedBox(height: 32),
@@ -148,37 +151,62 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
                       final args = ModalRoute.of(ctx)?.settings.arguments;
                       int? isarId;
                       if (args is int) isarId = args;
-                      if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+                      if (args is Map && args['isarId'] is int)
+                        isarId = args['isarId'] as int;
 
                       if (isarId != null) {
                         final updated = await repo.updateGym(
                           id: isarId,
-                          name: nameController.text.trim().isEmpty ? null : nameController.text.trim(),
-                          location: locationController.text.trim().isEmpty ? null : locationController.text.trim(),
-                          gymNotes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                          name:
+                              nameController.text.trim().isEmpty
+                                  ? null
+                                  : nameController.text.trim(),
+                          location:
+                              locationController.text.trim().isEmpty
+                                  ? null
+                                  : locationController.text.trim(),
+                          gymNotes:
+                              notesController.text.trim().isEmpty
+                                  ? null
+                                  : notesController.text.trim(),
                         );
                         if (!mounted) return;
                         showFlexSnackbarFromUiMessage(
                           ctx,
-                          UiMessage('Gym updated', subtitle: 'Updated ${updated?.name ?? ''}', type: UiMessageType.success),
+                          UiMessage(
+                            'Gym updated',
+                            subtitle: 'Updated ${updated?.name ?? ''}',
+                            type: UiMessageType.success,
+                          ),
                         );
                         await ref.read(dashboardProvider.notifier).refresh();
                         Navigator.of(ctx).pop(updated);
                       } else {
                         final user = Supabase.instance.client.auth.currentUser;
                         final userId = user?.id ?? 'local';
-                        final gymId = 'GYM-${DateTime.now().millisecondsSinceEpoch}';
+                        final gymId =
+                            'GYM-${DateTime.now().millisecondsSinceEpoch}';
                         final created = await repo.createGym(
                           gymId: gymId,
                           name: nameController.text.trim(),
                           userId: userId,
-                          location: locationController.text.trim().isEmpty ? null : locationController.text.trim(),
-                          gymNotes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                          location:
+                              locationController.text.trim().isEmpty
+                                  ? null
+                                  : locationController.text.trim(),
+                          gymNotes:
+                              notesController.text.trim().isEmpty
+                                  ? null
+                                  : notesController.text.trim(),
                         );
                         if (!mounted) return;
                         showFlexSnackbarFromUiMessage(
                           ctx,
-                          UiMessage('Gym saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                          UiMessage(
+                            'Gym saved',
+                            subtitle: 'Created ${created.name}',
+                            type: UiMessageType.success,
+                          ),
                         );
                         await ref.read(dashboardProvider.notifier).refresh();
                         Navigator.of(ctx).pop(created);
@@ -187,7 +215,11 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
                       if (!mounted) return;
                       showFlexSnackbarFromUiMessage(
                         ctx,
-                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                        UiMessage(
+                          'Save failed',
+                          subtitle: e.toString(),
+                          type: UiMessageType.error,
+                        ),
                       );
                     }
                   },

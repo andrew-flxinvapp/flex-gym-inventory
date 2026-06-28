@@ -20,8 +20,6 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 
-
-
 class AddEquipmentScreen extends ConsumerStatefulWidget {
   const AddEquipmentScreen({super.key});
 
@@ -44,7 +42,8 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  final TextEditingController maintenanceNotesController = TextEditingController();
+  final TextEditingController maintenanceNotesController =
+      TextEditingController();
   final TextEditingController valueController = TextEditingController();
 
   @override
@@ -95,66 +94,69 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                const SizedBox(height: 8),
-                Text(
-                  'Enter Equipment information below.',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(height: 8),
+                  Text(
+                    'Enter Equipment information below.',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      '*',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.stopColor,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        '*',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppTheme.stopColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Required field',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                      const SizedBox(width: 4),
+                      Text(
+                        'Required field',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                // ...existing code...
-                const SizedBox(height: 16),
-                CustomDropdownField<Gym>(
-                  hintText: 'Select Gym',
-                  items: gyms,
-                  value: selectedGym,
-                  showAsterisk: true,
-                  getLabel: (item) => item.name,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedGym = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Gym selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Name',
-                  showAsterisk: true,
-                  controller: nameController,
-                ),
-                /*const SizedBox(height: 20),
+                    ],
+                  ),
+                  // ...existing code...
+                  const SizedBox(height: 16),
+                  CustomDropdownField<Gym>(
+                    hintText: 'Select Gym',
+                    items: gyms,
+                    value: selectedGym,
+                    showAsterisk: true,
+                    getLabel: (item) => item.name,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGym = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Gym selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Name',
+                    showAsterisk: true,
+                    controller: nameController,
+                  ),
+                  /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(
                   hintText: 'Upload Image',
                   items: ImageSource.values,
@@ -167,154 +169,168 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                     });
                   },
                 ),*/
-                const SizedBox(height: 20),
-                CustomDropdownField<EquipmentCategory>(
-                  hintText: 'Select Category',
-                  items: EquipmentCategory.values,
-                  value: selectedCategory,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCategory = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Category selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Brand',
-                  showAsterisk: true,
-                  controller: brandController,
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Model',
-                  showAsterisk: true,
-                  controller: modelController,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<TrainingStyle>(
-                  hintText: 'Select Training Style',
-                  items: TrainingStyle.values,
-                  value: selectedTrainingStyle,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedTrainingStyle = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Training style selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Quantity',
-                  showAsterisk: true,
-                  controller: quantityController,
-                ),
-                const SizedBox(height: 20),
-                CustomTextInputField(
-                  hintText: 'Value',
-                  showAsterisk: false,
-                  controller: valueController,
-                ),
-                const SizedBox(height: 20),
-                CustomDropdownField<EquipmentCondition>(
-                  hintText: 'Select Condition',
-                  items: EquipmentCondition.values,
-                  value: selectedCondition,
-                  showAsterisk: true,
-                  getLabel: (item) => item.label,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedCondition = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Condition selection is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomDateInput(
-                  hintText: 'Purchase Date',
-                  initialDate: selectedPurchaseDate,
-                  onDateChanged: (date) {
-                    setState(() {
-                      selectedPurchaseDate = date;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomMultilineTextInput(
-                  hintText: 'Maintenance Notes',
-                  maxLines: 5,
-                  controller: maintenanceNotesController,
-                ),
-                const SizedBox(height: 32),
-                PrimaryButton(
-                  label: 'Save',
-                  onPressed: () async {
-                    if (!(_formKey.currentState?.validate() ?? false)) return;
-                    try {
-                      final repo = EquipmentRepository();
-                      final qty = int.tryParse(quantityController.text) ?? 1;
-                      final val = double.tryParse(valueController.text);
-                      final gymId = selectedGym?.gymId ?? 'GYM-0001';
+                  const SizedBox(height: 20),
+                  CustomDropdownField<EquipmentCategory>(
+                    hintText: 'Select Category',
+                    items: EquipmentCategory.values,
+                    value: selectedCategory,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCategory = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Category selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Brand',
+                    showAsterisk: true,
+                    controller: brandController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Model',
+                    showAsterisk: true,
+                    controller: modelController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<TrainingStyle>(
+                    hintText: 'Select Training Style',
+                    items: TrainingStyle.values,
+                    value: selectedTrainingStyle,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTrainingStyle = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Training style selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Quantity',
+                    showAsterisk: true,
+                    controller: quantityController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextInputField(
+                    hintText: 'Value',
+                    showAsterisk: false,
+                    controller: valueController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDropdownField<EquipmentCondition>(
+                    hintText: 'Select Condition',
+                    items: EquipmentCondition.values,
+                    value: selectedCondition,
+                    showAsterisk: true,
+                    getLabel: (item) => item.label,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCondition = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Condition selection is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomDateInput(
+                    hintText: 'Purchase Date',
+                    initialDate: selectedPurchaseDate,
+                    onDateChanged: (date) {
+                      setState(() {
+                        selectedPurchaseDate = date;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  CustomMultilineTextInput(
+                    hintText: 'Maintenance Notes',
+                    maxLines: 5,
+                    controller: maintenanceNotesController,
+                  ),
+                  const SizedBox(height: 32),
+                  PrimaryButton(
+                    label: 'Save',
+                    onPressed: () async {
+                      if (!(_formKey.currentState?.validate() ?? false)) return;
+                      try {
+                        final repo = EquipmentRepository();
+                        final qty = int.tryParse(quantityController.text) ?? 1;
+                        final val = double.tryParse(valueController.text);
+                        final gymId = selectedGym?.gymId ?? 'GYM-0001';
 
-                      final created = await repo.createEquipment(
-                        gymId: gymId,
-                        name: nameController.text.trim(),
-                        category: selectedCategory ?? EquipmentCategory.other,
-                        brand: brandController.text.trim(),
-                        model: modelController.text.trim(),
-                        trainingStyle: selectedTrainingStyle ?? TrainingStyle.general,
-                        quantity: qty,
-                        condition: selectedCondition ?? EquipmentCondition.good,
-                        purchaseDate: selectedPurchaseDate,
-                        value: val,
-                        maintenanceNotes: maintenanceNotesController.text.trim().isEmpty ? null : maintenanceNotesController.text.trim(),
-                      );
+                        final created = await repo.createEquipment(
+                          gymId: gymId,
+                          name: nameController.text.trim(),
+                          category: selectedCategory ?? EquipmentCategory.other,
+                          brand: brandController.text.trim(),
+                          model: modelController.text.trim(),
+                          trainingStyle:
+                              selectedTrainingStyle ?? TrainingStyle.general,
+                          quantity: qty,
+                          condition:
+                              selectedCondition ?? EquipmentCondition.good,
+                          purchaseDate: selectedPurchaseDate,
+                          value: val,
+                          maintenanceNotes:
+                              maintenanceNotesController.text.trim().isEmpty
+                                  ? null
+                                  : maintenanceNotesController.text.trim(),
+                        );
 
-                      showFlexSnackbarFromUiMessage(
-                        context,
-                        UiMessage('Equipment saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
-                      );
-                      await ref.read(dashboardProvider.notifier).refresh();
-                      Navigator.of(context).pop(created);
-                    } catch (e) {
-                      showFlexSnackbarFromUiMessage(
-                        context,
-                        UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                SecondaryButton(
-                  label: 'Cancel',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+                        showFlexSnackbarFromUiMessage(
+                          context,
+                          UiMessage(
+                            'Equipment saved',
+                            subtitle: 'Created ${created.name}',
+                            type: UiMessageType.success,
+                          ),
+                        );
+                        await ref.read(dashboardProvider.notifier).refresh();
+                        Navigator.of(context).pop(created);
+                      } catch (e) {
+                        showFlexSnackbarFromUiMessage(
+                          context,
+                          UiMessage(
+                            'Save failed',
+                            subtitle: e.toString(),
+                            type: UiMessageType.error,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  SecondaryButton(
+                    label: 'Cancel',
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

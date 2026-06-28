@@ -31,22 +31,37 @@ class DeeplinkService {
       }
     } catch (e, st) {
       // swallow errors but allow higher-level logging if needed
-      LogHandler.warning('DeeplinkService', 'error getting initial uri: $e', e, st);
+      LogHandler.warning(
+        'DeeplinkService',
+        'error getting initial uri: $e',
+        e,
+        st,
+      );
     }
 
     // Listen for subsequent incoming links while the app is running.
-    _sub = _appLinks.uriLinkStream.listen((uri) {
-      _handleUri(uri);
-    }, onError: (err, st) {
-      // ignore errors here, but log for diagnostics
-      LogHandler.warning('DeeplinkService', 'uri link stream error: $err', err, st);
-    });
+    _sub = _appLinks.uriLinkStream.listen(
+      (uri) {
+        _handleUri(uri);
+      },
+      onError: (err, st) {
+        // ignore errors here, but log for diagnostics
+        LogHandler.warning(
+          'DeeplinkService',
+          'uri link stream error: $err',
+          err,
+          st,
+        );
+      },
+    );
   }
 
   /// Register a handler that will be called whenever a deep link arrives.
   /// The handler receives the parsed [Uri] and a merged map of query and
   /// fragment parameters.
-  void registerHandler(Future<void> Function(Uri uri, Map<String, String> params) handler) {
+  void registerHandler(
+    Future<void> Function(Uri uri, Map<String, String> params) handler,
+  ) {
     _handler = handler;
   }
 
@@ -78,7 +93,10 @@ class DeeplinkService {
       }
     } else {
       // No handler registered — log for debugging
-      LogHandler.info('DeeplinkService', 'received uri but no handler registered: $uri');
+      LogHandler.info(
+        'DeeplinkService',
+        'received uri but no handler registered: $uri',
+      );
     }
   }
 

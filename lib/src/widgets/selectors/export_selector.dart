@@ -30,10 +30,7 @@ class ExportSelector extends StatelessWidget {
       color: color,
       body: Row(
         children: [
-          Checkbox(
-            value: selected,
-            onChanged: onChanged,
-          ),
+          Checkbox(value: selected, onChanged: onChanged),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

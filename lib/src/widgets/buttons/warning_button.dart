@@ -1,7 +1,6 @@
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-
 class WarningButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
@@ -33,9 +32,9 @@ class WarningButton extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

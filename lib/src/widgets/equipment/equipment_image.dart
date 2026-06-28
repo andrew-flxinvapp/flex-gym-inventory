@@ -38,18 +38,21 @@ class EquipmentImage extends StatelessWidget {
                 size: 20,
                 color: AppTheme.lightTextPrimary,
               ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               color: Colors.white,
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: ImageAction.edit,
-                  child: Text('Edit'),
-                ),
-                const PopupMenuItem(
-                  value: ImageAction.delete,
-                  child: Text('Delete'),
-                ),
-              ],
+              itemBuilder:
+                  (context) => [
+                    const PopupMenuItem(
+                      value: ImageAction.edit,
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: ImageAction.delete,
+                      child: Text('Delete'),
+                    ),
+                  ],
               onSelected: (value) => onImageActionSelected?.call(value),
             ),
           ),
@@ -77,12 +80,21 @@ class EquipmentImage extends StatelessWidget {
                     size: 20,
                     color: AppTheme.lightTextPrimary,
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   color: Colors.white,
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(value: ImageAction.edit, child: Text('Edit')),
-                    const PopupMenuItem(value: ImageAction.delete, child: Text('Delete')),
-                  ],
+                  itemBuilder:
+                      (context) => [
+                        const PopupMenuItem(
+                          value: ImageAction.edit,
+                          child: Text('Edit'),
+                        ),
+                        const PopupMenuItem(
+                          value: ImageAction.delete,
+                          child: Text('Delete'),
+                        ),
+                      ],
                   onSelected: (value) => onImageActionSelected?.call(value),
                 ),
               ),
@@ -95,12 +107,7 @@ class EquipmentImage extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  file,
-                  width: width,
-                  height: height,
-                  fit: fit,
-                ),
+                child: Image.file(file, width: width, height: height, fit: fit),
               ),
               Positioned(
                 top: 12,
@@ -111,12 +118,21 @@ class EquipmentImage extends StatelessWidget {
                     size: 20,
                     color: AppTheme.lightTextPrimary,
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   color: Colors.white,
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(value: ImageAction.edit, child: Text('Edit')),
-                    const PopupMenuItem(value: ImageAction.delete, child: Text('Delete')),
-                  ],
+                  itemBuilder:
+                      (context) => [
+                        const PopupMenuItem(
+                          value: ImageAction.edit,
+                          child: Text('Edit'),
+                        ),
+                        const PopupMenuItem(
+                          value: ImageAction.delete,
+                          child: Text('Delete'),
+                        ),
+                      ],
                   onSelected: (value) => onImageActionSelected?.call(value),
                 ),
               ),
@@ -135,12 +151,21 @@ class EquipmentImage extends StatelessWidget {
                   size: 20,
                   color: AppTheme.lightTextPrimary,
                 ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 color: Colors.white,
-                itemBuilder: (context) => [
-                  const PopupMenuItem(value: ImageAction.edit, child: Text('Edit')),
-                  const PopupMenuItem(value: ImageAction.delete, child: Text('Delete')),
-                ],
+                itemBuilder:
+                    (context) => [
+                      const PopupMenuItem(
+                        value: ImageAction.edit,
+                        child: Text('Edit'),
+                      ),
+                      const PopupMenuItem(
+                        value: ImageAction.delete,
+                        child: Text('Delete'),
+                      ),
+                    ],
                 onSelected: (value) => onImageActionSelected?.call(value),
               ),
             ),

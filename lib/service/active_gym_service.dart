@@ -21,7 +21,7 @@ class ActiveGymService {
       if (exists != null) return saved;
     }
 
-    // Fallback: pick first gym 
+    // Fallback: pick first gym
     final firstGym = await isar.gyms.where().anyId().findFirst();
     if (firstGym == null) {
       throw StateError('No gyms exist yet. Create a gym first.');

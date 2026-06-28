@@ -12,8 +12,8 @@ import 'package:flex_gym_inventory/src/models/user_prefs_model.dart';
 class UserLocalRepository {
   /// Get preferences for a given Supabase user id.
   Future<UserPrefs?> getPrefsByUserId(String userId) async {
-  final isar = IsarService.isar;
-  return isar.userPrefs.where().userIdEqualTo(userId).findFirst();
+    final isar = IsarService.isar;
+    return isar.userPrefs.where().userIdEqualTo(userId).findFirst();
   }
 
   /// Insert or replace the given [prefs].
@@ -29,9 +29,10 @@ class UserLocalRepository {
   Future<UserPrefs> ensurePrefsForUser(String userId) async {
     var prefs = await getPrefsByUserId(userId);
     if (prefs != null) return prefs;
-    prefs = UserPrefs()
-      ..userId = userId
-      ..defaultGymId = null;
+    prefs =
+        UserPrefs()
+          ..userId = userId
+          ..defaultGymId = null;
     await upsertPrefs(prefs);
     return prefs;
   }
@@ -50,9 +51,10 @@ class UserLocalRepository {
       return existing;
     }
 
-    final prefs = UserPrefs()
-      ..userId = userId
-      ..defaultGymId = null;
+    final prefs =
+        UserPrefs()
+          ..userId = userId
+          ..defaultGymId = null;
     await upsertPrefs(prefs);
     return prefs;
   }

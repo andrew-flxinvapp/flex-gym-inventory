@@ -23,7 +23,8 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
   Widget build(BuildContext context) {
     final total = widget.categoryCounts.values.fold<int>(0, (a, b) => a + b);
     final theme = Theme.of(context);
-    final double chartSize = widget.height; // use provided height to size the chart
+    final double chartSize =
+        widget.height; // use provided height to size the chart
     // Use colors defined on the `EquipmentCategory` enum via extension.
 
     final entries = widget.categoryCounts.entries.toList();
@@ -91,54 +92,56 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
           children: [
             PieChart(
               PieChartData(
-                  sections: sections,
-                  sectionsSpace: 2,
-                  centerSpaceRadius: chartSize * 0.33,
-                  startDegreeOffset: startDegreeOffset,
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      // Respond on tap up or long-press end. Ignore gap slice.
-                      if (event is FlTapUpEvent || event is FlLongPressEnd) {
-                          final resp = pieTouchResponse;
-                          if (resp == null) {
-                            setState(() => _tappedIndex = null);
-                          } else {
-                            final touched = resp.touchedSection;
-                            final idx = touched?.touchedSectionIndex ?? -1;
-                            // Validate index: must be >= 0 and not the gap slice (last section).
-                            if (idx < 0 || idx >= sections.length - 1) {
-                              setState(() => _tappedIndex = null);
-                            } else {
-                              setState(() => _tappedIndex = idx);
-                            }
-                          }
+                sections: sections,
+                sectionsSpace: 2,
+                centerSpaceRadius: chartSize * 0.33,
+                startDegreeOffset: startDegreeOffset,
+                pieTouchData: PieTouchData(
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                    // Respond on tap up or long-press end. Ignore gap slice.
+                    if (event is FlTapUpEvent || event is FlLongPressEnd) {
+                      final resp = pieTouchResponse;
+                      if (resp == null) {
+                        setState(() => _tappedIndex = null);
+                      } else {
+                        final touched = resp.touchedSection;
+                        final idx = touched?.touchedSectionIndex ?? -1;
+                        // Validate index: must be >= 0 and not the gap slice (last section).
+                        if (idx < 0 || idx >= sections.length - 1) {
+                          setState(() => _tappedIndex = null);
+                        } else {
+                          setState(() => _tappedIndex = idx);
+                        }
                       }
-                    },
-                  ),
+                    }
+                  },
                 ),
+              ),
             ),
             // Center column: show tapped category + count as a tooltip,
             // otherwise show total items.
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (_tappedIndex != null && _tappedIndex! >= 0 && _tappedIndex! < nonZeroEntries.length) ...[
-                      Text(
-                        nonZeroEntries[_tappedIndex!].key.label,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.lightTextPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        nonZeroEntries[_tappedIndex!].value.toString(),
-                        style: theme.textTheme.displayMedium?.copyWith(
-                          color: AppTheme.lightTextPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ] else ...[
+                if (_tappedIndex != null &&
+                    _tappedIndex! >= 0 &&
+                    _tappedIndex! < nonZeroEntries.length) ...[
+                  Text(
+                    nonZeroEntries[_tappedIndex!].key.label,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    nonZeroEntries[_tappedIndex!].value.toString(),
+                    style: theme.textTheme.displayMedium?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ] else ...[
                   Text(
                     total.toString(),
                     style: theme.textTheme.displayLarge?.copyWith(
@@ -152,7 +155,7 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
                       color: AppTheme.lightPrimary,
                     ),
                   ),
-                ]
+                ],
               ],
             ),
           ],
@@ -167,17 +170,19 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
         5,
         (i) => i < entries.length ? entries[i] : null,
       );
-      final rightSlots = List<MapEntry<EquipmentCategory, int>?>.generate(
-        5,
-        (i) {
-          final idx = i + 5;
-          return idx < entries.length ? entries[idx] : null;
-        },
-      );
+      final rightSlots = List<MapEntry<EquipmentCategory, int>?>.generate(5, (
+        i,
+      ) {
+        final idx = i + 5;
+        return idx < entries.length ? entries[idx] : null;
+      });
 
       Widget buildLegendItem(MapEntry<EquipmentCategory, int>? entry, int i) {
         final bool hasEntry = entry != null;
-        final color = hasEntry ? entry.key.color : AppTheme.lightTextPrimary.withValues(alpha: 0.12);
+        final color =
+            hasEntry
+                ? entry.key.color
+                : AppTheme.lightTextPrimary.withValues(alpha: 0.12);
         final label = hasEntry ? entry.key.label : '';
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -186,17 +191,17 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
               Container(
                 width: 12,
                 height: 12,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: hasEntry ? AppTheme.lightTextPrimary : AppTheme.lightTextPrimary.withValues(alpha: 0.35),
+                    color:
+                        hasEntry
+                            ? AppTheme.lightTextPrimary
+                            : AppTheme.lightTextPrimary.withValues(alpha: 0.35),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -205,20 +210,27 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
           ),
         );
       }
+
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(5, (i) => buildLegendItem(leftSlots[i], i)),
+              children: List.generate(
+                5,
+                (i) => buildLegendItem(leftSlots[i], i),
+              ),
             ),
           ),
           const SizedBox(width: 24),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(5, (i) => buildLegendItem(rightSlots[i], i + 5)),
+              children: List.generate(
+                5,
+                (i) => buildLegendItem(rightSlots[i], i + 5),
+              ),
             ),
           ),
         ],
@@ -244,31 +256,29 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
               ),
             ),
             SizedBox(height: 80),
-            Center(
-              child: chartWidget(),
-            ),
+            Center(child: chartWidget()),
             const SizedBox(height: 24),
             Theme(
               data: theme.copyWith(dividerColor: Colors.transparent),
               child: Material(
                 color: Colors.transparent,
                 child: ExpansionTile(
-                title: Text(
-                  'Legend',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.w600,
+                  title: Text(
+                    'Legend',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                initiallyExpanded: false,
-                tilePadding: EdgeInsets.zero,
-                childrenPadding: const EdgeInsets.only(top: 8),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: legend(),
-                  ),
-                ],
+                  initiallyExpanded: false,
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.only(top: 8),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: legend(),
+                    ),
+                  ],
                 ),
               ),
             ),

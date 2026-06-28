@@ -20,7 +20,9 @@ void main() {
       mockRepo = _MockOnboardingRepository();
     });
 
-    testWidgets('navigates to onboarding when onboarding incomplete', (tester) async {
+    testWidgets('navigates to onboarding when onboarding incomplete', (
+      tester,
+    ) async {
       when(() => mockRepo.isOnboardingComplete).thenReturn(false);
 
       // Provide a fake non-null Session so the screen treats the user as
@@ -30,11 +32,17 @@ void main() {
       final routes = Map<String, WidgetBuilder>.from(appRoutes);
       routes.remove(AppRoutes.splash);
       // Replace heavy routes with light placeholders to keep test isolated.
-      routes[AppRoutes.onboardingFeatureOne] = (_) => const Scaffold(body: Center(child: Text('Onboarding')));
-      await tester.pumpWidget(MaterialApp(
-        routes: routes,
-        home: StartupRouterScreen(onboardingRepository: mockRepo, testSession: fakeSession),
-      ));
+      routes[AppRoutes.onboardingFeatureOne] =
+          (_) => const Scaffold(body: Center(child: Text('Onboarding')));
+      await tester.pumpWidget(
+        MaterialApp(
+          routes: routes,
+          home: StartupRouterScreen(
+            onboardingRepository: mockRepo,
+            testSession: fakeSession,
+          ),
+        ),
+      );
 
       // allow async bootstrap to run
       await tester.pumpAndSettle();
@@ -43,7 +51,9 @@ void main() {
       expect(find.byType(StartupRouterScreen), findsNothing);
     });
 
-    testWidgets('navigates to dashboard when onboarding complete', (tester) async {
+    testWidgets('navigates to dashboard when onboarding complete', (
+      tester,
+    ) async {
       when(() => mockRepo.isOnboardingComplete).thenReturn(true);
 
       final fakeSession = FakeSession();
@@ -51,11 +61,17 @@ void main() {
       final routes = Map<String, WidgetBuilder>.from(appRoutes);
       routes.remove(AppRoutes.splash);
       // Replace heavy dashboard with a lightweight placeholder to avoid ProviderScope and layout issues.
-      routes[AppRoutes.dashboard] = (_) => const Scaffold(body: Center(child: Text('Dashboard')));
-      await tester.pumpWidget(MaterialApp(
-        routes: routes,
-        home: StartupRouterScreen(onboardingRepository: mockRepo, testSession: fakeSession),
-      ));
+      routes[AppRoutes.dashboard] =
+          (_) => const Scaffold(body: Center(child: Text('Dashboard')));
+      await tester.pumpWidget(
+        MaterialApp(
+          routes: routes,
+          home: StartupRouterScreen(
+            onboardingRepository: mockRepo,
+            testSession: fakeSession,
+          ),
+        ),
+      );
 
       // allow async bootstrap to run
       await tester.pumpAndSettle();

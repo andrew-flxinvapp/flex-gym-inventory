@@ -31,7 +31,8 @@ class _SuccessfulAuthRepository extends AuthRepository {
 
 class _ThrowingAuthRepository extends AuthRepository {
   final AuthException exception;
-  _ThrowingAuthRepository(this.exception) : super(client: _MockSupabaseClient());
+  _ThrowingAuthRepository(this.exception)
+    : super(client: _MockSupabaseClient());
   @override
   Future<void> signInWithMagicLink(String email) async {
     throw exception;
@@ -66,7 +67,8 @@ void main() {
 
   test('repository throws AuthException sets message from exception', () async {
     final repo = _ThrowingAuthRepository(
-        AuthException(AuthError.notFound, 'not found'));
+      AuthException(AuthError.notFound, 'not found'),
+    );
     final vm = LoginViewModel(authRepository: repo);
 
     vm.emailController.text = 'user@example.com';

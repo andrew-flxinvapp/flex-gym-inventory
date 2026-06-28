@@ -6,19 +6,25 @@ import 'package:flex_gym_inventory/enum/app_enums.dart';
 /// Query functions for Equipment filtering
 class EquipmentQueries {
   /// Get equipment items by category
-  static Future<List<Equipment>> getByCategory(EquipmentCategory category) async {
+  static Future<List<Equipment>> getByCategory(
+    EquipmentCategory category,
+  ) async {
     final isar = IsarService.isar;
     return isar.equipments.filter().categoryEqualTo(category).findAll();
   }
 
   /// Get equipment items by condition
-  static Future<List<Equipment>> getByCondition(EquipmentCondition condition) async {
+  static Future<List<Equipment>> getByCondition(
+    EquipmentCondition condition,
+  ) async {
     final isar = IsarService.isar;
     return isar.equipments.filter().conditionEqualTo(condition).findAll();
   }
 
   /// Get equipment items by purchase date
-  static Future<List<Equipment>> getByPurchaseDate(DateTime purchaseDate) async {
+  static Future<List<Equipment>> getByPurchaseDate(
+    DateTime purchaseDate,
+  ) async {
     final isar = IsarService.isar;
     return isar.equipments.filter().purchaseDateEqualTo(purchaseDate).findAll();
   }
@@ -30,8 +36,13 @@ class EquipmentQueries {
   }
 
   /// Get equipment items by training style
-  static Future<List<Equipment>> getByTrainingStyle(TrainingStyle trainingStyle) async {
+  static Future<List<Equipment>> getByTrainingStyle(
+    TrainingStyle trainingStyle,
+  ) async {
     final isar = IsarService.isar;
-    return isar.equipments.filter().trainingStyleEqualTo(trainingStyle).findAll();
+    return isar.equipments
+        .filter()
+        .trainingStyleEqualTo(trainingStyle)
+        .findAll();
   }
 }

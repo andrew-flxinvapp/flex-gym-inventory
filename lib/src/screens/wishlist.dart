@@ -35,7 +35,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
         showRightIcon: true,
         rightIcon: AppIcons.plus,
         onRightIconPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.addWishlist).then((_) => setState(() {}));
+          Navigator.of(
+            context,
+          ).pushNamed(AppRoutes.addWishlist).then((_) => setState(() {}));
         },
       ),
       body: SafeArea(
@@ -84,7 +86,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       SecondaryButton(
                         label: 'Add Item',
                         onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.addWishlist).then((_) => setState(() {}));
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.addWishlist)
+                              .then((_) => setState(() {}));
                         },
                       ),
                     ],
@@ -106,10 +110,15 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   ),
                   const SizedBox(height: 16),
                   for (final w in items) ...[
-                    WishlistItemCard.fromWishlist(w, onTapCallback: (id) async {
-                      await Navigator.of(context).pushNamed(AppRoutes.wishlistDetail, arguments: id);
-                      setState(() {});
-                    }),
+                    WishlistItemCard.fromWishlist(
+                      w,
+                      onTapCallback: (id) async {
+                        await Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.wishlistDetail, arguments: id);
+                        setState(() {});
+                      },
+                    ),
                     const SizedBox(height: 16),
                   ],
                   const SizedBox(height: 8),
@@ -122,5 +131,3 @@ class _WishlistScreenState extends State<WishlistScreen> {
     );
   }
 }
-
-

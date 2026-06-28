@@ -39,7 +39,9 @@ class _SplashScreenState extends State<SplashScreen> {
               Color(0xFF000000), // 100%
             ],
             stops: [0.0, 0.3, 0.8, 1.0],
-            transform: GradientRotation(0.25), // Rotate the gradient slightly for a more dynamic look
+            transform: GradientRotation(
+              0.25,
+            ), // Rotate the gradient slightly for a more dynamic look
           ),
         ),
         child: SafeArea(

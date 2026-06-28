@@ -33,8 +33,8 @@ class SearchResultsCard extends StatelessWidget {
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

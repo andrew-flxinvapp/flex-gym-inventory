@@ -78,7 +78,10 @@ class _CustomDateInputState extends State<CustomDateInput> {
                 ),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -93,9 +96,10 @@ class _CustomDateInputState extends State<CustomDateInput> {
                 ),
               ),
               controller: TextEditingController(
-                text: _selectedDate != null
-                    ? '${_selectedDate!.month}/${_selectedDate!.day}/${_selectedDate!.year}'
-                    : '',
+                text:
+                    _selectedDate != null
+                        ? '${_selectedDate!.month}/${_selectedDate!.day}/${_selectedDate!.year}'
+                        : '',
               ),
             ),
           ),

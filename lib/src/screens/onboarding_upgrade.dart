@@ -9,7 +9,8 @@ class OnboardingUpgradeScreen extends StatefulWidget {
   const OnboardingUpgradeScreen({super.key});
 
   @override
-  State<OnboardingUpgradeScreen> createState() => _OnboardingUpgradeScreenState();
+  State<OnboardingUpgradeScreen> createState() =>
+      _OnboardingUpgradeScreenState();
 }
 
 class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
@@ -43,7 +44,10 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                   maxWidth: 430, // Responsive max width for large screens
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 24.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -53,21 +57,27 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                         children: [
                           Text(
                             'Upgrade to PRO',
-                            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.displayMedium?.copyWith(
                               color: AppTheme.lightTextPrimary,
                               fontFamily: 'Roboto',
                             ),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(AppRoutes.complete);
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.complete);
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: AppTheme.lightTextPrimary,
                               padding: EdgeInsets.zero,
                               minimumSize: Size(0, 0),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              textStyle: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
                                 decoration: TextDecoration.underline,
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
@@ -75,7 +85,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             ),
                             child: Text(
                               'Skip',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
                                 decoration: TextDecoration.underline,
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
@@ -124,7 +136,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             Center(
                               child: Container(
                                 width: double.infinity,
-                                constraints: const BoxConstraints(maxWidth: 370),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 370,
+                                ),
                                 height: 73,
                                 decoration: BoxDecoration(
                                   color: AppTheme.lightCard,
@@ -135,7 +149,8 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                   ),
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Container(
                                       height: 20,
@@ -149,7 +164,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                       alignment: Alignment.center,
                                       child: Text(
                                         'Save 25%',
-                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelSmall?.copyWith(
                                           color: AppTheme.lightCard,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Roboto',
@@ -158,40 +175,60 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.only(left: 16.0, right: 4.0),
+                                        padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                          right: 4.0,
+                                        ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   'Yearly Plan',
-                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: AppTheme.lightTextPrimary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Roboto',
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        color:
+                                                            AppTheme
+                                                                .lightTextPrimary,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Roboto',
+                                                      ),
                                                 ),
                                                 const SizedBox(height: 4),
                                                 Text(
                                                   '\$44.99 per year',
-                                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                    color: AppTheme.lightTextPrimary,
-                                                    fontFamily: 'Roboto',
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelSmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            AppTheme
+                                                                .lightTextPrimary,
+                                                        fontFamily: 'Roboto',
+                                                      ),
                                                 ),
                                               ],
                                             ),
                                             Theme(
                                               data: Theme.of(context).copyWith(
-                                                unselectedWidgetColor: AppTheme.lightTextPrimary,
+                                                unselectedWidgetColor:
+                                                    AppTheme.lightTextPrimary,
                                               ),
                                               child: Radio<int>(
                                                 value: 1,
-                                                activeColor: AppTheme.lightTextPrimary,
+                                                activeColor:
+                                                    AppTheme.lightTextPrimary,
                                               ),
                                             ),
                                           ],
@@ -206,7 +243,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             Center(
                               child: Container(
                                 width: double.infinity,
-                                constraints: const BoxConstraints(maxWidth: 370),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 370,
+                                ),
                                 height: 57,
                                 decoration: BoxDecoration(
                                   color: AppTheme.lightCard,
@@ -217,18 +256,27 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 16.0, right: 4.0),
+                                  padding: const EdgeInsets.only(
+                                    left: 16.0,
+                                    right: 4.0,
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             'Monthly Plan',
-                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium?.copyWith(
                                               color: AppTheme.lightTextPrimary,
                                               fontWeight: FontWeight.bold,
                                               fontFamily: 'Roboto',
@@ -237,7 +285,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                           const SizedBox(height: 4),
                                           Text(
                                             '\$4.99 per month',
-                                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.labelSmall?.copyWith(
                                               color: AppTheme.lightTextPrimary,
                                               fontFamily: 'Roboto',
                                             ),
@@ -246,11 +296,13 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                                       ),
                                       Theme(
                                         data: Theme.of(context).copyWith(
-                                          unselectedWidgetColor: AppTheme.lightTextPrimary,
+                                          unselectedWidgetColor:
+                                              AppTheme.lightTextPrimary,
                                         ),
                                         child: Radio<int>(
                                           value: 0,
-                                          activeColor: AppTheme.lightTextPrimary,
+                                          activeColor:
+                                              AppTheme.lightTextPrimary,
                                         ),
                                       ),
                                     ],
@@ -276,27 +328,32 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             ),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   '7 - Day Free Trial',
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(
                                     color: AppTheme.lightTextPrimary,
                                     fontFamily: 'Roboto',
                                   ),
                                 ),
                                 CupertinoSwitch(
                                   value: _freeTrial,
-                                  onChanged: _selectedPlan == 1
-                                      ? null
-                                      : (bool value) {
-                                          setState(() {
-                                            _freeTrial = value;
-                                          });
-                                        },
+                                  onChanged:
+                                      _selectedPlan == 1
+                                          ? null
+                                          : (bool value) {
+                                            setState(() {
+                                              _freeTrial = value;
+                                            });
+                                          },
                                 ),
                               ],
                             ),
@@ -331,7 +388,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                               const SizedBox(width: 8),
                               Text(
                                 'No payment now',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
                                   color: AppTheme.lightTextPrimary,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.normal,
@@ -351,21 +410,27 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             },
                             child: Text(
                               'Terms of Use',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelSmall?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
                               ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                            ),
                             child: TextButton(
                               onPressed: () {
                                 // TODO: Restore purchases
                               },
                               child: Text(
                                 'Restore',
-                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelSmall?.copyWith(
                                   color: AppTheme.lightTextPrimary,
                                   fontFamily: 'Roboto',
                                 ),
@@ -378,7 +443,9 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                             },
                             child: Text(
                               'Privacy Policy',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelSmall?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
                               ),

@@ -54,26 +54,26 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
   final Ref ref;
 
   DashboardViewModel(this.ref)
-      : super(
-          DashboardState(
-            // Ensure every `EquipmentCategory` has at least one item for
-            // demo purposes so the dashboard arc chart always displays all
-            // categories in the legend and slices.
-            categoryCounts: {
-              EquipmentCategory.weights: 0,
-              EquipmentCategory.specialty: 0,
-              EquipmentCategory.machines: 0,
-              EquipmentCategory.storage: 0,
-              EquipmentCategory.racks: 0,
-              EquipmentCategory.attachments: 0,
-              EquipmentCategory.benches: 0,
-              EquipmentCategory.accessories: 0,
-              EquipmentCategory.safety: 0,
-              EquipmentCategory.other: 0,
-            },
-            gyms: [],
-          ),
-        ) {
+    : super(
+        DashboardState(
+          // Ensure every `EquipmentCategory` has at least one item for
+          // demo purposes so the dashboard arc chart always displays all
+          // categories in the legend and slices.
+          categoryCounts: {
+            EquipmentCategory.weights: 0,
+            EquipmentCategory.specialty: 0,
+            EquipmentCategory.machines: 0,
+            EquipmentCategory.storage: 0,
+            EquipmentCategory.racks: 0,
+            EquipmentCategory.attachments: 0,
+            EquipmentCategory.benches: 0,
+            EquipmentCategory.accessories: 0,
+            EquipmentCategory.safety: 0,
+            EquipmentCategory.other: 0,
+          },
+          gyms: [],
+        ),
+      ) {
     // Trigger a refresh after construction so the dashboard loads when the
     // provider is first created (e.g., on app startup or when the dashboard
     // view is first shown).
@@ -118,12 +118,14 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
           }
         }
 
-        dashboardGyms.add(DashboardGym(
-          gymId: g.gymId,
-          gymName: g.name,
-          equipmentCount: equipmentCount,
-          lastUpdated: lastUpdated,
-        ));
+        dashboardGyms.add(
+          DashboardGym(
+            gymId: g.gymId,
+            gymName: g.name,
+            equipmentCount: equipmentCount,
+            lastUpdated: lastUpdated,
+          ),
+        );
       }
 
       state = state.copyWith(
@@ -141,5 +143,5 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
 /// Provider exposing the dashboard state and notifier.
 final dashboardProvider =
     StateNotifierProvider<DashboardViewModel, DashboardState>((ref) {
-  return DashboardViewModel(ref);
-});
+      return DashboardViewModel(ref);
+    });

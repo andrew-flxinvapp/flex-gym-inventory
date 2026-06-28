@@ -25,24 +25,30 @@ class _DebugDeviceTokenScreenState extends State<DebugDeviceTokenScreen> {
     final token = _tokenController.text.trim();
     final deviceId = _deviceIdController.text.trim();
     if (token.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a token')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a token')));
       return;
     }
 
     setState(() => _loading = true);
-      try {
-        await DeviceTokenManager.instance.registerToken(
-          token: token,
-          platform: _platform,
-          deviceId: deviceId.isEmpty ? null : deviceId,
-        );
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Token upserted via DeviceTokenManager')));
-      } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
-      } finally {
-        if (mounted) setState(() => _loading = false);
+    try {
+      await DeviceTokenManager.instance.registerToken(
+        token: token,
+        platform: _platform,
+        deviceId: deviceId.isEmpty ? null : deviceId,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Token upserted via DeviceTokenManager')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -55,7 +61,9 @@ class _DebugDeviceTokenScreenState extends State<DebugDeviceTokenScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Paste a provider token (APNs / FCM / OneSignal) below for testing.'),
+            const Text(
+              'Paste a provider token (APNs / FCM / OneSignal) below for testing.',
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: _tokenController,
@@ -66,7 +74,9 @@ class _DebugDeviceTokenScreenState extends State<DebugDeviceTokenScreen> {
             const SizedBox(height: 12),
             TextField(
               controller: _deviceIdController,
-              decoration: const InputDecoration(labelText: 'Device ID (optional)'),
+              decoration: const InputDecoration(
+                labelText: 'Device ID (optional)',
+              ),
             ),
             const SizedBox(height: 12),
             DropdownButton<String>(
@@ -84,7 +94,10 @@ class _DebugDeviceTokenScreenState extends State<DebugDeviceTokenScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _loading ? null : _submit,
-              child: _loading ? const CircularProgressIndicator() : const Text('Upsert token'),
+              child:
+                  _loading
+                      ? const CircularProgressIndicator()
+                      : const Text('Upsert token'),
             ),
           ],
         ),

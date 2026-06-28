@@ -127,7 +127,6 @@ class EquipmentRepository {
     return isar.equipments.get(isarId);
   }
 
-
   // -------------------- List (with search/filter/sort) -----------------------
 
   /// Core list for a single gym with optional text search, filters, and sorting.
@@ -145,22 +144,24 @@ class EquipmentRepository {
     final isar = IsarService.isar;
 
     // Base query leveraging your indexed fields
-  var items = await isar.equipments
-    .filter()
-    .gymIdEqualTo(gymId)
-    .optional(category != null, (q) => q.categoryEqualTo(category!))
-    .optional(condition != null, (q) => q.conditionEqualTo(condition!))
-    .findAll();
+    var items =
+        await isar.equipments
+            .filter()
+            .gymIdEqualTo(gymId)
+            .optional(category != null, (q) => q.categoryEqualTo(category!))
+            .optional(condition != null, (q) => q.conditionEqualTo(condition!))
+            .findAll();
 
     // Local, case-insensitive text search over name/brand/model
     if (search != null && search.trim().isNotEmpty) {
       final q = search.toLowerCase().trim();
-      items = items.where((e) {
-        final name = (e.name).toLowerCase();
-        final brand = (e.brand).toLowerCase();
-        final model = (e.model).toLowerCase();
-        return name.contains(q) || brand.contains(q) || model.contains(q);
-      }).toList();
+      items =
+          items.where((e) {
+            final name = (e.name).toLowerCase();
+            final brand = (e.brand).toLowerCase();
+            final model = (e.model).toLowerCase();
+            return name.contains(q) || brand.contains(q) || model.contains(q);
+          }).toList();
     }
 
     // Sorting (null-safe helpers)
@@ -172,10 +173,14 @@ class EquipmentRepository {
 
     switch (sort) {
       case EquipmentSort.nameAsc:
-        items.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        items.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
         break;
       case EquipmentSort.nameDesc:
-        items.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+        items.sort(
+          (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
+        );
         break;
       case EquipmentSort.newestPurchase:
         items.sort((a, b) => cmpDate(b.purchaseDate, a.purchaseDate));

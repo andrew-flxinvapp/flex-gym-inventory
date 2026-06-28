@@ -1,13 +1,9 @@
-// lib/enum/app_enums.dart 
+// lib/enum/app_enums.dart
 // Enum definitions used across the Flex Gym Inventory app.
 import 'package:flutter/material.dart';
 
 // Upgrade priorities for planned upgrades
-enum WishlistPriority {
-  low,
-  medium,
-  high,
-}
+enum WishlistPriority { low, medium, high }
 
 extension WishlistPriorityLabel on WishlistPriority {
   String get label {
@@ -131,14 +127,7 @@ extension TrainingStyleLabel on TrainingStyle {
 }
 
 // Equipment condition states
-enum EquipmentCondition {
-  brandNew,
-  excellent,
-  good,
-  fair,
-  damaged,
-  retired,
-}
+enum EquipmentCondition { brandNew, excellent, good, fair, damaged, retired }
 
 extension EquipmentConditionLabel on EquipmentCondition {
   String get label {
@@ -160,11 +149,7 @@ extension EquipmentConditionLabel on EquipmentCondition {
 }
 
 // File types for export/import
-enum FileType {
-  simplePDF,
-  csv,
-  fullPDF,
-}
+enum FileType { simplePDF, csv, fullPDF }
 
 extension FileTypeLabel on FileType {
   String get label {
@@ -180,10 +165,7 @@ extension FileTypeLabel on FileType {
 }
 
 // Upgrade types for planned upgrades
-enum WishlistType {
-  newItem,
-  replacement,
-}
+enum WishlistType { newItem, replacement }
 
 extension WishlistTypeLabel on WishlistType {
   String get label {
@@ -197,17 +179,10 @@ extension WishlistTypeLabel on WishlistType {
 }
 
 /// Menu actions for dashboard pop-out menu
-enum DashboardMenuAction {
-  addGym,
-  addEquipment,
-  addWishlist,
-}
+enum DashboardMenuAction { addGym, addEquipment, addWishlist }
 
 /// Menu options for adding an image
-enum ImageSource {
-  camera,
-  gallery,
-}
+enum ImageSource { camera, gallery }
 
 extension ImageSourceLabel on ImageSource {
   String get label {
@@ -221,7 +196,4 @@ extension ImageSourceLabel on ImageSource {
 }
 
 /// Menu actions for equipment detail screen
-enum ImageAction {
-  edit,
-  delete,
-}
+enum ImageAction { edit, delete }

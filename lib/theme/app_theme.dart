@@ -27,10 +27,9 @@ class AppTheme {
   static const Color stopColor = Color(0xFFFF3B30);
   static const Color successColor = Color(0xFF34C759);
   static const Color disabledColor = Color(0xFFB9C3C7);
-  static const Color warningColor= Color(0xFFFFCC00);
+  static const Color warningColor = Color(0xFFFFCC00);
   static const Color updateColor = Color(0xFF4BB4E9);
   static const Color proColor = Color(0xFFC7A109);
-
 
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
@@ -43,16 +42,56 @@ class AppTheme {
       foregroundColor: lightBackground,
     ),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      displayMedium: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      titleMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      titleSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: lightTextPrimary),
-      bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: lightTextPrimary),
-      bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: lightTextPrimary),
-      bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: lightTextSecondary),
-      labelSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: lightTextSecondary),
+      displayLarge: TextStyle(
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: lightTextPrimary,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.normal,
+        color: lightTextPrimary,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: lightTextPrimary,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: lightTextSecondary,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: lightTextSecondary,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -77,15 +116,51 @@ class AppTheme {
       foregroundColor: Colors.white,
     ),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: darkTextPrimary),
-      displayMedium: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: darkTextPrimary),
-      displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: darkTextPrimary),
-      titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: darkTextPrimary),
-      titleMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkTextPrimary),
-      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: darkTextPrimary),
-      bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: darkTextPrimary),
-      bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: darkTextSecondary),
-      labelSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: darkTextSecondary),
+      displayLarge: TextStyle(
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: darkTextPrimary,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: darkTextPrimary,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: darkTextPrimary,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.normal,
+        color: darkTextPrimary,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: darkTextPrimary,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: darkTextPrimary,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: darkTextPrimary,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: darkTextSecondary,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: darkTextSecondary,
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(

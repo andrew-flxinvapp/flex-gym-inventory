@@ -3,11 +3,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../service/supabase_service.dart';
 
 /// 1. Auth Service Provider
-final authServiceProvider = Provider<SupabaseAuthService>((ref) => SupabaseAuthService());
+final authServiceProvider = Provider<SupabaseAuthService>(
+  (ref) => SupabaseAuthService(),
+);
 
 /// 2. Auth State Provider (stream of current user)
 final authStateProvider = StreamProvider<User?>((ref) {
-  return Supabase.instance.client.auth.onAuthStateChange.map((event) => event.session?.user);
+  return Supabase.instance.client.auth.onAuthStateChange.map(
+    (event) => event.session?.user,
+  );
 });
 
 /// 4. Magic Link State Provider (simple state for magic link sent status)

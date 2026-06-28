@@ -11,7 +11,9 @@ void main() {
   // Skip Isar native tests in CI/test env where native library may be missing.
   const skipIsarTests = true;
   if (skipIsarTests) {
-    stderr.writeln('Skipping Isar tests (native library not available in test environment)');
+    stderr.writeln(
+      'Skipping Isar tests (native library not available in test environment)',
+    );
     return;
   }
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -42,8 +44,8 @@ void main() {
       );
       final fetched = await repo.getByIsarId(created.id);
       expect(fetched, isNotNull);
-  expect(fetched!.name, equals('Power Rack'));
-  expect(fetched.priority, equals(WishlistPriority.high));
+      expect(fetched!.name, equals('Power Rack'));
+      expect(fetched.priority, equals(WishlistPriority.high));
     });
 
     test('update wishlist item', () async {
@@ -55,12 +57,12 @@ void main() {
         brand: 'Eleiko',
         priority: WishlistPriority.medium,
       );
-  item.name = 'Barbell Pro';
-  item.priority = WishlistPriority.high;
+      item.name = 'Barbell Pro';
+      item.priority = WishlistPriority.high;
       await repo.upsert(item);
       final fetched = await repo.getByIsarId(item.id);
       expect(fetched!.name, equals('Barbell Pro'));
-  expect(fetched.priority, equals(WishlistPriority.high));
+      expect(fetched.priority, equals(WishlistPriority.high));
     });
 
     test('delete wishlist item', () async {
@@ -106,7 +108,10 @@ void main() {
       );
       final all = await repo.getAll();
       expect(all.length, greaterThanOrEqualTo(3));
-      expect(all.map((w) => w.name).toList().sublist(0, 3), equals(['Ab Roller', 'Bench', 'Squat Rack']));
+      expect(
+        all.map((w) => w.name).toList().sublist(0, 3),
+        equals(['Ab Roller', 'Bench', 'Squat Rack']),
+      );
     });
   });
 }

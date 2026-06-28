@@ -16,12 +16,14 @@ class _FakeAuth {
   _FakeAuth(this.currentUser);
 
   Future<void> updateUser(UserAttributes attrs) async {
-    final Map<String, dynamic> data = attrs.data is Map
-      ? Map<String, dynamic>.from(attrs.data as Map)
-      : <String, dynamic>{};
-    final Map<String, dynamic> existing = currentUser.userMetadata != null
-      ? Map<String, dynamic>.from(currentUser.userMetadata!)
-      : <String, dynamic>{};
+    final Map<String, dynamic> data =
+        attrs.data is Map
+            ? Map<String, dynamic>.from(attrs.data as Map)
+            : <String, dynamic>{};
+    final Map<String, dynamic> existing =
+        currentUser.userMetadata != null
+            ? Map<String, dynamic>.from(currentUser.userMetadata!)
+            : <String, dynamic>{};
     currentUser.userMetadata = {...existing, ...data};
   }
 }
@@ -32,7 +34,9 @@ class _FakeClient {
 }
 
 void main() {
-  testWidgets('toggling switch requests permission and saves when granted', (tester) async {
+  testWidgets('toggling switch requests permission and saves when granted', (
+    tester,
+  ) async {
     final fakeUser = _FakeUser({'notificationsOn': false});
     final fakeAuth = _FakeAuth(fakeUser);
     final fakeClient = _FakeClient(fakeAuth);
@@ -68,10 +72,15 @@ void main() {
     final after = tester.widget<CupertinoSwitch>(switchFinder).value;
     expect(after, isTrue);
 
-    expect(fakeClient.auth.currentUser.userMetadata?['notificationsOn'], isTrue);
+    expect(
+      fakeClient.auth.currentUser.userMetadata?['notificationsOn'],
+      isTrue,
+    );
   });
 
-  testWidgets('toggling switch when permission denied persists false', (tester) async {
+  testWidgets('toggling switch when permission denied persists false', (
+    tester,
+  ) async {
     final fakeUser = _FakeUser({'notificationsOn': true});
     final fakeAuth = _FakeAuth(fakeUser);
     final fakeClient = _FakeClient(fakeAuth);
@@ -107,6 +116,9 @@ void main() {
     final after = tester.widget<CupertinoSwitch>(switchFinder).value;
     expect(after, isFalse);
 
-    expect(fakeClient.auth.currentUser.userMetadata?['notificationsOn'], isFalse);
+    expect(
+      fakeClient.auth.currentUser.userMetadata?['notificationsOn'],
+      isFalse,
+    );
   });
 }

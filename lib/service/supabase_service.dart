@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseAuthService {
   final SupabaseClient _client = Supabase.instance.client;
 
-
   /// Send a magic link (OTP) to the user's email for passwordless sign up or sign in
   Future<void> sendMagicLink({required String email}) async {
     await _client.auth.signInWithOtp(email: email);

@@ -14,7 +14,6 @@ import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/snackbar.dart';
 
-
 class EditWishlistScreen extends StatefulWidget {
   const EditWishlistScreen({super.key});
 
@@ -92,7 +91,10 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -239,42 +241,73 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                         final args = ModalRoute.of(ctx)?.settings.arguments;
                         int? isarId;
                         if (args is int) isarId = args;
-                        if (args is Map && args['isarId'] is int) isarId = args['isarId'] as int;
+                        if (args is Map && args['isarId'] is int)
+                          isarId = args['isarId'] as int;
 
                         if (isarId != null) {
                           final updated = await repo.updateWishlist(
                             id: isarId,
-                            name: nameController.text.trim().isEmpty ? null : nameController.text.trim(),
+                            name:
+                                nameController.text.trim().isEmpty
+                                    ? null
+                                    : nameController.text.trim(),
                             wishlistType: selectedItemType,
                             category: selectedCategory,
-                            brand: brandController.text.trim().isEmpty ? null : brandController.text.trim(),
+                            brand:
+                                brandController.text.trim().isEmpty
+                                    ? null
+                                    : brandController.text.trim(),
                             priority: selectedPriority,
-                            productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
-                            notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                            productUrl:
+                                linkController.text.trim().isEmpty
+                                    ? null
+                                    : linkController.text.trim(),
+                            notes:
+                                notesController.text.trim().isEmpty
+                                    ? null
+                                    : notesController.text.trim(),
                           );
                           if (!mounted) return;
                           showFlexSnackbarFromUiMessage(
                             ctx,
-                            UiMessage('Wishlist item updated', subtitle: 'Updated ${updated?.name ?? ''}', type: UiMessageType.success),
+                            UiMessage(
+                              'Wishlist item updated',
+                              subtitle: 'Updated ${updated?.name ?? ''}',
+                              type: UiMessageType.success,
+                            ),
                           );
                           Navigator.of(ctx).pop(updated);
                         } else {
-                          final user = Supabase.instance.client.auth.currentUser;
+                          final user =
+                              Supabase.instance.client.auth.currentUser;
                           final userId = user?.id ?? 'local';
                           final created = await repo.createWishlist(
                             userId: userId,
                             name: nameController.text.trim(),
-                            wishlistType: selectedItemType ?? WishlistType.newItem,
-                            category: selectedCategory ?? EquipmentCategory.other,
+                            wishlistType:
+                                selectedItemType ?? WishlistType.newItem,
+                            category:
+                                selectedCategory ?? EquipmentCategory.other,
                             brand: brandController.text.trim(),
-                            priority: selectedPriority ?? WishlistPriority.medium,
-                            productUrl: linkController.text.trim().isEmpty ? null : linkController.text.trim(),
-                            notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+                            priority:
+                                selectedPriority ?? WishlistPriority.medium,
+                            productUrl:
+                                linkController.text.trim().isEmpty
+                                    ? null
+                                    : linkController.text.trim(),
+                            notes:
+                                notesController.text.trim().isEmpty
+                                    ? null
+                                    : notesController.text.trim(),
                           );
                           if (!mounted) return;
                           showFlexSnackbarFromUiMessage(
                             ctx,
-                            UiMessage('Wishlist item saved', subtitle: 'Created ${created.name}', type: UiMessageType.success),
+                            UiMessage(
+                              'Wishlist item saved',
+                              subtitle: 'Created ${created.name}',
+                              type: UiMessageType.success,
+                            ),
                           );
                           Navigator.of(ctx).pop(created);
                         }
@@ -282,7 +315,11 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                         if (!mounted) return;
                         showFlexSnackbarFromUiMessage(
                           ctx,
-                          UiMessage('Save failed', subtitle: e.toString(), type: UiMessageType.error),
+                          UiMessage(
+                            'Save failed',
+                            subtitle: e.toString(),
+                            type: UiMessageType.error,
+                          ),
                         );
                       }
                     },

@@ -36,8 +36,7 @@ class DateUtilsFGI {
   }
 
   /// Converts a DateTime to a compact string for filenames or exports.
-  static String toCompactString(DateTime time) =>
-      compactTimestamp.format(time);
+  static String toCompactString(DateTime time) => compactTimestamp.format(time);
 
   /// Parses an ISO 8601 string safely into a DateTime (returns null if invalid)
   static DateTime? tryParseIso(String? value) {

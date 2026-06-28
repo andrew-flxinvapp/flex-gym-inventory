@@ -29,15 +29,15 @@ class ConfirmDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         title,
-        style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: AppTheme.lightTextPrimary,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.displaySmall?.copyWith(color: AppTheme.lightTextPrimary),
       ),
       content: Text(
         content,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.lightTextPrimary,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
       ),
       actions: [
         Row(
@@ -51,17 +51,20 @@ class ConfirmDialog extends StatelessWidget {
               child: Text(
                 cancelText,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
+                  color: AppTheme.lightTextPrimary,
+                ),
               ),
             ),
             const SizedBox(width: 56),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: usePrimaryColor
-                    ? AppTheme.lightTextPrimary
-                    : AppTheme.stopColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor:
+                    usePrimaryColor
+                        ? AppTheme.lightTextPrimary
+                        : AppTheme.stopColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -69,9 +72,9 @@ class ConfirmDialog extends StatelessWidget {
               },
               child: Text(
                 confirmText,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Colors.white,
-        ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
             ),
           ],

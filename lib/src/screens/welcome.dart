@@ -12,19 +12,17 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      appBar: const OnboardingLogoAppBar(
-        showBackArrow: true,
-      ),
+      appBar: const OnboardingLogoAppBar(showBackArrow: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, // Changed from center to start
+            mainAxisAlignment:
+                MainAxisAlignment.start, // Changed from center to start
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 32), // Added controlled top spacing

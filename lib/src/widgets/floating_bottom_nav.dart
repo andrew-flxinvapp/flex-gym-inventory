@@ -50,7 +50,11 @@ class _NavItem extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _NavItem({required this.iconPath, required this.label, required this.onTap});
+  const _NavItem({
+    required this.iconPath,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +67,7 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              iconPath,
-              height: 24,
-              width: 24,
-            ),
+            Image.asset(iconPath, height: 24, width: 24),
             const SizedBox(height: 4),
             Text(
               label,

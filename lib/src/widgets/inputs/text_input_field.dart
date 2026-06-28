@@ -43,23 +43,29 @@ class CustomTextInputField extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppTheme.lightTextPrimary,
                     ),
-                    children: showAsterisk
-                        ? [
-                            TextSpan(
-                              text: ' *',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppTheme.stopColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ]
-                        : [],
+                    children:
+                        showAsterisk
+                            ? [
+                              TextSpan(
+                                text: ' *',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: AppTheme.stopColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ]
+                            : [],
                   ),
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,

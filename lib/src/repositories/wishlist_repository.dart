@@ -113,37 +113,48 @@ class WishlistRepository {
     WishlistType? wishlistType,
     EquipmentCategory? category,
     String? brand,
-    WishlistPriority? priority,            // single priority filter
-    List<WishlistPriority>? priorities,    // multi-priority filter
+    WishlistPriority? priority, // single priority filter
+    List<WishlistPriority>? priorities, // multi-priority filter
     WishlistSort sort = WishlistSort.nameAsc,
     List<String>? priorityOrder, // optional custom sort precedence (labels)
   }) async {
     final isar = IsarService.isar;
 
     // Base fetch (indexed filters first)
-  var items = await isar.wishlists
-    .filter()
-    .optional(wishlistType != null, (q) => q.wishlistTypeEqualTo(wishlistType!))
-    .optional(category != null, (q) => q.categoryEqualTo(category!))
-    .optional(brand != null && brand.isNotEmpty, (q) => q.brandEqualTo(brand!))
-    .optional(priority != null, (q) => q.priorityEqualTo(priority!))
-    .findAll();
+    var items =
+        await isar.wishlists
+            .filter()
+            .optional(
+              wishlistType != null,
+              (q) => q.wishlistTypeEqualTo(wishlistType!),
+            )
+            .optional(category != null, (q) => q.categoryEqualTo(category!))
+            .optional(
+              brand != null && brand.isNotEmpty,
+              (q) => q.brandEqualTo(brand!),
+            )
+            .optional(priority != null, (q) => q.priorityEqualTo(priority!))
+            .findAll();
 
     // Multi-priority filter (local)
     if (priorities != null && priorities.isNotEmpty) {
       final set = priorities.map((p) => p.name.toLowerCase()).toSet();
-      items = items.where((w) => set.contains(w.priority.name.toLowerCase())).toList();
+      items =
+          items
+              .where((w) => set.contains(w.priority.name.toLowerCase()))
+              .toList();
     }
 
     // Text search (local, case-insensitive)
     if (search != null && search.trim().isNotEmpty) {
       final q = search.toLowerCase().trim();
-      items = items.where((w) {
-        final n = w.name.toLowerCase();
-        final b = w.brand.toLowerCase();
-        final c = w.category.name.toLowerCase();
-        return n.contains(q) || b.contains(q) || c.contains(q);
-      }).toList();
+      items =
+          items.where((w) {
+            final n = w.name.toLowerCase();
+            final b = w.brand.toLowerCase();
+            final c = w.category.name.toLowerCase();
+            return n.contains(q) || b.contains(q) || c.contains(q);
+          }).toList();
     }
 
     // Sorting

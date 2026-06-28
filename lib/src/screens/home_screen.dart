@@ -4,7 +4,6 @@ import '../screens/dashboard.dart';
 import '../screens/wishlist.dart';
 import '../screens/settings.dart';
 
-
 class HomeScreen extends StatefulWidget {
   final int initialIndex;
   const HomeScreen({super.key, this.initialIndex = 0});
@@ -37,10 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBarModern(
         currentIndex: _selectedIndex,
         onTap: _onTabSelected,

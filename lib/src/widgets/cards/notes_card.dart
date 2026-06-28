@@ -19,9 +19,9 @@ class NotesCard extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: Text(
           notes,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
       ),
     );

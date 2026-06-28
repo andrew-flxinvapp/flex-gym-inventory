@@ -65,18 +65,22 @@ class EquipmentCard extends StatelessWidget {
           ),
         ],
       ),
-        child: BaseCard(
-        onTap: onTapCallback ?? () {
-          if (isarId != null) {
-            Navigator.of(context).pushNamed(AppRoutes.equipmentDetail, arguments: isarId);
-          } else {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const EquipmentDetailScreen(),
-              ),
-            );
-          }
-        },
+      child: BaseCard(
+        onTap:
+            onTapCallback ??
+            () {
+              if (isarId != null) {
+                Navigator.of(
+                  context,
+                ).pushNamed(AppRoutes.equipmentDetail, arguments: isarId);
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const EquipmentDetailScreen(),
+                  ),
+                );
+              }
+            },
         body: Row(
           children: [
             // Image block
@@ -98,9 +102,9 @@ class EquipmentCard extends StatelessWidget {
                 children: [
                   Text(
                     brand,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.dividers,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppTheme.dividers),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -130,18 +134,18 @@ class EquipmentCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                              'Qty:',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              quantity.toString(),
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                              ),
-                            ),
+                        'Qty:',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        quantity.toString(),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -151,10 +155,7 @@ class EquipmentCard extends StatelessWidget {
             SizedBox(
               width: 24,
               height: 24,
-              child: Image.asset(
-                AppIcons.forward,
-                color: AppTheme.dividers,
-              ),
+              child: Image.asset(AppIcons.forward, color: AppTheme.dividers),
             ),
           ],
         ),

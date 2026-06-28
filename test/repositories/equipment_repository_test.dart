@@ -11,7 +11,9 @@ void main() {
   // Skip Isar native tests in CI/test env where native library may be missing.
   const skipIsarTests = true;
   if (skipIsarTests) {
-    stderr.writeln('Skipping Isar tests (native library not available in test environment)');
+    stderr.writeln(
+      'Skipping Isar tests (native library not available in test environment)',
+    );
     return;
   }
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -115,7 +117,10 @@ void main() {
       );
       final all = await repo.getAllForGym('GYM-010');
       expect(all.length, 3);
-      expect(all.map((e) => e.name).toList(), equals(['Ab Roller', 'Bench', 'Squat Rack']));
+      expect(
+        all.map((e) => e.name).toList(),
+        equals(['Ab Roller', 'Bench', 'Squat Rack']),
+      );
     });
   });
 }

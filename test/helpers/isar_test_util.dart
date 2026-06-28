@@ -13,11 +13,7 @@ Future<Isar> openIsarTestInstance() async {
   try {
     final dir = await Directory.systemTemp.createTemp('isar_test_');
     return await Isar.open(
-      [
-        GymSchema,
-        EquipmentSchema,
-        WishlistSchema,
-      ],
+      [GymSchema, EquipmentSchema, WishlistSchema],
       directory: dir.path,
       name: 'test_isar',
     );

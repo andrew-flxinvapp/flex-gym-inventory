@@ -43,7 +43,7 @@ import '../src/screens/startup_router.dart';
 class AppRoutes {
   static const String splash = '/';
   static const String startupRouter = '/startup-router';
-  
+
   // Navigation routes
   static const String dashboard = '/dashboard';
   static const String componentGallery = '/component-gallery';
@@ -124,10 +124,12 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.verifyEmail: (context) => const VerifyEmailScreen(),
   AppRoutes.optNotifications: (context) => const OptNotificationsScreen(),
-  AppRoutes.onboardingFeatureOne: (context) => const OnboardingFeatureOneScreen(),
-  AppRoutes.onboardingFeatureTwo: (context) => const OnboardingFeatureTwoScreen(),
+  AppRoutes.onboardingFeatureOne:
+      (context) => const OnboardingFeatureOneScreen(),
+  AppRoutes.onboardingFeatureTwo:
+      (context) => const OnboardingFeatureTwoScreen(),
   AppRoutes.welcome: (context) => const WelcomeScreen(),
-  AppRoutes.socialProof: (context) => const SocialProofScreen(),  
+  AppRoutes.socialProof: (context) => const SocialProofScreen(),
   AppRoutes.onboardingUpgrade: (context) => const OnboardingUpgradeScreen(),
   AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
 

@@ -7,10 +7,10 @@ import 'package:flex_gym_inventory/routes/routes.dart';
 import '../widgets/snackbar.dart';
 
 // LoginScreen
-// 
+//
 // This screen provides user authentication entry.
 // Follows MVVM architecture. Connect to a ViewModel for state management.
-// 
+//
 // TODO: Connect to LoginViewModel and implement Riverpod for state management.
 // TODO: Add responsive layout using size_config.dart.
 // TODO: Add modular widgets for login form fields and actions.
@@ -67,10 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Sign In',
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          color: AppTheme.lightTextPrimary,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Roboto',
-                        ),
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Roboto',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
@@ -86,20 +86,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     'Your gym is waiting!',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.lightTextPrimary,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Roboto',
-                        ),
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Roboto',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Email',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.lightTextPrimary,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Roboto',
-                        ),
+                      color: AppTheme.lightTextPrimary,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Roboto',
+                    ),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -109,11 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       onChanged: (_) => _loginViewModel.clearEmailError(),
                       decoration: InputDecoration(
                         hintText: 'flex@flxinv.com',
-                        hintStyle: TextStyle(color: AppTheme.lightTextSecondary),
+                        hintStyle: TextStyle(
+                          color: AppTheme.lightTextSecondary,
+                        ),
                         errorText: _loginViewModel.emailError,
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,

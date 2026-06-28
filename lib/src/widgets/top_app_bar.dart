@@ -40,55 +40,61 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: false,
       toolbarHeight: 60,
-      leading: showBackArrow
-          ? IconButton(
-              icon: SizedBox(
-                width: 32,
-                height: 32,
-                child: Image.asset(
-                  AppIcons.back,
-                  color: AppTheme.darkTextPrimary,
-                ),
-              ),
-              onPressed: onBackArrowPressed ?? () => Navigator.of(context).maybePop(),
-              tooltip: 'Back',
-            )
-          : null,
-      actions: rightWidget != null
-          ? [
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: rightWidget!,
-              ),
-            ]
-          : (showRightIcon && rightIcon != null
-              ? [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12.0),
-                    child: IconButton(
-                      icon: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Image.asset(
-                          rightIcon!,
-                          color: AppTheme.darkTextPrimary,
-                        ),
-                      ),
-                      onPressed: onRightIconPressed,
-                      tooltip: 'Action',
-                    ),
+      leading:
+          showBackArrow
+              ? IconButton(
+                icon: SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: Image.asset(
+                    AppIcons.back,
+                    color: AppTheme.darkTextPrimary,
                   ),
-                ]
-              : null),
+                ),
+                onPressed:
+                    onBackArrowPressed ??
+                    () => Navigator.of(context).maybePop(),
+                tooltip: 'Back',
+              )
+              : null,
+      actions:
+          rightWidget != null
+              ? [
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: rightWidget!,
+                ),
+              ]
+              : (showRightIcon && rightIcon != null
+                  ? [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: IconButton(
+                        icon: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Image.asset(
+                            rightIcon!,
+                            color: AppTheme.darkTextPrimary,
+                          ),
+                        ),
+                        onPressed: onRightIconPressed,
+                        tooltip: 'Action',
+                      ),
+                    ),
+                  ]
+                  : null),
       titleSpacing: 0, // <-- Ensures title is close to the leading/back arrow
-      title: titleWidget ?? Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: AppTheme.darkTextPrimary,
-            ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      title:
+          titleWidget ??
+          Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(color: AppTheme.darkTextPrimary),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
     );
   }
 }

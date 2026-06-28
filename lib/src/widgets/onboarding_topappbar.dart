@@ -4,7 +4,8 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 
 /// OnboardingLogoAppBar: For onboarding/auth screens with centered logo only
-class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidget {
+class OnboardingLogoAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   final bool showBackArrow;
   final VoidCallback? onBackArrowPressed;
   final double topSpacing;
@@ -23,7 +24,8 @@ class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidge
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(topSpacing + logoHeight + bottomSpacing);
+  Size get preferredSize =>
+      Size.fromHeight(topSpacing + logoHeight + bottomSpacing);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +48,11 @@ class OnboardingLogoAppBar extends StatelessWidget implements PreferredSizeWidge
                       width: 32,
                       color: AppTheme.lightTextPrimary,
                     ),
-                    onPressed: onBackArrowPressed ?? () {
-                      Navigator.of(context).maybePop();
-                    },
+                    onPressed:
+                        onBackArrowPressed ??
+                        () {
+                          Navigator.of(context).maybePop();
+                        },
                   )
                 else
                   const SizedBox(width: 48), // Space for alignment

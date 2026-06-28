@@ -6,11 +6,7 @@ class SettingsItem extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
 
-  const SettingsItem({
-    super.key,
-    this.title = 'Settings Item',
-    this.onTap,
-  });
+  const SettingsItem({super.key, this.title = 'Settings Item', this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +29,8 @@ class SettingsItem extends StatelessWidget {
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

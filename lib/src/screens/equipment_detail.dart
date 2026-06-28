@@ -96,129 +96,158 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
           rightIcon: AppIcons.edit,
           onRightIconPressed: () {
             if (equipment?.id != null) {
-              Navigator.of(context).pushNamed(AppRoutes.editEquipment, arguments: equipment!.id);
+              Navigator.of(
+                context,
+              ).pushNamed(AppRoutes.editEquipment, arguments: equipment!.id);
             }
           },
         ),
       ),
       body: SafeArea(
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : error != null
+        child:
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : error != null
                 ? Center(child: Text(error!))
                 : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                          child: Text(
-                            'Overview',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                        child: Text(
+                          'Overview',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: EquipmentImage(imageId: equipment?.imageId),
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: EquipmentImage(imageId: equipment?.imageId),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          equipment?.name ?? '-',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            equipment?.name ?? '-',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          'Details',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Details',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: DetailsCard(
+                          details: [
+                            MapEntry('Brand', equipment?.brand ?? '-'),
+                            MapEntry('Model', equipment?.model ?? '-'),
+                            MapEntry(
+                              'Category',
+                              equipment?.category.label ?? '-',
+                            ),
+                            MapEntry(
+                              'Training Style',
+                              equipment?.trainingStyle.label ?? '-',
+                            ),
+                            MapEntry(
+                              'Quantity',
+                              (equipment?.quantity ?? 0).toString(),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: DetailsCard(
-                            details: [
-                              MapEntry('Brand', equipment?.brand ?? '-'),
-                              MapEntry('Model', equipment?.model ?? '-'),
-                              MapEntry('Category', equipment?.category.label ?? '-'),
-                              MapEntry('Training Style', equipment?.trainingStyle.label ?? '-'),
-                              MapEntry('Quantity', (equipment?.quantity ?? 0).toString()),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          'Purchase Info',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Purchase Info',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: PurchaseCard(
+                          details: [
+                            MapEntry(
+                              'Purchase Price',
+                              equipment?.value != null
+                                  ? NumberFormat(
+                                    '#,##0.00',
+                                  ).format(equipment!.value)
+                                  : '-',
+                            ),
+                            MapEntry(
+                              'Purchase Date',
+                              equipment?.purchaseDate != null
+                                  ? DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(equipment!.purchaseDate!)
+                                  : '-',
+                            ),
+                            MapEntry(
+                              'Age',
+                              _calculateAgeFromDate(equipment?.purchaseDate),
+                            ),
+                            MapEntry(
+                              'Condition',
+                              equipment?.condition.label ?? '-',
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: PurchaseCard(
-                            details: [
-                              MapEntry('Purchase Price', equipment?.value != null ? NumberFormat('#,##0.00').format(equipment!.value) : '-'),
-                              MapEntry('Purchase Date', equipment?.purchaseDate != null ? DateFormat('yyyy-MM-dd').format(equipment!.purchaseDate!) : '-'),
-                              MapEntry('Age', _calculateAgeFromDate(equipment?.purchaseDate)),
-                              MapEntry('Condition', equipment?.condition.label ?? '-'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          'Notes',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Notes',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: NotesCard(
+                          notes: equipment?.maintenanceNotes ?? '-',
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: NotesCard(
-                            notes: equipment?.maintenanceNotes ?? '-',
-                          ),
+                      ),
+                      const SizedBox(height: 32),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: WarningButton(
+                          label: 'Delete Item',
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (ctx) => ConfirmDialog(
+                                    title: 'Delete Equipment',
+                                    content:
+                                        'Are you sure you want to delete this item? This action cannot be undone.',
+                                    confirmText: 'Delete',
+                                    onConfirm: () async {
+                                      await _deleteEquipment();
+                                    },
+                                  ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 32),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: WarningButton(
-                            label: 'Delete Item',
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => ConfirmDialog(
-                                  title: 'Delete Equipment',
-                                  content: 'Are you sure you want to delete this item? This action cannot be undone.',
-                                  confirmText: 'Delete',
-                                  onConfirm: () async {
-                                    await _deleteEquipment();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 32),
+                    ],
                   ),
+                ),
       ),
     );
   }

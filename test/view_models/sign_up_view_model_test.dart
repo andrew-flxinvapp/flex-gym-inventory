@@ -28,7 +28,8 @@ class _SuccessfulAuthRepository extends AuthRepository {
 
 class _ThrowingAuthRepository extends AuthRepository {
   final AuthException exception;
-  _ThrowingAuthRepository(this.exception) : super(client: _MockSupabaseClient());
+  _ThrowingAuthRepository(this.exception)
+    : super(client: _MockSupabaseClient());
   @override
   Future<void> signUp(String email) async {
     throw exception;
@@ -70,26 +71,34 @@ void main() {
 
     expect(repo.called, isTrue);
     expect(repo.email, 'user@example.com');
-    expect(vm.message?.title,
-      'Sign up successful! Please check your email to verify your account.');
+    expect(
+      vm.message?.title,
+      'Sign up successful! Please check your email to verify your account.',
+    );
   });
-  test('successful sign up calls repository and sets success message', () async {
-    final repo = _SuccessfulAuthRepository();
-    final vm = SignUpViewModel(authRepository: repo);
+  test(
+    'successful sign up calls repository and sets success message',
+    () async {
+      final repo = _SuccessfulAuthRepository();
+      final vm = SignUpViewModel(authRepository: repo);
 
-    vm.emailController.text = 'user@example.com';
+      vm.emailController.text = 'user@example.com';
 
-    await vm.signUp();
+      await vm.signUp();
 
-    expect(vm.message?.title,
-      'Sign up successful! Please check your email to verify your account.');
-    expect(vm.loading, isFalse);
-    expect(repo.receivedEmail, 'user@example.com');
-  });
+      expect(
+        vm.message?.title,
+        'Sign up successful! Please check your email to verify your account.',
+      );
+      expect(vm.loading, isFalse);
+      expect(repo.receivedEmail, 'user@example.com');
+    },
+  );
 
   test('repository throws AuthException and message is surfaced', () async {
     final repo = _ThrowingAuthRepository(
-        AuthException(AuthError.invalidCredentials, 'bad credentials'));
+      AuthException(AuthError.invalidCredentials, 'bad credentials'),
+    );
     final vm = SignUpViewModel(authRepository: repo);
 
     vm.emailController.text = 'user@example.com';

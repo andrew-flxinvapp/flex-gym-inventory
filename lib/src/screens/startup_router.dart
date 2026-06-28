@@ -4,7 +4,6 @@ import '../repositories/onboarding_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../routes/routes.dart';
 
-
 class StartupRouterScreen extends StatefulWidget {
   /// Optional injection point for `OnboardingRepository` to make the screen
   /// testable. If not provided, a default instance is created.
@@ -15,6 +14,7 @@ class StartupRouterScreen extends StatefulWidget {
   });
 
   final OnboardingRepository? onboardingRepository;
+
   /// Optional test-only session to allow tests to simulate an authenticated
   /// session without depending on `Supabase.instance`.
   final Session? testSession;
@@ -24,7 +24,6 @@ class StartupRouterScreen extends StatefulWidget {
 }
 
 class _StartupRouterScreenState extends State<StartupRouterScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -51,7 +50,8 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     }
 
     // Session exists → check onboarding metadata and route accordingly.
-    final onboardingRepo = widget.onboardingRepository ?? OnboardingRepository();
+    final onboardingRepo =
+        widget.onboardingRepository ?? OnboardingRepository();
     final onboardingComplete = onboardingRepo.isOnboardingComplete;
 
     if (onboardingComplete) {
@@ -63,7 +63,9 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
       // Not complete — send the user into the onboarding flow.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingFeatureOne);
+        Navigator.of(
+          context,
+        ).pushReplacementNamed(AppRoutes.onboardingFeatureOne);
       });
     }
   }
@@ -73,9 +75,7 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     // This screen is basically invisible, just a tiny loading state.
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      body: const Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
+      body: const Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 }

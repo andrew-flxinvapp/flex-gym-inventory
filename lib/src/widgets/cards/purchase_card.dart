@@ -10,9 +10,7 @@ class PurchaseCard extends StatelessWidget {
     // Only show up to 4 rows, fill with empty if less
     final rows = List<MapEntry<String, String>>.generate(
       4,
-      (i) => i < details.length
-          ? details[i]
-          : const MapEntry('', ''),
+      (i) => i < details.length ? details[i] : const MapEntry('', ''),
     );
 
     return Container(
@@ -26,10 +24,7 @@ class PurchaseCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (int i = 0; i < 4; i++) ...[
-            _PurchaseDetailRow(
-              label: rows[i].key,
-              value: rows[i].value,
-            ),
+            _PurchaseDetailRow(label: rows[i].key, value: rows[i].value),
             if (i != 3) const SizedBox(height: 12),
           ],
         ],
@@ -50,15 +45,15 @@ class _PurchaseDetailRow extends StatelessWidget {
       children: [
         Text(
           label.isNotEmpty ? "$label:" : '',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
       ],
     );

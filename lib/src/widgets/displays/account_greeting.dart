@@ -30,10 +30,7 @@ class AccountGreeting extends StatelessWidget {
               color: AppTheme.lightSecondary,
               shape: BoxShape.circle,
             ),
-            child: Image.asset(
-              AppIcons.round,
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(AppIcons.round, fit: BoxFit.contain),
           ),
         ),
         const SizedBox(width: 16),

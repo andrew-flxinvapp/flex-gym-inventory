@@ -66,7 +66,8 @@ class Equipment {
     if (purchaseDate == null) return null;
     final now = DateTime.now();
     int years = now.year - purchaseDate!.year;
-    if (now.month < purchaseDate!.month || (now.month == purchaseDate!.month && now.day < purchaseDate!.day)) {
+    if (now.month < purchaseDate!.month ||
+        (now.month == purchaseDate!.month && now.day < purchaseDate!.day)) {
       years--;
     }
     return years;

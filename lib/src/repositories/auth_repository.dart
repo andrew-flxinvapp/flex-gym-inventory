@@ -24,7 +24,7 @@ class AuthRepository {
   final Future<void> Function(Map<String, dynamic> user)? localUserUpsert;
 
   AuthRepository({SupabaseClient? client, this.localUserUpsert})
-      : _client = client ?? Supabase.instance.client;
+    : _client = client ?? Supabase.instance.client;
 
   /// Send a magic link sign-in email to [email].
   Future<void> signInWithMagicLink(String email) async {
@@ -113,7 +113,10 @@ class AuthRepository {
   /// with a more robust server-side `device_tokens` table when ready.
   Future<void> registerDeviceToken(String token, {String? platform}) async {
     try {
-      final data = <String, dynamic>{'lastDeviceToken': token, 'notificationsOn': true};
+      final data = <String, dynamic>{
+        'lastDeviceToken': token,
+        'notificationsOn': true,
+      };
       if (platform != null) data['lastDevicePlatform'] = platform;
       await _client.auth.updateUser(UserAttributes(data: data));
     } catch (e, st) {

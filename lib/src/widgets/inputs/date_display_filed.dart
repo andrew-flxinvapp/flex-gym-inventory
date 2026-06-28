@@ -5,10 +5,7 @@ import '../../../theme/app_theme.dart';
 class DateDisplayField extends StatelessWidget {
   final String date;
 
-  const DateDisplayField({
-    super.key,
-    required this.date,
-  });
+  const DateDisplayField({super.key, required this.date});
 
   @override
   Widget build(BuildContext context) {

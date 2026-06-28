@@ -10,9 +10,7 @@ class DetailsCard extends StatelessWidget {
     // Only show up to 5 rows, fill with empty if less
     final rows = List<MapEntry<String, String>>.generate(
       5,
-      (i) => i < details.length
-          ? details[i]
-          : const MapEntry('', ''),
+      (i) => i < details.length ? details[i] : const MapEntry('', ''),
     );
 
     return Container(
@@ -26,10 +24,7 @@ class DetailsCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (int i = 0; i < 5; i++) ...[
-            _DetailRow(
-              label: rows[i].key,
-              value: rows[i].value,
-            ),
+            _DetailRow(label: rows[i].key, value: rows[i].value),
             if (i != 4) const SizedBox(height: 12),
           ],
         ],
@@ -50,15 +45,15 @@ class _DetailRow extends StatelessWidget {
       children: [
         Text(
           label.isNotEmpty ? "$label:" : '',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
       ],
     );

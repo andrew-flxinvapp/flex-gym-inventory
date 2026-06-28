@@ -15,7 +15,9 @@ void main() {
   // with the Isar native library present.
   const skipIsarTests = true;
   if (skipIsarTests) {
-    stderr.writeln('Skipping Isar tests (native library not available in test environment)');
+    stderr.writeln(
+      'Skipping Isar tests (native library not available in test environment)',
+    );
     return;
   }
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +49,11 @@ void main() {
     });
 
     test('update gym', () async {
-      final g = await repo.createGym(gymId: 'GYM-002', name: 'Before', userId: 'user1');
+      final g = await repo.createGym(
+        gymId: 'GYM-002',
+        name: 'Before',
+        userId: 'user1',
+      );
       // Update by changing name and upserting
       g.name = 'After';
       await repo.upsert(g);
@@ -56,7 +62,11 @@ void main() {
     });
 
     test('delete gym', () async {
-      final g = await repo.createGym(gymId: 'GYM-003', name: 'To Delete', userId: 'user1');
+      final g = await repo.createGym(
+        gymId: 'GYM-003',
+        name: 'To Delete',
+        userId: 'user1',
+      );
       await repo.deleteGym(g.id);
       final fetched = await repo.getByIsarId(g.id);
       expect(fetched, isNull);
@@ -70,11 +80,18 @@ void main() {
       await repo.createGym(gymId: 'GYM-011', name: 'Charlie', userId: 'user1');
       final all = await repo.getAllForUser('user1');
       expect(all.length, 3);
-      expect(all.map((g) => g.name).toList(), equals(['Alpha', 'Beta', 'Charlie']));
+      expect(
+        all.map((g) => g.name).toList(),
+        equals(['Alpha', 'Beta', 'Charlie']),
+      );
     });
 
     test('get gym by gymId (custom id like GYM-001)', () async {
-      await repo.createGym(gymId: 'GYM-100', name: 'Lookup Gym', userId: 'user1');
+      await repo.createGym(
+        gymId: 'GYM-100',
+        name: 'Lookup Gym',
+        userId: 'user1',
+      );
       final fetched = await repo.getByGymId('GYM-100');
       expect(fetched, isNotNull);
       expect(fetched!.name, 'Lookup Gym');
@@ -85,7 +102,11 @@ void main() {
     test('prevent duplicate gymId', () async {
       await repo.createGym(gymId: 'GYM-200', name: 'Original', userId: 'user1');
       try {
-        await repo.createGym(gymId: 'GYM-200', name: 'Duplicate', userId: 'user1');
+        await repo.createGym(
+          gymId: 'GYM-200',
+          name: 'Duplicate',
+          userId: 'user1',
+        );
         fail('Expected unique constraint violation for gymId');
       } catch (e) {
         expect(e, isA<Exception>());

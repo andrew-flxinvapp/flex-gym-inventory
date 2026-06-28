@@ -12,9 +12,7 @@ class WishlistCard extends StatelessWidget {
     // Only show up to 5 rows, fill with empty if less
     final rows = List<MapEntry<String, String>>.generate(
       5,
-      (i) => i < details.length
-          ? details[i]
-          : const MapEntry('', ''),
+      (i) => i < details.length ? details[i] : const MapEntry('', ''),
     );
 
     return Container(
@@ -30,10 +28,7 @@ class WishlistCard extends StatelessWidget {
           for (int i = 0; i < 5; i++) ...[
             rows[i].key == 'Link' && rows[i].value.isNotEmpty
                 ? _WishlistLinkRow(url: rows[i].value)
-                : _WishlistDetailRow(
-                    label: rows[i].key,
-                    value: rows[i].value,
-                  ),
+                : _WishlistDetailRow(label: rows[i].key, value: rows[i].value),
             if (i != 4) const SizedBox(height: 12),
           ],
         ],
@@ -61,18 +56,19 @@ class _WishlistLinkRow extends StatelessWidget {
       // Show custom FlexSnackbar as a warning
       late OverlayEntry overlayEntry;
       overlayEntry = OverlayEntry(
-        builder: (ctx) => Positioned(
-          left: left,
-          bottom: bottom,
-          child: Material(
-            color: Colors.transparent,
-            child: FlexSnackbar(
-              title: 'Could not open link.',
-              type: SnackbarType.warning,
-              onClose: () => overlayEntry.remove(),
+        builder:
+            (ctx) => Positioned(
+              left: left,
+              bottom: bottom,
+              child: Material(
+                color: Colors.transparent,
+                child: FlexSnackbar(
+                  title: 'Could not open link.',
+                  type: SnackbarType.warning,
+                  onClose: () => overlayEntry.remove(),
+                ),
+              ),
             ),
-          ),
-        ),
       );
       overlay.insert(overlayEntry);
       Future.delayed(const Duration(seconds: 3), () {
@@ -88,25 +84,24 @@ class _WishlistLinkRow extends StatelessWidget {
       children: [
         Text(
           'Link:',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
         GestureDetector(
           onTap: () => _launchUrl(context),
           child: Text(
             'Open Link',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
           ),
         ),
       ],
     );
   }
 }
-
 
 class _WishlistDetailRow extends StatelessWidget {
   final String label;
@@ -120,15 +115,15 @@ class _WishlistDetailRow extends StatelessWidget {
       children: [
         Text(
           label.isNotEmpty ? "$label:" : '',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
         ),
       ],
     );

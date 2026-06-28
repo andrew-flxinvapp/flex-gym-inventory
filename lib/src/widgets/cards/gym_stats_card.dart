@@ -104,7 +104,8 @@ class GymStatsCard extends StatelessWidget {
     if (diff.inMinutes < 1) return 'Just now';
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24 && date.day == now.day) return '${diff.inHours}h ago';
-    if (date.year == now.year && date.month == now.month && date.day == now.day) return 'Today';
+    if (date.year == now.year && date.month == now.month && date.day == now.day)
+      return 'Today';
     // Fallback to MM/dd/yyyy
     return "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}";
   }

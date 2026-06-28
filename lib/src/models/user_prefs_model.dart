@@ -26,36 +26,37 @@ class UserPrefs {
 
   void touch() => updatedAt = DateTime.now();
 
-  UserPrefs copyWith({
-    String? userId,
-    String? defaultGymId = _sentinelString,
-  }) {
-    final c = UserPrefs()
-      ..id = id
-      ..userId = userId ?? this.userId
-      ..defaultGymId = 
-        (defaultGymId == _sentinelString) ? this.defaultGymId : defaultGymId
-      ..createdAt = createdAt
-      ..updatedAt = DateTime.now();
+  UserPrefs copyWith({String? userId, String? defaultGymId = _sentinelString}) {
+    final c =
+        UserPrefs()
+          ..id = id
+          ..userId = userId ?? this.userId
+          ..defaultGymId =
+              (defaultGymId == _sentinelString)
+                  ? this.defaultGymId
+                  : defaultGymId
+          ..createdAt = createdAt
+          ..updatedAt = DateTime.now();
 
-    return c; 
+    return c;
   }
 
   Map<String, dynamic> toJson() => {
-    'id' : id,
-    'userId' : userId,
-    'defaultGymId' : defaultGymId,
-    'createdAt' : createdAt.toIso8601String(),
-    'updatedAt' : updatedAt.toIso8601String(), 
+    'id': id,
+    'userId': userId,
+    'defaultGymId': defaultGymId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
   };
 
   static UserPrefs fromJson(Map<String, dynamic> json) {
-    final prefs = UserPrefs()
-      ..id = (json['id'] as int?) ?? Isar.autoIncrement
-      ..userId = json['userId'] as String
-      ..defaultGymId = json['defaultGymId'] as String?
-      ..createdAt = DateTime.parse(json['createdAt'] as String)
-      ..updatedAt = DateTime.parse(json['updatedAt'] as String);
+    final prefs =
+        UserPrefs()
+          ..id = (json['id'] as int?) ?? Isar.autoIncrement
+          ..userId = json['userId'] as String
+          ..defaultGymId = json['defaultGymId'] as String?
+          ..createdAt = DateTime.parse(json['createdAt'] as String)
+          ..updatedAt = DateTime.parse(json['updatedAt'] as String);
 
     return prefs;
   }

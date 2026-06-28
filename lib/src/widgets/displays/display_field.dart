@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
 
-
 class DisplayField extends StatelessWidget {
   final String? iconPath;
   final String label;
@@ -45,15 +44,15 @@ class DisplayField extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
+                    color: AppTheme.lightTextPrimary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightPrimary,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: AppTheme.lightPrimary),
                 ),
               ],
             ),

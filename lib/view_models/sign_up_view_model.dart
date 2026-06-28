@@ -7,7 +7,7 @@ class SignUpViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
 
   SignUpViewModel({AuthRepository? authRepository})
-      : _authRepository = authRepository ?? AuthRepository();
+    : _authRepository = authRepository ?? AuthRepository();
 
   bool _loading = false;
   UiMessage? _message;
@@ -36,11 +36,20 @@ class SignUpViewModel extends ChangeNotifier {
       // request the magic link here. Persist metadata after verification
       // using `AuthRepository.updateUserMetadata` when a session is active.
       await _authRepository.signUp(email);
-      _setMessage(UiMessage('Sign up successful! Please check your email to verify your account.', type: UiMessageType.success));
+      _setMessage(
+        UiMessage(
+          'Sign up successful! Please check your email to verify your account.',
+          type: UiMessageType.success,
+        ),
+      );
     } on AuthException catch (ae) {
-      _setMessage(UiMessage(ae.message ?? 'Sign up failed.', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(ae.message ?? 'Sign up failed.', type: UiMessageType.error),
+      );
     } catch (e) {
-      _setMessage(UiMessage('Error: ${e.toString()}', type: UiMessageType.error));
+      _setMessage(
+        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+      );
     } finally {
       _setLoading(false);
     }
@@ -52,14 +61,24 @@ class SignUpViewModel extends ChangeNotifier {
     final email = emailController.text.trim();
     if (email.isEmpty) {
       _emailError = 'Please enter your email';
-      _setMessage(UiMessage('Please enter your email address.', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          'Please enter your email address.',
+          type: UiMessageType.error,
+        ),
+      );
       notifyListeners();
       return false;
     }
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
     if (!emailRegex.hasMatch(email)) {
       _emailError = 'Please enter a valid email';
-      _setMessage(UiMessage('Please enter a valid email address.', type: UiMessageType.error));
+      _setMessage(
+        UiMessage(
+          'Please enter a valid email address.',
+          type: UiMessageType.error,
+        ),
+      );
       notifyListeners();
       return false;
     }

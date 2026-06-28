@@ -48,7 +48,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
           final service = ActiveGymService(IsarService.isar);
           final gym = await service.getActiveGym();
           if (gym != null) {
-            Navigator.of(context).pushNamed(AppRoutes.editGym, arguments: gym.id);
+            Navigator.of(
+              context,
+            ).pushNamed(AppRoutes.editGym, arguments: gym.id);
           } else {
             Navigator.of(context).pushNamed(AppRoutes.editGym);
           }
@@ -127,7 +129,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       SecondaryButton(
                         label: 'Add Equipment',
                         onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.addEquipment)
+                              .then((_) => setState(() {}));
                         },
                       ),
                     ],
@@ -137,9 +141,23 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
             }
 
             // Filled state
-            final int itemCount = items.fold<int>(0, (acc, e) => acc + e.quantity);
-            final double estimatedValue = items.fold<double>(0, (acc, e) => acc + (e.value ?? 0) * e.quantity);
-            final DateTime lastUpdated = items.map((e) => e.createdDate).whereType<DateTime>().fold<DateTime?>(null, (prev, d) => prev == null || d.isAfter(prev) ? d : prev) ?? gym.createdDate;
+            final int itemCount = items.fold<int>(
+              0,
+              (acc, e) => acc + e.quantity,
+            );
+            final double estimatedValue = items.fold<double>(
+              0,
+              (acc, e) => acc + (e.value ?? 0) * e.quantity,
+            );
+            final DateTime lastUpdated =
+                items
+                    .map((e) => e.createdDate)
+                    .whereType<DateTime>()
+                    .fold<DateTime?>(
+                      null,
+                      (prev, d) => prev == null || d.isAfter(prev) ? d : prev,
+                    ) ??
+                gym.createdDate;
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
@@ -152,9 +170,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       Expanded(
                         child: Text(
                           'Overview',
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                            color: AppTheme.lightTextPrimary,
-                          ),
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
                       ),
                       IconButton(
@@ -162,7 +179,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                         constraints: const BoxConstraints(),
                         icon: Image.asset(AppIcons.plus, height: 22, width: 22),
                         onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.addEquipment).then((_) => setState(() {}));
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.addEquipment)
+                              .then((_) => setState(() {}));
                         },
                       ),
                     ],
@@ -180,9 +199,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       Expanded(
                         child: Text(
                           'Equipment List',
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                            color: AppTheme.lightTextPrimary,
-                          ),
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -197,42 +215,48 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       category: e.category,
                       isarId: e.id,
                       onTapCallback: () async {
-                        await Navigator.of(context).pushNamed(AppRoutes.equipmentDetail, arguments: e.id);
+                        await Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.equipmentDetail, arguments: e.id);
                         if (mounted) setState(() {});
                       },
                     ),
                     const SizedBox(height: 16),
                   ],
-                    const SizedBox(height: 8),
-                      WarningButton(
-                        label: 'Delete Gym',
-                        onPressed: () {
-                          Future<void> deleteAction() async {
-                            final service = ActiveGymService(IsarService.isar);
-                            final gym = await service.getActiveGym();
-                            if (gym != null) {
-                              final repo = GymRepository();
-                              await repo.deleteGym(gym.id);
-                              await service.clearActiveGym();
-                            }
-                            if (!mounted) return;
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          }
+                  const SizedBox(height: 8),
+                  WarningButton(
+                    label: 'Delete Gym',
+                    onPressed: () {
+                      Future<void> deleteAction() async {
+                        final service = ActiveGymService(IsarService.isar);
+                        final gym = await service.getActiveGym();
+                        if (gym != null) {
+                          final repo = GymRepository();
+                          await repo.deleteGym(gym.id);
+                          await service.clearActiveGym();
+                        }
+                        if (!mounted) return;
+                        Navigator.of(
+                          context,
+                        ).popUntil((route) => route.isFirst);
+                      }
 
-                          showDialog(
-                            context: context,
-                            builder: (ctx) => ConfirmDialog(
+                      showDialog(
+                        context: context,
+                        builder:
+                            (ctx) => ConfirmDialog(
                               title: 'Delete Gym',
-                              content: 'Are you sure you want to delete this gym and all its equipment?',
+                              content:
+                                  'Are you sure you want to delete this gym and all its equipment?',
                               confirmText: 'Delete',
                               cancelText: 'Cancel',
                               onConfirm: () async {
                                 await deleteAction();
                               },
                             ),
-                          );
-                        },
-                      ),
+                      );
+                    },
+                  ),
                 ],
               ),
             );
@@ -242,5 +266,3 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
     );
   }
 }
-
-

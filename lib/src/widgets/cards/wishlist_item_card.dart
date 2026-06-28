@@ -25,15 +25,16 @@ class WishlistItemCard extends StatelessWidget {
     this.onTapCallback,
   });
 
-  WishlistItemCard.fromWishlist(
-    Wishlist item, {
-    super.key,
-    this.onTapCallback,
-  })  : itemName = item.name,
-        brand = item.brand,
-        price = double.tryParse(item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '') ?? 0.0,
-        priority = item.priority.label,
-        isarId = item.id;
+  WishlistItemCard.fromWishlist(Wishlist item, {super.key, this.onTapCallback})
+    : itemName = item.name,
+      brand = item.brand,
+      price =
+          double.tryParse(
+            item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '',
+          ) ??
+          0.0,
+      priority = item.priority.label,
+      isarId = item.id;
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +75,16 @@ class WishlistItemCard extends StatelessWidget {
           ),
         ],
       ),
-        child: BaseCard(
+      child: BaseCard(
         onTap: () {
           if (onTapCallback != null) {
             onTapCallback!(isarId);
             return;
           }
           if (isarId != null) {
-            Navigator.of(context).pushNamed(AppRoutes.wishlistDetail, arguments: isarId);
+            Navigator.of(
+              context,
+            ).pushNamed(AppRoutes.wishlistDetail, arguments: isarId);
           } else {
             Navigator.of(context).pushNamed(AppRoutes.wishlistDetail);
           }
@@ -107,9 +110,9 @@ class WishlistItemCard extends StatelessWidget {
                 children: [
                   Text(
                     brand,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.dividers,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppTheme.dividers),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -139,18 +142,18 @@ class WishlistItemCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                              'Priority',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              priority.toString(),
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                              ),
-                            ),
+                        'Priority',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        priority.toString(),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -160,10 +163,7 @@ class WishlistItemCard extends StatelessWidget {
             SizedBox(
               width: 24,
               height: 24,
-              child: Image.asset(
-                AppIcons.forward,
-                color: AppTheme.dividers,
-              ),
+              child: Image.asset(AppIcons.forward, color: AppTheme.dividers),
             ),
           ],
         ),

@@ -33,18 +33,18 @@ class CustomDropdownField<T> extends StatelessWidget {
         width: width,
         height: height,
         child: DropdownButtonFormField2<T>(
-          value: value,
           validator: validator,
           onChanged: onChanged,
           isExpanded: true, // keep child filling the field width
-
           // --- Label with optional asterisk (matches your current look) ---
           decoration: InputDecoration(
             hintText: null,
             filled: true,
             fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
@@ -66,22 +66,25 @@ class CustomDropdownField<T> extends StatelessWidget {
             text: TextSpan(
               text: hintText,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                  ),
-              children: showAsterisk
-                  ? [
-                      TextSpan(
-                        text: ' *',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.stopColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ]
-                  : [],
+                color: AppTheme.lightTextPrimary,
+              ),
+              children:
+                  showAsterisk
+                      ? [
+                        TextSpan(
+                          text: ' *',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: AppTheme.stopColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ]
+                      : [],
             ),
           ),
-          buttonStyleData: ButtonStyleData(
+          buttonStyleData: FormFieldButtonStyleData(
             height: height,
             padding: const EdgeInsets.symmetric(horizontal: 0),
             decoration: BoxDecoration(
@@ -98,7 +101,7 @@ class CustomDropdownField<T> extends StatelessWidget {
 
           // --- The key fix: force the menu to match the field width ---
           dropdownStyleData: DropdownStyleData(
-            width: width,               // <- menu equals closed widget width
+            width: width, // <- menu equals closed widget width
             maxHeight: 320,
             elevation: 4,
             padding: EdgeInsets.zero,
@@ -111,26 +114,24 @@ class CustomDropdownField<T> extends StatelessWidget {
           ),
 
           menuItemStyleData: const MenuItemStyleData(
-            height: 48,
             padding: EdgeInsets.symmetric(horizontal: 12),
           ),
 
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTextPrimary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
 
-          items: items.map((item) {
-            final label = getLabel != null
-                ? getLabel!(item)
-                : item.toString().split('.').last;
-            return DropdownMenuItem<T>(
-              value: item,
-              child: Text(
-                label,
-                overflow: TextOverflow.ellipsis,
-              ),
-            );
-          }).toList(),
+          items:
+              items.map((item) {
+                final label =
+                    getLabel != null
+                        ? getLabel!(item)
+                        : item.toString().split('.').last;
+                return DropdownItem<T>(
+                  value: item,
+                  child: Text(label, overflow: TextOverflow.ellipsis),
+                );
+              }).toList(),
         ),
       ),
     );

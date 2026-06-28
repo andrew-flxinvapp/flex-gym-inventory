@@ -80,7 +80,9 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
           rightIcon: AppIcons.edit,
           onRightIconPressed: () {
             if (item?.id != null) {
-              Navigator.of(context).pushNamed(AppRoutes.editWishlist, arguments: item!.id);
+              Navigator.of(
+                context,
+              ).pushNamed(AppRoutes.editWishlist, arguments: item!.id);
             } else {
               Navigator.of(context).pushNamed(AppRoutes.editWishlist);
             }
@@ -88,102 +90,103 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
         ),
       ),
       body: SafeArea(
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : error != null
+        child:
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : error != null
                 ? Center(child: Text(error!))
                 : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                          child: Text(
-                            'Overview',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                        child: Text(
+                          'Overview',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Center(
-                          child: EquipmentImage(imageId: item?.imagePath, width: 370, height: 208),
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: EquipmentImage(
+                          imageId: item?.imagePath,
+                          width: 370,
+                          height: 208,
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            item?.name ?? '-',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          item?.name ?? '-',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Details',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          'Details',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: WishlistCard(
-                            details: [
-                              MapEntry('Brand', item?.brand ?? '-'),
-                              MapEntry('Category', item?.category.label ?? '-'),
-                              MapEntry('Type', item?.wishlistType.label ?? '-'),
-                              MapEntry('Priority', item?.priority.label ?? '-'),
-                              MapEntry('Link', item?.productUrl ?? '-'),
-                              MapEntry('Price', item?.price ?? '-'),
-                            ],
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: WishlistCard(
+                          details: [
+                            MapEntry('Brand', item?.brand ?? '-'),
+                            MapEntry('Category', item?.category.label ?? '-'),
+                            MapEntry('Type', item?.wishlistType.label ?? '-'),
+                            MapEntry('Priority', item?.priority.label ?? '-'),
+                            MapEntry('Link', item?.productUrl ?? '-'),
+                            MapEntry('Price', item?.price ?? '-'),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'Notes',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                ),
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          'Notes',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: NotesCard(
-                            notes: item?.notes ?? '-',
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: NotesCard(notes: item?.notes ?? '-'),
+                      ),
+                      const SizedBox(height: 32),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: PrimaryButton(
+                          label: 'Delete Item',
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (ctx) => ConfirmDialog(
+                                    title: 'Delete Item',
+                                    content:
+                                        'Are you sure you want to delete this item? This action cannot be undone.',
+                                    confirmText: 'Delete',
+                                    onConfirm: () async {
+                                      await _deleteItem();
+                                    },
+                                  ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 32),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: PrimaryButton(
-                            label: 'Delete Item',
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => ConfirmDialog(
-                                  title: 'Delete Item',
-                                  content: 'Are you sure you want to delete this item? This action cannot be undone.',
-                                  confirmText: 'Delete',
-                                  onConfirm: () async {
-                                    await _deleteItem();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 32),
+                    ],
                   ),
+                ),
       ),
     );
   }
