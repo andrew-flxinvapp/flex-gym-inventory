@@ -31,50 +31,55 @@ class ExportService {
     final equipments =
         await isar.equipments.filter().gymIdEqualTo(gymId).findAll();
 
-    
-                  final doc = pw.Document();
-    
-                  doc.addPage(
-                    pw.MultiPage(
-                      build: (pw.Context context) => [
-                        pw.Header(
-                          level: 0,
-                          child: pw.Text(gym?.name ?? 'Gym Summary', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                        ),
-                        pw.Text('Location: ${gym?.location ?? '—'}'),
-                        pw.SizedBox(height: 8),
-                        pw.Text('Created: ${DateTime.now()}', style: pw.TextStyle(fontSize: 12)),
-                        pw.SizedBox(height: 12),
-                        pw.Text(
-                          'Equipment',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
-                        ),
-                        pw.SizedBox(height: 8),
-                        pw.TableHelper.fromTextArray(
-                          context: context,
-                          headers: ['Name', 'Qty', 'Condition', 'Value'],
-                          data: equipments
-                              .map((e) => [
-                                    e.name,
-                                    e.quantity.toString(),
-                                    e.condition.toString().split('.').last,
-                                    e.value?.toStringAsFixed(2) ?? '-',
-                                  ])
-                              .toList(),
-                          headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                          cellStyle: pw.TextStyle(),
-                        ),
-                      ],
-                    ),
-                  );
+    // Load PDF-safe fonts from Google Fonts so PDF rendering includes required glyphs.
+    final roboto = await PdfGoogleFonts.robotoRegular();
+    final robotoBold = await PdfGoogleFonts.robotoBold();
+
+    final doc = pw.Document();
+
+    doc.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Text(gym?.name ?? 'Gym Summary', style: pw.TextStyle(font: robotoBold, fontSize: 20)),
+          ),
+          pw.Text('Location: ${gym?.location ?? '—'}', style: pw.TextStyle(font: roboto)),
+          pw.SizedBox(height: 8),
+          pw.Text('Created: ${DateTime.now()}', style: pw.TextStyle(font: roboto, fontSize: 12)),
+          pw.SizedBox(height: 12),
+          pw.Text(
+            'Equipment',
+            style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: robotoBold),
+          ),
+          pw.SizedBox(height: 8),
+          pw.TableHelper.fromTextArray(
+            context: context,
+            headers: ['Name', 'Qty', 'Condition', 'Value'],
+            data: equipments
+                .map((e) => [
+                      e.name,
+                      e.quantity.toString(),
+                      e.condition.toString().split('.').last,
+                      e.value?.toStringAsFixed(2) ?? '-',
+                    ])
+                .toList(),
+            headerStyle: pw.TextStyle(font: robotoBold),
+            cellStyle: pw.TextStyle(font: roboto),
+          ),
+        ],
+      ),
+    );
+
     final bytes = await doc.save();
     final dir = await getApplicationDocumentsDirectory();
-
+    // Use the gym name in the filename when available. Sanitize to remove
+    // unsafe characters and replace spaces with underscores.
     final rawName = gym?.name ?? gymId;
     final safeBase = rawName
       .replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '')
       .replaceAll(RegExp(r'\s+'), '_');
-    final outName = fileName ?? '${safeBase}_Summary.pdf';
+    final outName = fileName ?? '${safeBase}_summary.pdf';
     final outFile = File(p.join(dir.path, outName));
     await outFile.writeAsBytes(bytes);
     return outFile;

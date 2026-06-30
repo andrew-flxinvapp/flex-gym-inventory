@@ -56,11 +56,6 @@ class _ExportScreenState extends State<ExportScreen> {
   }
 
   Future<void> _exportPdf() async {
-    showFlexSnackbar(
-      context,
-      title: 'Preparing export...',
-      type: SnackbarType.success,
-    );
     if (!mounted) return;
     setState(() => _exporting = true);
     try {
@@ -80,8 +75,22 @@ class _ExportScreenState extends State<ExportScreen> {
         gym.gymId,
         shareText: 'Exported ${gym.name} inventory',
       );
+      if (!mounted) return;
+      showFlexSnackbar(
+        context,
+        title: 'Export complete',
+        subtitle: 'Prepared ${gym.name} summary',
+        type: SnackbarType.success,
+      );
     } catch (e) {
-      _showMessage('Export failed: $e');
+      if (mounted) {
+        showFlexSnackbar(
+          context,
+          title: 'Export failed',
+          subtitle: e.toString(),
+          type: SnackbarType.warning,
+        );
+      }
     } finally {
       if (mounted) setState(() => _exporting = false);
     }

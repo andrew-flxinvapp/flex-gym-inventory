@@ -3,6 +3,10 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import '../models/ui_message.dart';
 
+// Track active snackbar overlay entries and their vertical offsets
+final List<ValueNotifier<double>> _snackbarOffsets = [];
+final List<OverlayEntry> _snackbarEntries = [];
+
 void showFlexSnackbar(
   BuildContext context, {
   required String title,
@@ -10,30 +14,60 @@ void showFlexSnackbar(
   required SnackbarType type,
   Duration duration = const Duration(seconds: 3),
 }) {
+  // Stacked snackbars support: maintain a list of active overlay entries
   final overlay = Overlay.of(context);
+  const double itemHeight = 58.0;
+  const double gap = 8.0;
+  final baseTop = MediaQuery.of(context).padding.top + 16.0;
+
+  // Lists to track active entries and their top offsets (declared at file scope)
+
+  final index = _snackbarEntries.length;
+  final topNotifier = ValueNotifier<double>(baseTop + index * (itemHeight + gap));
+
   late OverlayEntry overlayEntry;
   overlayEntry = OverlayEntry(
     builder: (context) {
-      final topOffset = MediaQuery.of(context).padding.top + 16;
-      return Positioned(
-        top: topOffset,
-        left: 24,
-        right: 24,
-        child: Material(
-          color: Colors.transparent,
-          child: AnimatedFlexSnackbar(
-            title: title,
-            subtitle: subtitle,
-            type: type,
-            duration: duration,
-            onDismissed: () {
-              if (overlayEntry.mounted) overlayEntry.remove();
-            },
-          ),
-        ),
+      return ValueListenableBuilder<double>(
+        valueListenable: topNotifier,
+        builder: (context, topValue, _) {
+          return Positioned(
+            top: topValue,
+            left: 24,
+            right: 24,
+            child: Material(
+              color: Colors.transparent,
+              child: AnimatedFlexSnackbar(
+                title: title,
+                subtitle: subtitle,
+                type: type,
+                duration: duration,
+                onDismissed: () {
+                  // When dismissed, remove this entry and shift remaining
+                  final removedIndex = _snackbarEntries.indexOf(overlayEntry);
+                  if (removedIndex != -1) {
+                    _snackbarEntries.removeAt(removedIndex);
+                    final removedNotifier = _snackbarOffsets.removeAt(removedIndex);
+                    // shift up remaining notifiers
+                    for (var i = removedIndex; i < _snackbarOffsets.length; i++) {
+                      _snackbarOffsets[i].value = baseTop + i * (itemHeight + gap);
+                    }
+                    // dispose removed notifier and remove overlay
+                    removedNotifier.dispose();
+                  }
+                  if (overlayEntry.mounted) overlayEntry.remove();
+                },
+              ),
+            ),
+          );
+        },
       );
     },
   );
+
+  // register and insert
+  _snackbarOffsets.add(topNotifier);
+  _snackbarEntries.add(overlayEntry);
   overlay.insert(overlayEntry);
 }
 
