@@ -87,6 +87,8 @@ flutter:
     # FGI Logo and App Icon
     - lib/assets/images/db_logo.png
     - lib/assets/images/fgi_logo_white.png
+    - lib/assets/images/fgi_logo_navy.png
+    - lib/assets/images/fgi_logo_navy.svg
     - lib/assets/images/fgi_logo.png
     - lib/assets/images/fgi_logo_white.svg
     - lib/assets/images/fgi_logo.svg

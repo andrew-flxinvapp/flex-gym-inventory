@@ -43,8 +43,8 @@ class DisplayField extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.lightTextPrimary,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppTheme.lightPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -52,7 +52,8 @@ class DisplayField extends StatelessWidget {
                   value,
                   style: Theme.of(
                     context,
-                  ).textTheme.bodySmall?.copyWith(color: AppTheme.lightPrimary),
+                  ).textTheme.bodyLarge?.copyWith(
+                    color: AppTheme.lightTextPrimary),
                 ),
               ],
             ),

@@ -21,7 +21,7 @@ const AppStateSchema = CollectionSchema(
       id: 0,
       name: r'activeGymId',
       type: IsarType.string,
-    ),
+    )
   },
   estimateSize: _appStateEstimateSize,
   serialize: _appStateSerialize,
@@ -110,7 +110,10 @@ extension AppStateQueryWhereSort on QueryBuilder<AppState, AppState, QWhere> {
 extension AppStateQueryWhere on QueryBuilder<AppState, AppState, QWhereClause> {
   QueryBuilder<AppState, AppState, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
     });
   }
 
@@ -136,10 +139,8 @@ extension AppStateQueryWhere on QueryBuilder<AppState, AppState, QWhereClause> {
     });
   }
 
-  QueryBuilder<AppState, AppState, QAfterWhereClause> idGreaterThan(
-    Id id, {
-    bool include = false,
-  }) {
+  QueryBuilder<AppState, AppState, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -147,10 +148,8 @@ extension AppStateQueryWhere on QueryBuilder<AppState, AppState, QWhereClause> {
     });
   }
 
-  QueryBuilder<AppState, AppState, QAfterWhereClause> idLessThan(
-    Id id, {
-    bool include = false,
-  }) {
+  QueryBuilder<AppState, AppState, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -165,14 +164,12 @@ extension AppStateQueryWhere on QueryBuilder<AppState, AppState, QWhereClause> {
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.between(
-          lower: lowerId,
-          includeLower: includeLower,
-          upper: upperId,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -181,18 +178,18 @@ extension AppStateQueryFilter
     on QueryBuilder<AppState, AppState, QFilterCondition> {
   QueryBuilder<AppState, AppState, QAfterFilterCondition> activeGymIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'activeGymId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'activeGymId',
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition>
-  activeGymIdIsNotNull() {
+      activeGymIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'activeGymId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'activeGymId',
+      ));
     });
   }
 
@@ -201,31 +198,27 @@ extension AppStateQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition>
-  activeGymIdGreaterThan(
+      activeGymIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
@@ -235,14 +228,12 @@ extension AppStateQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
@@ -254,16 +245,14 @@ extension AppStateQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'activeGymId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'activeGymId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
@@ -272,13 +261,11 @@ extension AppStateQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
@@ -287,68 +274,63 @@ extension AppStateQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition> activeGymIdContains(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'activeGymId',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'activeGymId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition> activeGymIdMatches(
-    String pattern, {
-    bool caseSensitive = true,
-  }) {
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'activeGymId',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'activeGymId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition> activeGymIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'activeGymId', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'activeGymId',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition>
-  activeGymIdIsNotEmpty() {
+      activeGymIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'activeGymId', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'activeGymId',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<AppState, AppState, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'id', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -357,13 +339,11 @@ extension AppStateQueryFilter
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -372,13 +352,11 @@ extension AppStateQueryFilter
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -389,15 +367,13 @@ extension AppStateQueryFilter
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'id',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -451,9 +427,8 @@ extension AppStateQuerySortThenBy
 
 extension AppStateQueryWhereDistinct
     on QueryBuilder<AppState, AppState, QDistinct> {
-  QueryBuilder<AppState, AppState, QDistinct> distinctByActiveGymId({
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<AppState, AppState, QDistinct> distinctByActiveGymId(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'activeGymId', caseSensitive: caseSensitive);
     });

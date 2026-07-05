@@ -3,7 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 
-/// OnboardingLogoAppBar: For onboarding/auth screens with centered logo only
+/// OnboardingLogoAppBar: a single configurable appbar for onboarding/auth screens.
+/// Use `theme` to pick the light or dark variant per screen.
+enum OnboardingAppBarTheme { light, dark }
+
 class OnboardingLogoAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final bool showBackArrow;
@@ -12,6 +15,7 @@ class OnboardingLogoAppBar extends StatelessWidget
   final double bottomSpacing;
   final double logoHeight;
   final double logoWidth;
+  final OnboardingAppBarTheme theme;
 
   const OnboardingLogoAppBar({
     super.key,
@@ -21,6 +25,7 @@ class OnboardingLogoAppBar extends StatelessWidget
     this.logoWidth = 200,
     this.showBackArrow = false,
     this.onBackArrowPressed,
+    this.theme = OnboardingAppBarTheme.light,
   });
 
   @override
@@ -29,8 +34,15 @@ class OnboardingLogoAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final isDark = theme == OnboardingAppBarTheme.dark;
+    final background = isDark ? AppTheme.transparent : AppTheme.lightBackground;
+    final iconColor = isDark ? AppTheme.darkTextPrimary : AppTheme.lightTextPrimary;
+    final logoAsset = isDark
+        ? 'lib/assets/images/fgi_logo_white.svg'
+        : 'lib/assets/images/fgi_logo_navy.svg';
+
     return Container(
-      color: AppTheme.lightBackground,
+      color: background,
       child: SizedBox(
         height: topSpacing + logoHeight + bottomSpacing,
         child: Column(
@@ -46,13 +58,9 @@ class OnboardingLogoAppBar extends StatelessWidget
                       AppIcons.back,
                       height: 32,
                       width: 32,
-                      color: AppTheme.lightTextPrimary,
+                      color: iconColor,
                     ),
-                    onPressed:
-                        onBackArrowPressed ??
-                        () {
-                          Navigator.of(context).maybePop();
-                        },
+                    onPressed: onBackArrowPressed ?? () => Navigator.of(context).maybePop(),
                   )
                 else
                   const SizedBox(width: 48), // Space for alignment
@@ -62,8 +70,7 @@ class OnboardingLogoAppBar extends StatelessWidget
                       height: logoHeight,
                       width: logoWidth,
                       child: SvgPicture.asset(
-                        'lib/assets/images/fgi_logo.svg',
-                        package: null,
+                        logoAsset,
                         fit: BoxFit.contain,
                       ),
                     ),

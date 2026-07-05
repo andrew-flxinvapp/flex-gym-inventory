@@ -28,9 +28,8 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
       await _onboardingRepository.completeOnboarding(
         notificationsOn: widget.notificationsOn,
       );
-
-      if (!mounted) return;
-      Navigator.of(context).pushNamed(AppRoutes.dashboard);
+      // repository call completed; we don't navigate here to avoid
+      // double-navigation — navigation is handled by the button tap.
     } catch (e) {
       // Optionally surface error to the user. For now, rethrow so callers/tests see it.
       rethrow;
@@ -48,52 +47,78 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.lightBackground,
-      appBar: const OnboardingLogoAppBar(),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.start, // Changed from center to start
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 32), // Added controlled top spacing
-              Text(
-                'Onboarding Complete!',
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: AppTheme.lightTextPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Image.asset(
-                'lib/assets/images/celebrate.png',
-                height: 325,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'You completed onboarding! The button below will take you to your Dashboard!',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  height: 1.2,
-                  color: AppTheme.lightTextPrimary,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-              const SizedBox(height: 82),
-              PrimaryButton(
-                label: 'To Dashboard',
-                // keep a non-null callback (PrimaryButton requires it) but guard inside
-                onPressed: () {
-                  if (_isSubmitting) return;
-                  _handleContinue();
-                },
-              ),
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: const OnboardingLogoAppBar(
+        showBackArrow: false,
+        theme: OnboardingAppBarTheme.dark,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0.9, -0.62),
+            radius: 1.6,
+            focal: Alignment(0.9, -0.7),
+            focalRadius: 0.001,
+            colors: [
+              Color(0xFF1F4F66), // 0%
+              Color(0xFF023246), // 28%
+              Color(0xFF010D1B), // 64%
+              Color(0xFF000000), // 100%
             ],
+            stops: [0.0, 0.3, 0.8, 1.0],
+            transform: GradientRotation(0.25),
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.start, // Changed from center to start
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 32), // Added controlled top spacing
+                Text(
+                  'Onboarding Complete!',
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    color: AppTheme.darkTextPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Image.asset(
+                  'lib/assets/images/celebrate.png',
+                  height: 325,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'You completed onboarding! The button below will take you to your Dashboard!',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.2,
+                    color: AppTheme.darkTextPrimary,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+                const SizedBox(height: 82),
+                PrimaryButton(
+                  label: 'To Dashboard',
+                  variant: PrimaryButtonVariant.dark,
+                  // keep a non-null callback (PrimaryButton requires it) but guard inside
+                  onPressed: () {
+                      if (_isSubmitting) return;
+                      // Trigger repository work, but navigate immediately and
+                      // replace onboarding in the stack with the dashboard.
+                      _handleContinue();
+                      Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+                    },
+                ),
+              ],
+            ),
           ),
         ),
       ),

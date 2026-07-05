@@ -47,7 +47,7 @@ class AccountGreeting extends StatelessWidget {
             Text(
               'Flex',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppTheme.lightPrimary,
+                color: AppTheme.lightTextPrimary,
                 fontWeight: FontWeight.normal,
               ),
             ),

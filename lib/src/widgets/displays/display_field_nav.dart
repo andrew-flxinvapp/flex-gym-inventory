@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 
-class DisplayFieldUpgrade extends StatelessWidget {
+class DisplayFieldNav extends StatelessWidget {
   final VoidCallback? onPressed;
-  const DisplayFieldUpgrade({super.key, this.onPressed});
+  const DisplayFieldNav({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 64,
       child: Material(
-        color: AppTheme.darkBackground,
+        color: AppTheme.lightCard,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
@@ -21,17 +21,17 @@ class DisplayFieldUpgrade extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  AppIcons.pro,
+                  AppIcons.sparkle,
                   width: 22,
                   height: 22,
-                  color: AppTheme.proColor,
+                  color: AppTheme.lightTextPrimary,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Upgrade to PRO',
+                    'Wishlist',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.darkTextPrimary,
+                      color: AppTheme.lightTextPrimary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -40,7 +40,7 @@ class DisplayFieldUpgrade extends StatelessWidget {
                   AppIcons.forward,
                   width: 24,
                   height: 24,
-                  color: AppTheme.darkTextPrimary,
+                  color: AppTheme.lightTextPrimary,
                 ),
               ],
             ),

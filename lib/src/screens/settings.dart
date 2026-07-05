@@ -40,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                 SettingsItem(
                   title: 'Account',
                   onTap: () {
-                    Navigator.of(context).pushNamed('/account');
+                    Navigator.of(context).pushNamed(AppRoutes.account);
                   },
                 ),
                 /*const SizedBox(height: 12),
@@ -51,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                 SettingsItem(
                   title: 'Upgrade Account',
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.upgradeAccount);
+                    Navigator.of(context).pushNamed(AppRoutes.upgrade);
                   },
                 ),
                 const SizedBox(height: 12),

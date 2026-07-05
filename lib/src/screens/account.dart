@@ -9,6 +9,7 @@ import '../widgets/top_app_bar.dart';
 import '../widgets/cards/settings_item.dart';
 import '../widgets/buttons/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/displays/display_field_nav.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -39,7 +40,7 @@ class AccountScreen extends StatelessWidget {
                   'Account Info',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -61,10 +62,10 @@ class AccountScreen extends StatelessWidget {
                   value: '+1 (555) 123-4567',
                 ),
                 const SizedBox(height: 16),
-                const DisplayField(
-                  iconPath: AppIcons.sparkle,
-                  label: 'Wishlist',
-                  value: '# of Items',
+                DisplayFieldNav(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.wishlist);
+                  },
                 ),
                 const SizedBox(height: 16),
                 const DisplayField(
@@ -75,7 +76,7 @@ class AccountScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 DisplayFieldUpgrade(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.upgradeAccount);
+                    Navigator.of(context).pushNamed(AppRoutes.upgrade);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -83,14 +84,14 @@ class AccountScreen extends StatelessWidget {
                   'Legal',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
                 SettingsItem(
                   title: 'Privacy Policy',
                   onTap: () async {
-                    final url = Uri.parse('https://flxinv.app/privacy-policy');
+                    final url = Uri.parse('https://flexgyminventory.app/privacy-policy');
                     if (await canLaunchUrl(url)) {
                       await launchUrl(
                         url,
@@ -104,7 +105,7 @@ class AccountScreen extends StatelessWidget {
                   title: 'Terms of Service',
                   onTap: () async {
                     final url = Uri.parse(
-                      'https://flxinv.app/terms-and-conditions',
+                      'https://flexgyminventory.app/terms-and-conditions',
                     );
                     if (await canLaunchUrl(url)) {
                       await launchUrl(

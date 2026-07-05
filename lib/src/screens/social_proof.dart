@@ -11,11 +11,33 @@ class SocialProofScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const OnboardingLogoAppBar(showBackArrow: true),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: const OnboardingLogoAppBar(
+        showBackArrow: true,
+        theme: OnboardingAppBarTheme.dark,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0.9, -0.62),
+            radius: 1.6,
+            focal: Alignment(0.9, -0.7),
+            focalRadius: 0.001,
+            colors: [
+              Color(0xFF1F4F66), // 0%
+              Color(0xFF023246), // 28%
+              Color(0xFF010D1B), // 64%
+              Color(0xFF000000), // 100%
+            ],
+            stops: [0.0, 0.3, 0.8, 1.0],
+            transform: GradientRotation(0.25),
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             // Social proof block
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,9 +49,7 @@ class SocialProofScreen extends StatelessWidget {
                     'Trusted by gym owners everywhere',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      color: const Color(
-                        0xFF023246,
-                      ), // AppTheme.lightTextPrimary
+                      color: AppTheme.darkTextPrimary,
                     ),
                   ),
                 ),
@@ -40,9 +60,7 @@ class SocialProofScreen extends StatelessWidget {
                     'Rated 4.9 by early adopters',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(
-                        0xFF023246,
-                      ), // AppTheme.lightTextPrimary
+                      color: AppTheme.darkTextPrimary,
                     ),
                   ),
                 ),
@@ -59,7 +77,7 @@ class SocialProofScreen extends StatelessWidget {
                     Text(
                       '10k+ ratings',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                        color: AppTheme.darkTextPrimary,
                       ),
                     ),
                   ],
@@ -69,12 +87,17 @@ class SocialProofScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(AppIcons.apple, width: 18, height: 18),
+                    Image.asset(
+                      AppIcons.apple,
+                      width: 18,
+                      height: 18,
+                      color: AppTheme.darkTextPrimary,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'App Store',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
+                        color: AppTheme.darkTextPrimary,
                       ),
                     ),
                   ],
@@ -92,7 +115,7 @@ class SocialProofScreen extends StatelessWidget {
                     '"Flex Gym Inventory makes it so much easier to keep track of my home gym. I can see what I have at a glance and plan what to add next without digging through notes or spreadsheets."',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.lightTextPrimary,
+                      color: AppTheme.darkTextPrimary,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -102,7 +125,7 @@ class SocialProofScreen extends StatelessWidget {
                   'Jordan M., Garage Gym Owner',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
+                    color: AppTheme.darkTextPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -112,6 +135,7 @@ class SocialProofScreen extends StatelessWidget {
             const Spacer(),
             PrimaryButton(
               label: 'Continue',
+              variant: PrimaryButtonVariant.dark,
               onPressed: () {
                 Navigator.of(context).pushNamed(AppRoutes.onboardingUpgrade);
               },
@@ -120,6 +144,6 @@ class SocialProofScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
