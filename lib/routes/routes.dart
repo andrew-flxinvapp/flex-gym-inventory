@@ -21,7 +21,7 @@ import '../src/screens/verify_email.dart';
 import '../src/screens/opt_notifications.dart';
 import '../src/screens/debug_device_token.dart';
 import '../src/screens/welcome.dart';
-import '../src/screens/upgrade.dart';
+// import '../src/screens/upgrade.dart';
 import '../src/screens/support.dart';
 import '../src/screens/feedback.dart';
 import '../src/screens/account.dart';
@@ -35,8 +35,10 @@ import '../src/screens/social_proof.dart';
 import '../src/screens/about_flex_rackley.dart';
 import '../src/screens/default_gym_picker.dart';
 import '../src/screens/startup_router.dart';
-import '../src/screens/onboarding_upgrade.dart';
+// import '../src/screens/onboarding_upgrade.dart';
 import '../src/screens/onboarding_complete.dart';
+import '../src/screens/new_onboarding_upgrade.dart';
+import '../src/screens/new_upgrade.dart';
 
 // Add other imports as needed
 
@@ -75,7 +77,7 @@ class AppRoutes {
   static const String onboardingFeatureTwo = '/onboarding-feature-two';
   static const String welcome = '/welcome';
   static const String socialProof = '/social-proof';
-  static const String onboardingUpgrade = '/onboarding-upgrade';
+  static const String newOnboardingUpgrade = '/new-onboarding-upgrade';
   static const String complete = '/complete';
 
   // Settings routes
@@ -84,6 +86,7 @@ class AppRoutes {
   static const String feedback = '/feedback';
   static const String account = '/account';
   static const String upgrade = '/upgrade';
+  static const String newUpgrade = '/new-upgrade';
   static const String deleteAccount = '/delete-account';
   static const String notifications = '/notifications';
   static const String aboutFlexRackley = '/about-flex-rackley';
@@ -131,7 +134,7 @@ final Map<String, WidgetBuilder> appRoutes = {
       (context) => const OnboardingFeatureTwoScreen(),
   AppRoutes.welcome: (context) => const WelcomeScreen(),
   AppRoutes.socialProof: (context) => const SocialProofScreen(),
-  AppRoutes.onboardingUpgrade: (context) => const OnboardingUpgradeScreen(),
+  AppRoutes.newOnboardingUpgrade: (context) => const NewOnboardingUpgrade(),
   AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
 
   // Settings routes
@@ -139,7 +142,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.support: (context) => const SupportScreen(),
   AppRoutes.feedback: (context) => const FeedbackScreen(),
   AppRoutes.account: (context) => const AccountScreen(),
-  AppRoutes.upgrade: (context) => const UpgradeScreen(),
+  AppRoutes.newUpgrade: (context) => const NewUpgrade(),
   AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),

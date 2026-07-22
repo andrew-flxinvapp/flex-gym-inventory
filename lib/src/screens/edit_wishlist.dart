@@ -66,6 +66,7 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
     } catch (_) {}
   }
 
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
@@ -241,8 +242,9 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                         final args = ModalRoute.of(ctx)?.settings.arguments;
                         int? isarId;
                         if (args is int) isarId = args;
-                        if (args is Map && args['isarId'] is int)
+                        if (args is Map && args['isarId'] is int) {
                           isarId = args['isarId'] as int;
+                        }
 
                         if (isarId != null) {
                           final updated = await repo.updateWishlist(

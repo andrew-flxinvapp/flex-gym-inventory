@@ -137,7 +137,7 @@ class SocialProofScreen extends StatelessWidget {
               label: 'Continue',
               variant: PrimaryButtonVariant.dark,
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.onboardingUpgrade);
+                Navigator.of(context).pushNamed(AppRoutes.newOnboardingUpgrade);
               },
             ),
             const SizedBox(height: 32),

@@ -14,7 +14,7 @@ class SupabaseAccountService implements SupabaseService {
           .from('profiles')
           .select()
           .eq('id', id)
-          .maybeSingle() as Map<String, dynamic>?;
+          .maybeSingle();
       return res;
     } catch (err) {
       rethrow;

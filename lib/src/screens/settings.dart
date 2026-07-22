@@ -51,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                 SettingsItem(
                   title: 'Upgrade Account',
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.upgrade);
+                    Navigator.of(context).pushNamed(AppRoutes.newUpgrade);
                   },
                 ),
                 const SizedBox(height: 12),

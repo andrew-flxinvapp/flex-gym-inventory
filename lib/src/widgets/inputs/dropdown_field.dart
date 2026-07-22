@@ -33,6 +33,9 @@ class CustomDropdownField<T> extends StatelessWidget {
         width: width,
         height: height,
         child: DropdownButtonFormField2<T>(
+          // Provide the current value via a ValueListenable so the
+          // DropdownButtonFormField2 can initialize its internal state.
+          valueListenable: ValueNotifier<T?>(value),
           validator: validator,
           onChanged: onChanged,
           isExpanded: true, // keep child filling the field width

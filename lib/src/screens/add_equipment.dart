@@ -34,9 +34,10 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
   Gym? selectedGym;
   List<Gym> gyms = [];
   ImageSource? selectedImageSource;
-  EquipmentCategory? selectedCategory;
-  TrainingStyle? selectedTrainingStyle;
-  EquipmentCondition? selectedCondition;
+  // sensible defaults for dropdowns
+  EquipmentCategory? selectedCategory = EquipmentCategory.weights;
+  TrainingStyle? selectedTrainingStyle = TrainingStyle.general;
+  EquipmentCondition? selectedCondition = EquipmentCondition.good;
   DateTime? selectedPurchaseDate;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
@@ -49,6 +50,8 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
   @override
   void initState() {
     super.initState();
+    // default quantity
+    quantityController.text = '1';
     _loadGyms();
   }
 
@@ -60,6 +63,10 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
       final list = await repo.getAllForUser(userId);
       setState(() {
         gyms = list;
+        // if there's at least one gym, default to the first gym
+        if (gyms.isNotEmpty && selectedGym == null) {
+          selectedGym = gyms.first;
+        }
       });
     } catch (_) {}
   }

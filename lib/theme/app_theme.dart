@@ -22,6 +22,7 @@ class AppTheme {
   static const Color darkTextSecondary = Color(0xFFF4F4F5);
   static const Color darkAppBar = Color(0xFF023246);
   static const Color darkBottomNavBar = Color(0xFF010D1B);
+  static const Color darkDividers = Color(0xFF1F4F66);
 
   static const Color transparent = Color(0x00000000);
 

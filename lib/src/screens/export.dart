@@ -11,7 +11,7 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/snackbar.dart';
 
 class ExportScreen extends StatefulWidget {
-  const ExportScreen({Key? key}) : super(key: key);
+  const ExportScreen({super.key});
 
   static const routeName = '/export';
 

@@ -133,6 +133,8 @@ flutter:
     - lib/assets/icons/apple.png
     - lib/assets/icons/upload.png
     - lib/assets/icons/more.png
+    - lib/assets/icons/laurel_left.png
+    - lib/assets/icons/laurel_right.png
 
 
 

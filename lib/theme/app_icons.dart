@@ -34,6 +34,8 @@ class AppIcons {
   static const String unlimited = 'lib/assets/icons/infinite_cycle.png';
   static const String support = 'lib/assets/icons/user_headset.png';
   static const String gyms = 'lib/assets/icons/dumbbell_fitness.png';
+  static const String laurelLeft = 'lib/assets/icons/laurel_left.png';
+  static const String laurelRight = 'lib/assets/icons/laurel_right.png';
 
   // Other
   static const String rectangle = 'lib/assets/icons/placeholder_rectangle.png';

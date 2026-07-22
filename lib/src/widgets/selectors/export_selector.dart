@@ -10,13 +10,13 @@ class ExportSelector extends StatelessWidget {
   final Color? color;
 
   const ExportSelector({
-    Key? key,
+    super.key,
     required this.gymName,
     required this.itemCount,
     this.selected = false,
     this.onChanged,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
