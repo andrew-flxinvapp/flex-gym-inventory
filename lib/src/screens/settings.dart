@@ -11,6 +11,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.lightBackground,
       appBar: TopAppBar(
         title: 'Settings',
         titleWidget: const Padding(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
 import '../../theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -13,6 +14,10 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   bool allowNotifications = false;
+  bool maintenanceReminders = false;
+  bool newFeatureAnnouncements = false;
+  bool weeklySummaries = false;
+  bool appUpdates = false;
 
   @override
   void initState() {
@@ -22,17 +27,96 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Future<void> _loadNotificationPreference() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
+
+    // Prefer system permission as source-of-truth when possible.
+    try {
+      final status = await Permission.notification.status;
+      if (status.isGranted || status.isLimited) {
+        allowNotifications = true;
+      } else {
+        allowNotifications = prefs.getBool('allow_notifications') ?? false;
+      }
+    } catch (_) {
       allowNotifications = prefs.getBool('allow_notifications') ?? false;
-    });
+    }
+
+    // Load sub-option prefs
+    maintenanceReminders = prefs.getBool('allow_notifications_maintenance') ?? false;
+    newFeatureAnnouncements = prefs.getBool('allow_notifications_new_features') ?? false;
+    weeklySummaries = prefs.getBool('allow_notifications_weekly') ?? false;
+    appUpdates = prefs.getBool('allow_notifications_app_updates') ?? false;
+
+    setState(() {});
   }
 
   Future<void> _updateNotificationPreference(bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('allow_notifications', value);
-    setState(() {
-      allowNotifications = value;
-    });
+
+    if (!value) {
+      await prefs.setBool('allow_notifications', false);
+      setState(() => allowNotifications = false);
+      return;
+    }
+
+    // Request runtime notification permission when enabling notifications.
+    final status = await Permission.notification.request();
+
+    if (status.isGranted || status.isLimited) {
+      await prefs.setBool('allow_notifications', true);
+      setState(() => allowNotifications = true);
+    } else {
+      // Persist the negative choice locally.
+      await prefs.setBool('allow_notifications', false);
+      setState(() => allowNotifications = false);
+
+      if (status.isPermanentlyDenied) {
+        final open = await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Enable notifications'),
+            content: const Text(
+              'Notifications are blocked. Open app settings to enable them.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Open Settings'),
+              ),
+            ],
+          ),
+        );
+
+        if (open == true) openAppSettings();
+      }
+    }
+  }
+
+  Future<void> _setMaintenance(bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('allow_notifications_maintenance', v);
+    setState(() => maintenanceReminders = v);
+  }
+
+  Future<void> _setNewFeatures(bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('allow_notifications_new_features', v);
+    setState(() => newFeatureAnnouncements = v);
+  }
+
+  Future<void> _setWeekly(bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('allow_notifications_weekly', v);
+    setState(() => weeklySummaries = v);
+  }
+
+  Future<void> _setAppUpdates(bool v) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('allow_notifications_app_updates', v);
+    setState(() => appUpdates = v);
   }
 
   @override
@@ -71,20 +155,40 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   _updateNotificationPreference(val);
                 },
               ),
-              if (allowNotifications) ...[
-                const SizedBox(height: 32),
-                Column(
-                  children: [
-                    NotificationsToggle(label: 'Maintenance reminders'),
-                    const SizedBox(height: 8),
-                    NotificationsToggle(label: 'New feature announcements'),
-                    const SizedBox(height: 8),
-                    NotificationsToggle(label: 'Weekly usage summaries'),
-                    const SizedBox(height: 8),
-                    NotificationsToggle(label: 'Community updates'),
-                  ],
+              const SizedBox(height: 32),
+              AbsorbPointer(
+                absorbing: !allowNotifications,
+                child: Opacity(
+                  opacity: allowNotifications ? 1.0 : 0.5,
+                  child: Column(
+                    children: [
+                      NotificationsToggle(
+                        label: 'Maintenance reminders',
+                        initialValue: maintenanceReminders,
+                        onChanged: (v) => _setMaintenance(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'New feature announcements',
+                        initialValue: newFeatureAnnouncements,
+                        onChanged: (v) => _setNewFeatures(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'Weekly usage summaries',
+                        initialValue: weeklySummaries,
+                        onChanged: (v) => _setWeekly(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'App updates',
+                        initialValue: appUpdates,
+                        onChanged: (v) => _setAppUpdates(v),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ],
           ),
         ),
