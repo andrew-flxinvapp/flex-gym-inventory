@@ -76,7 +76,7 @@ class AccountScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 DisplayFieldUpgrade(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.upgrade);
+                    Navigator.of(context).pushNamed(AppRoutes.newUpgrade);
                   },
                 ),
                 const SizedBox(height: 16),
