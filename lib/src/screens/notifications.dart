@@ -199,32 +199,45 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
                 },
               ),
               const SizedBox(height: 32),
-              Column(
-                children: [
-                  NotificationsToggle(
-                    label: 'Maintenance reminders',
-                    initialValue: maintenanceReminders,
-                    onChanged: (v) => _setMaintenance(v),
+              Text(
+                'Sub-options will be available in a future app update.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.lightTextPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              AbsorbPointer(
+                absorbing: true,
+                child: Opacity(
+                  opacity: 0.5,
+                  child: Column(
+                    children: [
+                      NotificationsToggle(
+                        label: 'Maintenance reminders',
+                        initialValue: maintenanceReminders,
+                        onChanged: (v) => _setMaintenance(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'New feature announcements',
+                        initialValue: newFeatureAnnouncements,
+                        onChanged: (v) => _setNewFeatures(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'Weekly usage summaries',
+                        initialValue: weeklySummaries,
+                        onChanged: (v) => _setWeekly(v),
+                      ),
+                      const SizedBox(height: 8),
+                      NotificationsToggle(
+                        label: 'App updates',
+                        initialValue: appUpdates,
+                        onChanged: (v) => _setAppUpdates(v),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  NotificationsToggle(
-                    label: 'New feature announcements',
-                    initialValue: newFeatureAnnouncements,
-                    onChanged: (v) => _setNewFeatures(v),
-                  ),
-                  const SizedBox(height: 8),
-                  NotificationsToggle(
-                    label: 'Weekly usage summaries',
-                    initialValue: weeklySummaries,
-                    onChanged: (v) => _setWeekly(v),
-                  ),
-                  const SizedBox(height: 8),
-                  NotificationsToggle(
-                    label: 'App updates',
-                    initialValue: appUpdates,
-                    onChanged: (v) => _setAppUpdates(v),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
