@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../repositories/onboarding_repository.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
@@ -53,16 +54,25 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
         // Request permission; on first run this will show the system dialog.
         final result = await Permission.notification.request();
 
-        // Persist the user's choice locally so Settings reflects onboarding.
+        // Persist the user's choice locally so Settings reflects onboarding
+        // and also send a lightweight server update so Supabase is in sync.
         try {
           final prefs = await SharedPreferences.getInstance();
+          final repo = OnboardingRepository();
+
           if (result.isGranted || result.isLimited) {
             await prefs.setBool('allow_notifications', true);
+            try {
+              await repo.updateNotificationsOn(true);
+            } catch (_) {}
           } else {
             await prefs.setBool('allow_notifications', false);
+            try {
+              await repo.updateNotificationsOn(false);
+            } catch (_) {}
           }
         } catch (_) {
-          // ignore persistence errors
+          // ignore persistence / network errors
         }
       }
     } catch (_) {
@@ -126,6 +136,11 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
                   try {
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setBool('allow_notifications', false);
+
+                    try {
+                      final repo = OnboardingRepository();
+                      await repo.updateNotificationsOn(false);
+                    } catch (_) {}
                   } catch (_) {}
 
                   Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureOne);

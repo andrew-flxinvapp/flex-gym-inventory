@@ -28,6 +28,16 @@ class _NotificationsToggleState extends State<NotificationsToggle> {
   }
 
   @override
+  void didUpdateWidget(covariant NotificationsToggle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      setState(() {
+        _value = widget.initialValue;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: 370,

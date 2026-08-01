@@ -34,6 +34,19 @@ class OnboardingRepository {
     );
   }
 
+  /// Update only the `notificationsOn` flag in user metadata.
+  ///
+  /// This is a lightweight call that can be used earlier in onboarding
+  /// (for example immediately after the system permission request) so
+  /// that Settings reflects the user's current choice.
+  Future<void> updateNotificationsOn(bool enabled) async {
+    await _client.auth.updateUser(
+      UserAttributes(
+        data: {'notificationsOn': enabled},
+      ),
+    );
+  }
+
   /// (Optional) Convenience getter — reads metadata for current user.
   Map<String, dynamic> get metadata {
     final user = _client.auth.currentUser;
@@ -46,4 +59,17 @@ class OnboardingRepository {
   bool get notificationsEnabled => metadata['notificationsOn'] == true;
 
   bool get hasProPlan => metadata['proPlan'] == true;
+
+  /// Fetch the `notificationsOn` flag from the current user's metadata.
+  /// Returns `null` if there is no authenticated user or no value set.
+  Future<bool?> fetchNotificationsOn() async {
+    final user = _client.auth.currentUser;
+    if (user == null) return null;
+    final meta = user.userMetadata ?? <String, dynamic>{};
+    if (meta.containsKey('notificationsOn')) {
+      return meta['notificationsOn'] == true;
+    }
+    return null;
+  }
 }
+
