@@ -207,14 +207,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     await ref.read(dashboardProvider.notifier).refresh();
                   },
                 ),
-                const SizedBox(height: 24),
+                /* const SizedBox(height: 24), //REMOVE IN PRODUCTION
               PrimaryButton(
                 label: 'Component Gallery',
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.componentGallery);
                 },
               ),
-              /*const SizedBox(height: 24),
+              const SizedBox(height: 24),
               if (kDebugMode) ...[ //REMOVE IN PRODUCTION
                 PrimaryButton(
                   label: 'Show Test Snackbar',

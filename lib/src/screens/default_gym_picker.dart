@@ -8,6 +8,9 @@ import '../widgets/selectors/delete_account_selector.dart';
 // import '../widgets/buttons/secondary_button.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import '../widgets/snackbar.dart';
+import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/models/gym_model.dart';
+import 'package:flex_gym_inventory/service/supabase_service.dart';
 
 class DefaultGymScreen extends StatefulWidget {
   const DefaultGymScreen({super.key});
@@ -17,16 +20,15 @@ class DefaultGymScreen extends StatefulWidget {
 }
 
 class _DefaultGymScreenState extends State<DefaultGymScreen> {
-  // Example list of gyms - replace with real data source as needed
-  final List<String> gyms = [
-    'Downtown Fitness',
-    'Northside Gym',
-    'East End Strength',
-    'Westside CrossFit',
-  ];
-
   // Currently selected gym index. Use -1 for none selected.
   int _selectedIndex = -1;
+
+  Future<List<Gym>> _fetchGyms() async {
+    final auth = SupabaseAuthService();
+    final userId = auth.currentUser?.id ?? 'local';
+    final repo = GymRepository();
+    return repo.getAllForUser(userId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,103 +42,122 @@ class _DefaultGymScreenState extends State<DefaultGymScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 16.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pick your main gym.',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppTheme.lightTextPrimary,
+        child: Column(
+          children: [
+            // Scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 16.0,
                   ),
-                ),
-                const SizedBox(height: 8),
-                // Second text section placeholder
-                Text(
-                  'This will be the one you see first every time you open Flex Gym Inventory.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 32),
-
-                // Render gym list as radio selectors
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Select your default gym',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ...List<Widget>.generate(gyms.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0),
-                        child: DeleteAccountSelector(
-                          selected: _selectedIndex == index,
-                          text: gyms[index],
-                          onTap: () {
-                            setState(() {
-                              _selectedIndex = index;
-                            });
-                          },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Pick your main gym.',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
                         ),
-                      );
-                    }),
+                      ),
+                      const SizedBox(height: 8),
+                      // Second text section placeholder
+                      Text(
+                        'This will be the one you see first every time you open Flex Gym Inventory.',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 32),
 
-                    const SizedBox(height: 24),
-                    PrimaryButton(
-                      label: 'Set Default Gym',
-                      onPressed: () {
-                        if (_selectedIndex < 0 ||
-                            _selectedIndex >= gyms.length) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              padding: EdgeInsets.zero,
-                              content: FlexSnackbar(
-                                title: 'Please select a gym first.',
-                                subtitle: null,
-                                type: SnackbarType.warning,
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-
-                        final selectedGym = gyms[_selectedIndex];
-                        // TODO: persist the selection to app settings / backend
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            padding: EdgeInsets.zero,
-                            content: FlexSnackbar(
-                              title: 'Set "$selectedGym" as your default gym.',
-                              subtitle: null,
-                              type: SnackbarType.success,
+                      // Render gym list as radio selectors
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Select your default gym',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppTheme.lightTextPrimary,
                             ),
                           ),
-                        );
+                          const SizedBox(height: 8),
+                              FutureBuilder<List<Gym>>(
+                                future: _fetchGyms(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const Center(child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Error loading gyms', style: Theme.of(context).textTheme.bodySmall);
+                                  }
+                                  final gyms = snapshot.data ?? [];
+                                  if (gyms.isEmpty) {
+                                    return Text('No gyms found', style: Theme.of(context).textTheme.bodySmall);
+                                  }
 
-                        // Optionally pop back after setting
-                        // Navigator.of(context).pop(selectedGym);
-                      },
-                    ),
-                  ],
+                                  return Column(
+                                    children: List<Widget>.generate(gyms.length, (index) {
+                                      final g = gyms[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 0),
+                                        child: DeleteAccountSelector(
+                                          selected: _selectedIndex == index,
+                                          text: g.name,
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedIndex = index;
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }),
+                                  );
+                                },
+                              ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+
+            // Bottom action area — anchored and respects safe area
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + MediaQuery.of(context).padding.bottom),
+              child: SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  label: 'Set Default Gym',
+                  onPressed: () async {
+                    final gyms = await _fetchGyms();
+                    if (_selectedIndex < 0 ||
+                        _selectedIndex >= gyms.length) {
+                      showFlexSnackbar(
+                        context,
+                        title: 'Please select a gym first.',
+                        subtitle: null,
+                        type: SnackbarType.warning,
+                      );
+                      return;
+                    }
+
+                    final selectedGym = gyms[_selectedIndex];
+                    // TODO: persist the selection to app settings / backend
+
+                    showFlexSnackbar(
+                      context,
+                      title: 'Set "${selectedGym.name}" as your default gym.',
+                      subtitle: null,
+                      type: SnackbarType.success,
+                    );
+
+                    // Optionally pop back after setting
+                    // Navigator.of(context).pop(selectedGym);
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

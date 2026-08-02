@@ -19,14 +19,24 @@ class DeleteAccountSelector extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Checkbox(value: selected, onChanged: (_) => onTap?.call()),
+          Checkbox(
+            value: selected,
+            onChanged: (_) => onTap?.call(),
+            fillColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.selected)) {
+                return AppTheme.lightAppBar;
+              }
+              return null; // use default unselected color
+            }),
+            checkColor: AppTheme.lightBackground,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
               style: Theme.of(
                 context,
-              ).textTheme.bodySmall?.copyWith(color: AppTheme.lightTextPrimary),
+              ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
               overflow: TextOverflow.visible,
               softWrap: true,
             ),

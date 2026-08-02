@@ -40,15 +40,15 @@ class DeleteAccountScreen extends StatelessWidget {
                 // Second text section placeholder
                 Text(
                   'We\'re sorry to see you go. Deleting your account will permanently remove all of your gyms, equipment data, and preferences. This action cannot be undone.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Before you go, would you mind telling us why you\'re leaving?',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppTheme.lightTextPrimary,
                       ),
                     ),

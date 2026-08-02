@@ -27,7 +27,7 @@ class PrimaryButton extends StatelessWidget {
 
     final backgroundColor = isDark ? AppTheme.lightBackground : AppTheme.darkBackground;
     final foregroundColor = isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
-    final textColor = isDark ? AppTheme.lightTextPrimary : AppTheme.darkTextPrimary;
+    final textColor = isDark ? AppTheme.darkBackground : AppTheme.darkTextPrimary;
 
     return SizedBox(
       width: btnWidth,

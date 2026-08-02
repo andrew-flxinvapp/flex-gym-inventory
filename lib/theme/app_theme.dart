@@ -10,13 +10,13 @@ class AppTheme {
   static const Color lightCard = Color(0xFFFFFFFF);
   static const Color lightTextPrimary = Color(0xFF023246);
   static const Color lightTextSecondary = Color(0xFF94B0BE);
-  static const Color lightAppBar = Color(0xFF023246);
+  static const Color lightAppBar = Color(0xFF010D1B);
   static const Color lightBottomNavBar = Color(0xFFFFFFFF);
   static const Color dividers = Color(0xFFC4C4C9);
 
   static const Color darkPrimary = Color(0xFF287094);
   static const Color darkSecondary = Color(0xFF94B0BE);
-  static const Color darkBackground = Color(0xFF023246);
+  static const Color darkBackground = Color(0xFF010D1B);
   static const Color darkCard = Color(0xFF1F4F66);
   static const Color darkTextPrimary = Color(0xFFF4F4F5);
   static const Color darkTextSecondary = Color(0xFFF4F4F5);

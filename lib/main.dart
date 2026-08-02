@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       initialRoute: AppRoutes.splash,
       // Use appRoutes for named routes lookup, but override transitions with onGenerateRoute
       routes: appRoutes,
