@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../enum/app_enums.dart';
+import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/inputs/image_input.dart';
+import '../widgets/cards/info_card.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
-class SupportScreen extends StatelessWidget {
+class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
+
+  @override
+  State<SupportScreen> createState() => _SupportScreenState();
+}
+
+class _SupportScreenState extends State<SupportScreen> {
+  late final TextEditingController _messageController;
+  int _charCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
+    _messageController.addListener(() {
+      setState(() {
+        _charCount = _messageController.text.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +47,11 @@ class SupportScreen extends StatelessWidget {
         showBackArrow: true,
         showRightIcon: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-        child: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -32,22 +63,65 @@ class SupportScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'If you have any question or run into an issue, our support team is ready to assist. We typically reply within 48 hours.',
+              'Have a question, found a bug, or need assistance? Send us a support request and we will typically respond within 48 hours.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.normal,
                 color: AppTheme.lightTextPrimary,
               ),
             ),
-            const SizedBox(height: 32),
-            CustomTextInputField(hintText: 'Name', showAsterisk: true),
             const SizedBox(height: 16),
-            CustomTextInputField(hintText: 'Email', showAsterisk: true),
+            CustomDropdownField<SupportCategory>(
+              hintText: 'Category',
+              items: SupportCategory.values,
+              value: null,
+              showAsterisk: true,
+              getLabel: (item) => item.label,
+              onChanged: (value) {},
+            ),
             const SizedBox(height: 16),
             CustomTextInputField(hintText: 'Subject', showAsterisk: true),
             const SizedBox(height: 16),
-            CustomMultilineTextInput(hintText: 'Message'),
-            const SizedBox(height: 40),
-            PrimaryButton(label: 'Submit', onPressed: () {}),
+            Text(
+              'Screenshot (Optional)',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppTheme.lightTextPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add a screenshot to help us better understand the issue.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.normal,
+                color: AppTheme.lightTextPrimary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ImageInput(),
+            const SizedBox(height: 16),
+            CustomMultilineTextInput(
+              hintText: 'Describe your issue or question in detail...',
+              showAsterisk: true,
+              controller: _messageController,
+              maxLines: 45,
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                '$_charCount/2000',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppTheme.lightTextPrimary,
+                    ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            InfoCard(
+              title: 'Diagnostic information included',
+              subtitle: 'We include your app version, device, and OS details to help diagnose issues.',
+            ),
+            const SizedBox(height: 32),
+            PrimaryButton(label: 'Submit Support Request', onPressed: () {}),
             const SizedBox(height: 12),
             SecondaryButton(
               label: 'Cancel',
@@ -56,6 +130,8 @@ class SupportScreen extends StatelessWidget {
               },
             ),
           ],
+            ),
+          ),
         ),
       ),
     );

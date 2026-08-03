@@ -197,3 +197,59 @@ extension ImageSourceLabel on ImageSource {
 
 /// Menu actions for equipment detail screen
 enum ImageAction { edit, delete }
+extension ImageActionLabel on ImageAction {
+  String get label {
+    switch (this) {
+      case ImageAction.edit:
+        return 'Edit';
+      case ImageAction.delete:
+        return 'Delete';
+    }
+  }
+}
+
+enum SupportCategory { bugReport, account, equipment, gym, wishlist, export, subscriptions, featureRequest, generalQuestion, other }
+extension SupportCategoryLabel on SupportCategory {
+  String get label {  
+    switch (this) {
+      case SupportCategory.bugReport:
+        return 'Bug Report';
+      case SupportCategory.account:
+        return 'Account';
+      case SupportCategory.equipment:
+        return 'Equipment';
+      case SupportCategory.gym:
+        return 'Gym';
+      case SupportCategory.wishlist:
+        return 'Wishlist';
+      case SupportCategory.export:
+        return 'Export';
+      case SupportCategory.subscriptions:
+        return 'Subscriptions';
+      case SupportCategory.featureRequest:
+        return 'Feature Request';
+      case SupportCategory.generalQuestion:
+        return 'General Question';
+      case SupportCategory.other:
+        return 'Other';
+    }
+  }
+} 
+
+enum SupportStatus { open, inProgress, waitingOnUser, resolved, closed }
+extension SupportStatusLabel on SupportStatus {
+  String get label {
+    switch (this) {
+      case SupportStatus.open:
+        return 'Open';
+      case SupportStatus.inProgress:
+        return 'In Progress';
+      case SupportStatus.waitingOnUser:
+        return 'Waiting on User';
+      case SupportStatus.resolved:
+        return 'Resolved';
+      case SupportStatus.closed:
+        return 'Closed';
+    }
+  }
+}

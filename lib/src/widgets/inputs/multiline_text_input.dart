@@ -8,6 +8,7 @@ class CustomMultilineTextInput extends StatelessWidget {
   final double width;
   final double height;
   final int maxLines;
+  final bool showAsterisk;
 
   const CustomMultilineTextInput({
     super.key,
@@ -17,6 +18,7 @@ class CustomMultilineTextInput extends StatelessWidget {
     this.width = 370,
     this.height = 120,
     this.maxLines = 5,
+    this.showAsterisk = false,
   });
 
   @override
@@ -30,14 +32,34 @@ class CustomMultilineTextInput extends StatelessWidget {
           validator: validator,
           maxLines: maxLines,
           decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.lightTextPrimary,
-              fontWeight: FontWeight.normal,
+            alignLabelWithHint: true,
+            label: Align(
+              alignment: Alignment.topLeft,
+              child: RichText(
+                text: TextSpan(
+                  text: hintText,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  children: showAsterisk
+                      ? [
+                          TextSpan(
+                            text: ' *',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppTheme.stopColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ]
+                      : [],
+                ),
+              ),
             ),
+            floatingLabelBehavior: FloatingLabelBehavior.auto,
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,

@@ -18,7 +18,8 @@ void showFlexSnackbar(
   final overlay = Overlay.of(context);
   const double itemHeight = 58.0;
   const double gap = 8.0;
-  final baseTop = MediaQuery.of(context).padding.top + 16.0;
+  // Add extra top offset to avoid OS UI like the Dynamic Island on newer iPhones
+  final baseTop = MediaQuery.of(context).padding.top + 36.0;
 
   // Lists to track active entries and their top offsets (declared at file scope)
 
