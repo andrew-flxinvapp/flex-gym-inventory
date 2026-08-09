@@ -131,10 +131,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   PrimaryButton(
                     label: _loginViewModel.loading ? 'Sending...' : 'Sign In',
-                    onPressed: () {
+                    onPressed: () async {
                       if (_loginViewModel.loading) return;
+
+                      // Trim whitespace and update controller
+                      final trimmed = _loginViewModel.emailController.text.trim();
+                      _loginViewModel.emailController.text = trimmed;
+
+                      // Dismiss keyboard
+                      FocusScope.of(context).unfocus();
+
                       if (_loginViewModel.validateEmail()) {
+                        // Start sending magic link (don't await so navigation isn't blocked)
                         _sendMagicLink();
+
+                        // Navigate to verify email screen and pass the trimmed email
+                        Navigator.of(context).pushNamed(
+                          AppRoutes.verifyEmail,
+                          arguments: {'email': trimmed},
+                        );
                       }
                     },
                   ),

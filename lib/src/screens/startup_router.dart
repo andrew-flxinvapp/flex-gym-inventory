@@ -65,7 +65,7 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
         if (!mounted) return;
         Navigator.of(
           context,
-        ).pushReplacementNamed(AppRoutes.onboardingFeatureOne);
+        ).pushReplacementNamed(AppRoutes.optNotifications);
       });
     }
   }

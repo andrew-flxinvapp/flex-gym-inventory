@@ -29,7 +29,10 @@ class AuthRepository {
   /// Send a magic link sign-in email to [email].
   Future<void> signInWithMagicLink(String email) async {
     try {
-      await _client.auth.signInWithOtp(email: email);
+      await _client.auth.signInWithOtp(
+        email: email.trim(),
+        emailRedirectTo: 'flexgyminventory://auth-callback',
+      );
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }
@@ -45,7 +48,10 @@ class AuthRepository {
   /// settings, so we avoid doing that here.
   Future<void> signUp(String email) async {
     try {
-      await _client.auth.signInWithOtp(email: email);
+      await _client.auth.signInWithOtp(
+        email: email.trim(),
+        emailRedirectTo: 'flexgyminventory://auth-callback',
+      );
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }
@@ -65,7 +71,10 @@ class AuthRepository {
   /// to request a magic link again.
   Future<void> resendMagicLink(String email) async {
     try {
-      await _client.auth.signInWithOtp(email: email);
+      await _client.auth.signInWithOtp(
+        email: email.trim(),
+        emailRedirectTo: 'flexgyminventory://auth-callback',
+      );
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }

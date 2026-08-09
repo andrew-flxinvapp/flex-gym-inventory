@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../../view_models/auth_view_model.dart';
 import '../widgets/snackbar.dart';
+import '../../routes/routes.dart';
 // import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 // Verify Email Screen
@@ -34,6 +36,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           args.containsKey('user_email')) {
         _authViewModel.emailController.text = args['user_email']!;
       }
+    }
+
+    // If a session already exists (for example the deeplink restored a session),
+    // navigate into the app so the user continues onboarding or the main flow.
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.startupRouter,
+          (_) => false,
+        );
+      });
     }
   }
 

@@ -52,13 +52,13 @@ class DiagnosticsHelper {
     try {
       if (Platform.isAndroid) {
         final info = await deviceInfo.androidInfo;
-        deviceModel = '${info.manufacturer ?? ''} ${info.model ?? ''}'.trim();
-        osVersion = info.version.release;
+          deviceModel = '${info.manufacturer} ${info.model}'.trim();
+          osVersion = info.version.release;
       } else if (Platform.isIOS) {
         final info = await deviceInfo.iosInfo;
-        // utsname.machine is the device identifier (e.g. iPhone14,3)
-        deviceModel = info.utsname.machine ?? info.name;
-        osVersion = info.systemVersion;
+          // utsname.machine is the device identifier (e.g. iPhone14,3)
+          deviceModel = info.utsname.machine;
+          osVersion = info.systemVersion;
       } else {
         // Web, linux, macos, windows
         final info = await deviceInfo.deviceInfo;
