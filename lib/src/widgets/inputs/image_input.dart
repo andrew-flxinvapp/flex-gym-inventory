@@ -14,8 +14,9 @@ import '../../../theme/app_theme.dart';
 
 class ImageInput extends StatefulWidget {
   final VoidCallback? onTap;
+  final ValueChanged<File?>? onImageChanged;
 
-  const ImageInput({super.key, this.onTap});
+  const ImageInput({super.key, this.onTap, this.onImageChanged});
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -82,6 +83,8 @@ class _ImageInputState extends State<ImageInput> {
 
       setState(() {
         _imageFile = savedFile;
+        // notify parent about new file
+        widget.onImageChanged?.call(_imageFile);
         _isProcessing = false;
       });
 

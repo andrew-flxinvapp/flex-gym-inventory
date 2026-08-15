@@ -29,7 +29,7 @@
 			<string>flex_gym_inventory</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>flexgyminv</string>
+				<string>flexgyminventory</string>
 			</array>
 		</dict>
 	</array>

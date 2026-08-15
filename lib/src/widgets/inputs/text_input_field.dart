@@ -19,7 +19,7 @@ class CustomTextInputField extends StatelessWidget {
     this.validator,
     this.keyboardType,
     this.maxLines = 1,
-    this.width = 370,
+    this.width = double.infinity,
     this.height = 50,
   });
 

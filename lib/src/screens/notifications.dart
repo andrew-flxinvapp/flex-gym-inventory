@@ -1,4 +1,4 @@
-import '../widgets/selectors/notifications_toggle.dart';
+import '../widgets/selectors/app_toggle.dart';
 import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
 import '../../theme/app_theme.dart';
@@ -191,7 +191,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
                 ),
               ),
               const SizedBox(height: 24),
-              NotificationsToggle(
+              AppToggle(
                 label: 'Allow Notifications?',
                 initialValue: allowNotifications,
                 onChanged: (val) {
@@ -212,25 +212,25 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
                   opacity: 0.5,
                   child: Column(
                     children: [
-                      NotificationsToggle(
+                      AppToggle(
                         label: 'Maintenance reminders',
                         initialValue: maintenanceReminders,
                         onChanged: (v) => _setMaintenance(v),
                       ),
                       const SizedBox(height: 8),
-                      NotificationsToggle(
+                      AppToggle(
                         label: 'New feature announcements',
                         initialValue: newFeatureAnnouncements,
                         onChanged: (v) => _setNewFeatures(v),
                       ),
                       const SizedBox(height: 8),
-                      NotificationsToggle(
+                      AppToggle(
                         label: 'Weekly usage summaries',
                         initialValue: weeklySummaries,
                         onChanged: (v) => _setWeekly(v),
                       ),
                       const SizedBox(height: 8),
-                      NotificationsToggle(
+                      AppToggle(
                         label: 'App updates',
                         initialValue: appUpdates,
                         onChanged: (v) => _setAppUpdates(v),

@@ -21,7 +21,7 @@ class CustomDropdownField<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.getLabel,
-    this.width = 360,
+    this.width = double.infinity,
     this.height = 56,
     this.validator,
   });

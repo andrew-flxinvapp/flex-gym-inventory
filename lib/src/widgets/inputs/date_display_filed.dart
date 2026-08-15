@@ -11,7 +11,7 @@ class DateDisplayField extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color textColor = AppTheme.lightTextPrimary;
     return Container(
-      width: 370,
+      width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
         color: Colors.white,

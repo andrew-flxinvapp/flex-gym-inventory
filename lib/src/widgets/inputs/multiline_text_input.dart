@@ -15,7 +15,7 @@ class CustomMultilineTextInput extends StatelessWidget {
     required this.hintText,
     this.controller,
     this.validator,
-    this.width = 370,
+    this.width = double.infinity,
     this.height = 120,
     this.maxLines = 5,
     this.showAsterisk = false,

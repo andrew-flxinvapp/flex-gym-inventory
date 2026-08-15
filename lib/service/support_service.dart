@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 
 import '../src/data/dtos/support_request_dto.dart';
 import '../src/utils/diagnostics_helper.dart';
+import '../utilities/logging_handler.dart';
 
 class SupportResult {
   final bool success;
@@ -43,13 +44,29 @@ class SupportService {
 
       String? screenshotPath;
       if (screenshot != null) {
+        // Ensure we have an authenticated user for namespacing uploads.
+        final user = Supabase.instance.client.auth.currentUser;
+        if (user == null) {
+          throw StateError('User must be signed in to upload support screenshots');
+        }
+        final userId = user.id;
+
         final id = const Uuid().v4();
         final ext = p.extension(screenshot.path).toLowerCase();
-        final remotePath = 'support/$id$ext';
+        // Store screenshots under a folder named with the user's UUID: `userId/fileName.ext`
+        final remotePath = '$userId/$id$ext';
 
-        final res = await _client.storage.from(_screenshotBucket).upload(remotePath, screenshot);
-        if (res.error != null) {
-          return SupportResult(success: false, message: 'Screenshot upload failed: ${res.error!.message}');
+        dynamic uploadRes;
+        try {
+          uploadRes = await _client.storage.from(_screenshotBucket).upload(remotePath, screenshot);
+        } catch (e, st) {
+          LogHandler.error('SupportService', 'Screenshot upload failed', e, st);
+          return SupportResult(success: false, message: 'Screenshot upload failed: $e');
+        }
+
+        // Handle multiple possible return shapes across supabase client versions.
+        if (uploadRes is Map && uploadRes['error'] != null) {
+          return SupportResult(success: false, message: 'Screenshot upload failed: ${uploadRes['error']}');
         }
 
         // Store the storage path (server can resolve public URL)
@@ -68,7 +85,8 @@ class SupportService {
 
       // supabase functions.invoke returns a Map or string depending on function
       return SupportResult(success: true, message: 'Submitted', data: fnRes);
-    } catch (e) {
+    } catch (e, st) {
+      LogHandler.error('SupportService', 'submitSupportRequest failed', e, st);
       return SupportResult(success: false, message: e.toString());
     }
   }

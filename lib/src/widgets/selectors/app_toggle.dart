@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '/../../theme/app_theme.dart';
+import '../switch_adapter.dart';
 
-class NotificationsToggle extends StatefulWidget {
+class AppToggle extends StatefulWidget {
   final String label;
   final bool initialValue;
   final ValueChanged<bool>? onChanged;
 
-  const NotificationsToggle({
+  const AppToggle({
     super.key,
     required this.label,
     this.initialValue = false,
@@ -15,10 +15,10 @@ class NotificationsToggle extends StatefulWidget {
   });
 
   @override
-  State<NotificationsToggle> createState() => _NotificationsToggleState();
+  State<AppToggle> createState() => _AppToggleState();
 }
 
-class _NotificationsToggleState extends State<NotificationsToggle> {
+class _AppToggleState extends State<AppToggle> {
   late bool _value;
 
   @override
@@ -28,7 +28,7 @@ class _NotificationsToggleState extends State<NotificationsToggle> {
   }
 
   @override
-  void didUpdateWidget(covariant NotificationsToggle oldWidget) {
+  void didUpdateWidget(covariant AppToggle oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.initialValue != oldWidget.initialValue) {
       setState(() {
@@ -56,7 +56,7 @@ class _NotificationsToggleState extends State<NotificationsToggle> {
               context,
             ).textTheme.bodyMedium?.copyWith(color: AppTheme.lightTextPrimary),
           ),
-          CupertinoSwitch(
+          AdaptiveSwitch(
             value: _value,
             onChanged: (val) {
               setState(() => _value = val);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
+import '../widgets/layouts/app_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppDetailsScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class AppDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const TopAppBar(title: 'App Details', showBackArrow: true),
-      body: SafeArea(
+      body: AppScreen(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(

@@ -22,7 +22,7 @@ class PurchaseReassurance extends StatelessWidget {
 			const TextStyle(fontSize: 12, color: AppTheme.darkTextPrimary);
 
 				return SizedBox(
-					width: 330,
+					width: double.infinity,
 					child: Row(
 						mainAxisAlignment: MainAxisAlignment.center,
 						crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +34,7 @@ class PurchaseReassurance extends StatelessWidget {
 							),
 
 							SizedBox(
-								width: 20,
+								width: 40,
 								height: 32,
 								child: Center(child: const CustomVerticalDivider(height: 16.0)),
 							),
@@ -45,7 +45,7 @@ class PurchaseReassurance extends StatelessWidget {
 							),
 
 							SizedBox(
-								width: 20,
+								width: 40,
 								height: 32,
 								child: Center(child: const CustomVerticalDivider(height: 16.0)),
 							),

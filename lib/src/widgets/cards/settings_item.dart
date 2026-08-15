@@ -13,7 +13,7 @@ class SettingsItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 370,
+        width: double.infinity,
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         decoration: BoxDecoration(

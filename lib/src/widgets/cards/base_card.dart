@@ -66,7 +66,7 @@ class BaseCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: borderRadius as BorderRadius?,
         child: Container(
-          width: width ?? 370,
+          width: width ?? double.infinity,
           // no fixed height by default
           height: height,
           decoration: decoration,

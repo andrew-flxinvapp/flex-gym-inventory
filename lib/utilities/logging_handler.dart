@@ -5,7 +5,8 @@ class LogHandler {
   static final Logger _logger = Logger('FlexGymApp');
 
   static void setupLogging() {
-    Logger.root.level = Level.ALL;
+    // Be verbose in debug builds, but keep INFO+ in non-debug to avoid noisy SDK logs.
+    Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
     Logger.root.onRecord.listen((record) {
       final timestamp = record.time.toIso8601String();
       debugPrint(
@@ -14,6 +15,10 @@ class LogHandler {
       if (record.error != null) debugPrint('Error details: ${record.error}');
       if (record.stackTrace != null) debugPrint('Stack: ${record.stackTrace}');
     });
+    // Allow adjusting levels on non-root loggers.
+    hierarchicalLoggingEnabled = true;
+    // Suppress very verbose Supabase auth logs unless explicitly debugging.
+    Logger('supabase.auth').level = Level.INFO;
   }
 
   static void debug(

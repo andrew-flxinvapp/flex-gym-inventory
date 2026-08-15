@@ -23,7 +23,7 @@ class FooterLinks extends StatelessWidget {
     final labelStyle = Theme.of(context).textTheme.labelSmall;
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 370),
+      constraints: const BoxConstraints(maxWidth: double.infinity),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

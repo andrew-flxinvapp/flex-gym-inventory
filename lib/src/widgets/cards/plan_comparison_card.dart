@@ -38,7 +38,7 @@ class PlanComparisonCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        width: 370,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: AppTheme.transparent,
           borderRadius: BorderRadius.circular(16),

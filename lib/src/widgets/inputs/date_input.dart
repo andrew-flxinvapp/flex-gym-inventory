@@ -13,7 +13,7 @@ class CustomDateInput extends StatefulWidget {
     this.hintText = 'Select Date',
     this.initialDate,
     this.onDateChanged,
-    this.width = 370,
+    this.width = double.infinity,
     this.height = 50,
   });
 

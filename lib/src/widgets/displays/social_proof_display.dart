@@ -17,14 +17,13 @@ class SocialProofDisplay extends StatelessWidget {
 
  	@override
  	Widget build(BuildContext context) {
- 		return SizedBox(
- 			width: 320,
+ 		return Center(
  			child: Row(
  				mainAxisSize: MainAxisSize.min,
  				crossAxisAlignment: CrossAxisAlignment.center,
  				children: <Widget>[
  					UserCount(data: data ?? socialProofContent),
- 					const SizedBox(width: 48),
+ 					const SizedBox(width: 56),
  					const UserRatings(),
  				],
  			),

@@ -22,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = variant == PrimaryButtonVariant.dark;
-    final btnWidth = width ?? 370;
+    final btnWidth = width ?? double.infinity;
     final btnHeight = height ?? 50;
 
     final backgroundColor = isDark ? AppTheme.lightBackground : AppTheme.darkBackground;

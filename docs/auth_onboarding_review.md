@@ -31,9 +31,9 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 - Deeplink handling exists in `main.dart`. It calls `Supabase.instance.client.auth.getSessionFromUrl(uri)` and navigates to verify-email when appropriate.
 - Deeplink handling exists in `main.dart`. It calls `Supabase.instance.client.auth.getSessionFromUrl(uri)` and navigates to verify-email when appropriate.
 - Platform registration for a custom deep-link scheme has been added in this repo (custom-scheme approach):
-  - Android: `android/app/src/main/AndroidManifest.xml` includes an `intent-filter` for `flexgyminv://auth`.
-  - iOS: `ios/Runner/Info.plist` includes `CFBundleURLTypes` registering the `flexgyminv` scheme.
-  These changes enable opening the app from Supabase magic links when Supabase is configured to redirect to `flexgyminv://auth`.
+  - Android: `android/app/src/main/AndroidManifest.xml` includes an `intent-filter` for `flexgyminventory://auth-callback`.
+  - iOS: `ios/Runner/Info.plist` includes `CFBundleURLTypes` registering the `flexgyminventory` scheme.
+  These changes enable opening the app from Supabase magic links when Supabase is configured to redirect to `flexgyminventory://auth-callback`.
 - View models exist for login and signup with unit tests in `test/view_models/`.
 
 
@@ -99,7 +99,7 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 
 **Quick Checklist (for manual testers)**
 - [ ] Set `.env` with `SUPABASE_URL` and `SUPABASE_ANON_KEY` for the test Supabase project.
-- [ ] Confirm Supabase redirect/site URL is set to the custom scheme used by the app: `flexgyminv://auth`.
+ - [ ] Confirm Supabase redirect/site URL is set to the custom scheme used by the app: `flexgyminventory://auth-callback`.
 - [ ] Run the app and confirm deeplink handler navigates to `VerifyEmailScreen` after a magic-link click.
 - [ ] Attempt sign-up and confirm whether email verification is expected (magic link) or immediate login (password flow).
 - [ ] For public testing, ensure `StartupRouterScreen` routes new users through onboarding.
@@ -110,17 +110,17 @@ Test commands (quick):
 Android emulator/device (replace `com.your.package.name` with your app id):
 
 ```bash
-adb shell am start -a android.intent.action.VIEW -d "flexgyminv://auth#access_token=TEST&refresh_token=TEST" com.your.package.name
+adb shell am start -a android.intent.action.VIEW -d "flexgyminventory://auth-callback#access_token=TEST&refresh_token=TEST" com.your.package.name
 ```
 
 iOS Simulator:
 
 ```bash
-xcrun simctl openurl booted "flexgyminv://auth#access_token=TEST&refresh_token=TEST"
+xcrun simctl openurl booted "flexgyminventory://auth-callback#access_token=TEST&refresh_token=TEST"
 ```
 
 End-to-end (recommended):
-- In Supabase Auth settings set the redirect/site URL to `flexgyminv://auth`.
+ - In Supabase Auth settings set the redirect/site URL to `flexgyminventory://auth-callback`.
 - Send a magic link to an email that you can open on the same device. Clicking the magic link should open the app and your `main.dart` deeplink handler should call `getSessionFromUrl` and then navigate to the startup router.
 
 

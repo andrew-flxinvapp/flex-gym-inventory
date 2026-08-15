@@ -17,9 +17,12 @@ class WarningButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final btnWidth = width ?? double.infinity;
+    final btnHeight = height ?? 50;
+
     return SizedBox(
-      width: 370,
-      height: 50,
+      width: btnWidth,
+      height: btnHeight,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
