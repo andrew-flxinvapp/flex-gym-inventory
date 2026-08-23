@@ -39,7 +39,7 @@ class PrimaryButton extends StatelessWidget {
           foregroundColor: foregroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: AppTheme.lightTextPrimary, width: 1),
+            side: BorderSide(color: AppTheme.darkBackground, width: 1),
           ),
         ),
         child: Text(

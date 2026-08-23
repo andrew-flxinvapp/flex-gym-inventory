@@ -25,7 +25,7 @@ class SupportRequestDto {
 
   Map<String, dynamic> toJson() {
     return {
-      'category': category.name,
+      'category': _categoryToBackendValue(category),
       'subject': subject.trim(),
       'message': message.trim(),
       'screenshot_storage_path': screenshotStoragePath,
@@ -35,5 +35,30 @@ class SupportRequestDto {
       'device_model': deviceModel,
       'os_version': osVersion,
     };
+  }
+
+  String _categoryToBackendValue(SupportCategory c) {
+    switch (c) {
+      case SupportCategory.bugReport:
+        return 'bug_report';
+      case SupportCategory.account:
+        return 'account';
+      case SupportCategory.equipment:
+        return 'equipment';
+      case SupportCategory.gym:
+        return 'gyms';
+      case SupportCategory.wishlist:
+        return 'wishlist';
+      case SupportCategory.export:
+        return 'export';
+      case SupportCategory.subscriptions:
+        return 'subscriptions';
+      case SupportCategory.featureRequest:
+        return 'feature_request';
+      case SupportCategory.generalQuestion:
+        return 'general_question';
+      case SupportCategory.other:
+        return 'other';
+    }
   }
 }

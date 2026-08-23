@@ -1,24 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../theme/app_theme.dart';
 import '../../enum/app_enums.dart';
 import '../../service/support_service.dart';
 import '../data/dtos/support_request_dto.dart';
-import '../../routes/routes.dart';
-import '../widgets/inputs/dropdown_field.dart';
-import '../widgets/inputs/image_input.dart';
-import '../widgets/cards/info_card.dart';
 import '../widgets/top_app_bar.dart';
+import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/inputs/text_input_field.dart';
 import '../widgets/inputs/multiline_text_input.dart';
+import '../widgets/cards/info_card.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
-import '../widgets/snackbar.dart';
-import 'package:flutter/services.dart';
-import '../../utilities/logging_handler.dart';
+import '../../theme/app_theme.dart';
+
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -29,133 +23,112 @@ class SupportScreen extends StatefulWidget {
 
 class _SupportScreenState extends State<SupportScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  late final TextEditingController _messageController;
-  late final TextEditingController _subjectController;
+  final _subjectController = TextEditingController();
+  final _messageController = TextEditingController();
   SupportCategory? _selectedCategory;
-  File? _screenshotFile;
   bool _isSubmitting = false;
-  int _charCount = 0;
+
   final SupportService _supportService = SupportService();
+
+  static const int _messageMaxLength = 2000;
 
   @override
   void initState() {
     super.initState();
-    _messageController = TextEditingController();
-    _subjectController = TextEditingController();
-    _messageController.addListener(() {
-      setState(() {
-        _charCount = _messageController.text.length;
-      });
-    });
+    _messageController.addListener(_enforceMessageMaxLength);
   }
 
   @override
   void dispose() {
-    _messageController.dispose();
+    _messageController.removeListener(_enforceMessageMaxLength);
     _subjectController.dispose();
+    _messageController.dispose();
     super.dispose();
+  }
+
+  void _enforceMessageMaxLength() {
+    final text = _messageController.text;
+    if (text.length > _messageMaxLength) {
+      final truncated = text.substring(0, _messageMaxLength);
+      _messageController.value = _messageController.value.copyWith(
+        text: truncated,
+        selection: TextSelection.collapsed(offset: truncated.length),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.lightBackground,
       appBar: const TopAppBar(
         title: 'Support',
         showBackArrow: true,
         showRightIcon: false,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 32.0,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Need Help?',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            child: Form(
+            const SizedBox(height: 8),
+            Text(
+              "Have a question, found a bug, or need assistance? Send us a support request and we'll typically respond within 48 hours.",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                  ),
+            ),
+            const SizedBox(height: 24),
+            Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Need help?',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Have a question, found a bug, or need assistance? Send us a support request and we will typically respond within 48 hours.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.normal,
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   CustomDropdownField<SupportCategory>(
                     hintText: 'Category',
+                    showAsterisk: true,
                     items: SupportCategory.values,
                     value: _selectedCategory,
-                    showAsterisk: true,
-                    getLabel: (item) => item.label,
-                    validator: (val) => val == null ? 'Required' : null,
-                    onChanged:
-                        (value) => setState(() => _selectedCategory = value),
+                    getLabel: (c) => c.label,
+                    onChanged: (v) => setState(() => _selectedCategory = v),
+                    validator: (v) => v == null ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
                   CustomTextInputField(
                     hintText: 'Subject',
                     showAsterisk: true,
                     controller: _subjectController,
-                    validator:
-                        (s) =>
-                            s == null || s.trim().isEmpty ? 'Required' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Screenshot (Optional)',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Add a screenshot to help us better understand the issue.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.normal,
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ImageInput(
-                    onImageChanged:
-                        (file) => setState(() => _screenshotFile = file),
+                    validator: (s) => s == null || s.trim().isEmpty ? 'Required' : null,
                   ),
                   const SizedBox(height: 16),
                   CustomMultilineTextInput(
-                    hintText: 'Describe your issue or question in detail...',
+                    hintText: 'Message',
                     showAsterisk: true,
                     controller: _messageController,
-                    maxLines: 45,
-                    validator: (s) {
-                      if (s == null || s.trim().isEmpty) return 'Required';
-                      if (s.length > 2000)
-                        return 'Message must be 2000 characters or less';
-                      return null;
-                    },
+                    maxLines: 6,
+                    height: 200,
+                    validator: (s) => s == null || s.trim().isEmpty ? 'Required' : null,
                   ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      '$_charCount/2000',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightTextPrimary,
-                      ),
-                    ),
+                  const SizedBox(height: 4),
+                  AnimatedBuilder(
+                    animation: _messageController,
+                    builder: (context, child) {
+                      final len = _messageController.text.length;
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: Text('${len.toString()} / 2000',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppTheme.lightTextPrimary,
+                              ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   InfoCard(
@@ -163,109 +136,63 @@ class _SupportScreenState extends State<SupportScreen> {
                     subtitle:
                         'We include your app version, device, and OS details to help diagnose issues.',
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 16),
                   PrimaryButton(
-                    label:
-                        _isSubmitting
-                            ? 'Submitting...'
-                            : 'Submit Support Request',
-                    onPressed:
-                        _isSubmitting
-                            ? null
-                            : () async {
-                              if (!_formKey.currentState!.validate()) return;
-
-                              // require authenticated user
-                              final user =
-                                  Supabase.instance.client.auth.currentUser;
-                              if (user == null) {
-                                showFlexSnackbar(
-                                  context,
-                                  title: 'Sign in required',
-                                  subtitle:
-                                      'Please sign in to submit a support request.',
-                                  type: SnackbarType.update,
-                                );
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(AppRoutes.login);
-                                return;
-                              }
-
-                              if (_selectedCategory == null) return;
-
-                              setState(() => _isSubmitting = true);
-
-                              final dto = SupportRequestDto(
-                                category: _selectedCategory!,
-                                subject: _subjectController.text,
-                                message: _messageController.text,
-                              );
-
-                              final res = await _supportService
-                                  .submitSupportRequest(
-                                    dto,
-                                    screenshot: _screenshotFile,
-                                  );
-
-                              setState(() => _isSubmitting = false);
-
-                              if (res.success) {
-                                showFlexSnackbar(
-                                  context,
-                                  title: 'Support request sent',
-                                  subtitle: 'We will respond within 48 hours.',
-                                  type: SnackbarType.success,
-                                );
-                                Navigator.of(context).pop();
-                              } else {
-                                // Log full error and show snackbar + dialog with full details for copying.
-                                LogHandler.error('SupportScreen', 'Support submission failed', res.message);
-                                showFlexSnackbar(
-                                  context,
-                                  title: 'Submission failed',
-                                  subtitle: res.message ?? 'An error occurred.',
-                                  type: SnackbarType.stop,
-                                );
-                                // Show full error in dialog so it's readable and copyable.
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: const Text('Submission error'),
-                                    content: SingleChildScrollView(
-                                      child: Text(res.message ?? 'An unknown error occurred.'),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Clipboard.setData(ClipboardData(text: res.message ?? ''));
-                                          Navigator.of(ctx).pop();
-                                        },
-                                        child: const Text('Copy'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.of(ctx).pop(),
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            },
+                    label: _isSubmitting ? 'Submitting...' : 'Submit Support Request',
+                    onPressed: _isSubmitting ? null : _handleSubmit,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   SecondaryButton(
                     label: 'Cancel',
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/settings');
-                    },
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _handleSubmit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please sign in to submit a request.')));
+      return;
+    }
+
+    if (_selectedCategory == null) return;
+    setState(() => _isSubmitting = true);
+
+    try {
+      final dto = SupportRequestDto(
+        category: _selectedCategory!,
+        subject: _subjectController.text.trim(),
+        message: _messageController.text.trim(),
+      );
+
+      final res = await _supportService.submitSupportRequest(dto);
+
+      if (res.success) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Support request submitted')));
+        Navigator.of(context).pop();
+      } else {
+        await showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Submission failed'),
+            content: SingleChildScrollView(child: Text(res.message ?? 'An error occurred')),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('OK')),
+            ],
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 }

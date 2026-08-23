@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../repositories/onboarding_repository.dart';
@@ -24,6 +26,8 @@ class StartupRouterScreen extends StatefulWidget {
 }
 
 class _StartupRouterScreenState extends State<StartupRouterScreen> {
+  StreamSubscription? _authSub;
+  var _navigated = false;
   @override
   void initState() {
     super.initState();
@@ -41,6 +45,21 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     if (!mounted) return;
 
     if (session == null) {
+      // No session right now — listen for an auth state change so that when
+      // the magic link flow restores a session we can navigate into the app.
+      _authSub = Supabase.instance.client.auth.onAuthStateChange.listen(
+        (event) {
+          final newSession = event.session;
+          if (newSession != null && !_navigated && mounted) {
+            _navigated = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              Navigator.of(context).pushReplacementNamed(AppRoutes.startupRouter);
+            });
+          }
+        },
+      );
+
       // No session → User not logged in → Go to Login / Sign Up screen
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -77,5 +96,11 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
       backgroundColor: AppTheme.lightBackground,
       body: const Center(child: CircularProgressIndicator.adaptive()),
     );
+  }
+
+  @override
+  void dispose() {
+    _authSub?.cancel();
+    super.dispose();
   }
 }

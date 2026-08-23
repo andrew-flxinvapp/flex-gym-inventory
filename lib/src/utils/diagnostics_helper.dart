@@ -25,6 +25,15 @@ class DiagnosticsInfo {
         'deviceModel': deviceModel,
         'osVersion': osVersion,
       };
+
+  /// Returns a JSON-friendly map with snake_case keys suitable for backend payloads.
+  Map<String, String?> toJson() => {
+        'app_version': appVersion,
+        'build_number': buildNumber,
+        'platform': platform,
+        'device_model': deviceModel,
+        'os_version': osVersion,
+      };
 }
 
 class DiagnosticsHelper {

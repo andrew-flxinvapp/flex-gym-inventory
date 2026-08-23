@@ -109,7 +109,7 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
                 ),
                 const SizedBox(height: 20),
                 CustomTextInputField(
-                  hintText: 'Location',
+                  hintText: 'Enter a city name or address',
                   showAsterisk: false,
                   controller: locationController,
                 ),
