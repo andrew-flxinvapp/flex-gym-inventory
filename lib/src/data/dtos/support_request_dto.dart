@@ -4,7 +4,6 @@ class SupportRequestDto {
   final SupportCategory category;
   final String subject;
   final String message;
-  final String? screenshotStoragePath;
   final String? appVersion;
   final String? buildNumber;
   final String? platform;
@@ -15,7 +14,6 @@ class SupportRequestDto {
     required this.category,
     required this.subject,
     required this.message,
-    this.screenshotStoragePath,
     this.appVersion,
     this.buildNumber,
     this.platform,
@@ -28,7 +26,6 @@ class SupportRequestDto {
       'category': _categoryToBackendValue(category),
       'subject': subject.trim(),
       'message': message.trim(),
-      'screenshot_storage_path': screenshotStoragePath,
       'app_version': appVersion,
       'build_number': buildNumber,
       'platform': platform,
