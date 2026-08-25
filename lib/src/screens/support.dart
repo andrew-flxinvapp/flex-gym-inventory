@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../widgets/snackbar.dart';
 
 import '../../enum/app_enums.dart';
 import '../../service/support_service.dart';
@@ -25,6 +25,8 @@ class _SupportScreenState extends State<SupportScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subjectController = TextEditingController();
   final _messageController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
   SupportCategory? _selectedCategory;
   bool _isSubmitting = false;
 
@@ -42,6 +44,8 @@ class _SupportScreenState extends State<SupportScreen> {
   void dispose() {
     _messageController.removeListener(_enforceMessageMaxLength);
     _subjectController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
     _messageController.dispose();
     super.dispose();
   }
@@ -90,6 +94,27 @@ class _SupportScreenState extends State<SupportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const SizedBox(height: 16),
+                  CustomTextInputField(
+                    hintText: 'Name',
+                    showAsterisk: true,
+                    controller: _nameController,
+                    validator: (s) => s == null || s.trim().isEmpty ? 'Required' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  CustomTextInputField(
+                    hintText: 'Email',
+                    showAsterisk: true,
+                    controller: _emailController,
+                    validator: (s) {
+                      if (s == null || s.trim().isEmpty) return 'Required';
+                      final email = s.trim();
+                      final emailRegex = RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+                      if (!emailRegex.hasMatch(email)) return 'Invalid email';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
                   CustomDropdownField<SupportCategory>(
                     hintText: 'Category',
                     showAsterisk: true,
@@ -139,7 +164,7 @@ class _SupportScreenState extends State<SupportScreen> {
                   const SizedBox(height: 16),
                   PrimaryButton(
                     label: _isSubmitting ? 'Submitting...' : 'Submit Support Request',
-                    onPressed: _isSubmitting ? null : _handleSubmit,
+                    onPressed: _isSubmitting ? null : _submitSupportRequest,
                   ),
                   const SizedBox(height: 16),
                   SecondaryButton(
@@ -155,20 +180,16 @@ class _SupportScreenState extends State<SupportScreen> {
     );
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _submitSupportRequest() async {
     if (!_formKey.currentState!.validate()) return;
-
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please sign in to submit a request.')));
-      return;
-    }
 
     if (_selectedCategory == null) return;
     setState(() => _isSubmitting = true);
 
     try {
       final dto = SupportRequestDto(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
         category: _selectedCategory!,
         subject: _subjectController.text.trim(),
         message: _messageController.text.trim(),
@@ -177,7 +198,14 @@ class _SupportScreenState extends State<SupportScreen> {
       final res = await _supportService.submitSupportRequest(dto);
 
       if (res.success) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Support request submitted')));
+        // Clear fields after confirmed success, then show success UI.
+        _nameController.clear();
+        _emailController.clear();
+        _subjectController.clear();
+        _messageController.clear();
+        setState(() => _selectedCategory = null);
+
+        showFlexSnackbar(context, title: 'Support request submitted', type: SnackbarType.success);
         Navigator.of(context).pop();
       } else {
         await showDialog<void>(

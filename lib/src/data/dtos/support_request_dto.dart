@@ -1,6 +1,8 @@
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 
 class SupportRequestDto {
+  final String name;
+  final String email;
   final SupportCategory category;
   final String subject;
   final String message;
@@ -11,6 +13,8 @@ class SupportRequestDto {
   final String? osVersion;
 
   const SupportRequestDto({
+    required this.name,
+    required this.email,
     required this.category,
     required this.subject,
     required this.message,
@@ -23,6 +27,8 @@ class SupportRequestDto {
 
   Map<String, dynamic> toJson() {
     return {
+      'name': name.trim(),
+      'email': email.trim(),
       'category': _categoryToBackendValue(category),
       'subject': subject.trim(),
       'message': message.trim(),
@@ -50,8 +56,6 @@ class SupportRequestDto {
         return 'export';
       case SupportCategory.subscriptions:
         return 'subscriptions';
-      case SupportCategory.featureRequest:
-        return 'feature_request';
       case SupportCategory.generalQuestion:
         return 'general_question';
       case SupportCategory.other:

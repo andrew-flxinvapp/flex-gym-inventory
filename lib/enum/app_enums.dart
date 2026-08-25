@@ -208,7 +208,17 @@ extension ImageActionLabel on ImageAction {
   }
 }
 
-enum SupportCategory { bugReport, account, equipment, gym, wishlist, export, subscriptions, featureRequest, generalQuestion, other }
+enum SupportCategory { 
+  bugReport, 
+  account, 
+  equipment, 
+  gym, 
+  wishlist, 
+  export, 
+  subscriptions,  
+  generalQuestion, 
+  other 
+}
 extension SupportCategoryLabel on SupportCategory {
   String get label {  
     switch (this) {
@@ -226,8 +236,6 @@ extension SupportCategoryLabel on SupportCategory {
         return 'Export';
       case SupportCategory.subscriptions:
         return 'Subscriptions';
-      case SupportCategory.featureRequest:
-        return 'Feature Request';
       case SupportCategory.generalQuestion:
         return 'General Question';
       case SupportCategory.other:
