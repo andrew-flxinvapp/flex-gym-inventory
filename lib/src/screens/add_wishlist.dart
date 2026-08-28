@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
-import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/wishlist_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';

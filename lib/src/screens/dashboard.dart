@@ -10,7 +10,7 @@ import 'package:flex_gym_inventory/service/active_gym_service.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
-import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import '../widgets/buttons/primary_button.dart';
 //import '../widgets/dashboard_piechart.dart';
 import '../widgets/dashboard_arc_chart.dart';

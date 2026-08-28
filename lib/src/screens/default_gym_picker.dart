@@ -8,7 +8,7 @@ import '../widgets/selectors/delete_account_selector.dart';
 // import '../widgets/buttons/secondary_button.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import '../widgets/snackbar.dart';
-import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:flex_gym_inventory/service/supabase_service.dart';
 

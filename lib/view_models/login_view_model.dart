@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 class LoginViewModel extends ChangeNotifier {

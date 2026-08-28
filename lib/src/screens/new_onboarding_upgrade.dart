@@ -7,7 +7,7 @@ import '../widgets/displays/social_proof_display.dart';
 import '../widgets/cards/plan_comparison_card.dart';
 import '../widgets/displays/purchase_reassurance.dart';
 import '../widgets/cards/subscription_plan_card.dart';
-import '../services/price_provider.dart';
+import '../providers/price_provider.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/displays/footer_links.dart';
 

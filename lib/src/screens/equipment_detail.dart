@@ -3,7 +3,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/equipment/equipment_image.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:intl/intl.dart';

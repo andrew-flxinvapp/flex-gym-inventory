@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../repositories/onboarding_repository.dart';
+import '../data/repositories/onboarding_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../routes/routes.dart';
 

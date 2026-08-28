@@ -3,7 +3,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import '../repositories/onboarding_repository.dart';
+import '../data/repositories/onboarding_repository.dart';
 
 class OnboardingCompleteScreen extends StatefulWidget {
   const OnboardingCompleteScreen({super.key, this.notificationsOn = false});

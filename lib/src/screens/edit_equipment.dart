@@ -1,9 +1,9 @@
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously
-import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
-import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/snackbar.dart';

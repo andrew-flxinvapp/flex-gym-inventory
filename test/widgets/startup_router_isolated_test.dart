@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flex_gym_inventory/src/screens/startup_router.dart';
-import 'package:flex_gym_inventory/src/repositories/onboarding_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/onboarding_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 

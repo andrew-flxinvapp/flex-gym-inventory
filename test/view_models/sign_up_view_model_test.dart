@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 import 'package:flex_gym_inventory/view_models/sign_up_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 

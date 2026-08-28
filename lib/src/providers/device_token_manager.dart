@@ -1,4 +1,4 @@
-import '../repositories/auth_repository.dart';
+import '../data/repositories/auth_repository.dart';
 
 /// App-level helper for registering device tokens in a provider-agnostic way.
 ///

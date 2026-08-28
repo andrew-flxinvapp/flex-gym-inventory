@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
-import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
-import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/providers/auth_providers.dart';
 
 /// Small model used by the dashboard for gym summaries.

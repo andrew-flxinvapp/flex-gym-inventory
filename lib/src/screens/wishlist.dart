@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/wishlist_repository.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 // import '../widgets/buttons/primary_button.dart';
 

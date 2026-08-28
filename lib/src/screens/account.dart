@@ -1,6 +1,5 @@
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
-import '../widgets/displays/account_greeting.dart';
 import '../widgets/displays/display_field.dart';
 import '../widgets/displays/display_field_upgrade.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import '../widgets/top_app_bar.dart';
 import '../widgets/cards/settings_item.dart';
 import '../widgets/buttons/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../widgets/displays/display_field_nav.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -21,11 +19,7 @@ class AccountScreen extends StatelessWidget {
       appBar: TopAppBar(
         title: 'Account',
         showBackArrow: true,
-        showRightIcon: true,
-        rightIcon: AppIcons.edit,
-        onRightIconPressed: () {
-          // TODO: Implement edit account action
-        },
+        showRightIcon: false,
       ),
       body: SafeArea(
         child: Padding(
@@ -34,38 +28,18 @@ class AccountScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AccountGreeting(),
-                const SizedBox(height: 32),
                 Text(
                   'Account Info',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                   ),
-                ),
-                const SizedBox(height: 16),
-                const DisplayField(
-                  iconPath: AppIcons.user,
-                  label: 'Name',
-                  value: 'Flex Rackley',
                 ),
                 const SizedBox(height: 16),
                 const DisplayField(
                   iconPath: AppIcons.email,
                   label: 'Email',
                   value: 'flex@flexgym.com',
-                ),
-                const SizedBox(height: 16),
-                const DisplayField(
-                  iconPath: AppIcons.phone,
-                  label: 'Phone',
-                  value: '+1 (555) 123-4567',
-                ),
-                const SizedBox(height: 16),
-                DisplayFieldNav(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.wishlist);
-                  },
                 ),
                 const SizedBox(height: 16),
                 const DisplayField(
@@ -84,7 +58,7 @@ class AccountScreen extends StatelessWidget {
                   'Legal',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -115,14 +89,37 @@ class AccountScreen extends StatelessWidget {
                     }
                   },
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+                Text(
+                  'Actions',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 PrimaryButton(
                   label: 'Sign Out',
                   onPressed: () {
                     // TODO: Add sign out logic
                   },
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoutes.deleteAccount);
+                    },
+                    child: Text(
+                      'Delete Account',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(color: AppTheme.stopColor),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

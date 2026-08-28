@@ -10,7 +10,7 @@ import '../widgets/displays/social_proof_display.dart';
 import '../widgets/layouts/gradient_background.dart';
 import '../widgets/cards/plan_comparison_card.dart';
 import '../widgets/cards/subscription_plan_card.dart';
-import '../services/price_provider.dart';
+import '../providers/price_provider.dart';
 
 class ComponentGallery extends StatelessWidget {
   const ComponentGallery({super.key});

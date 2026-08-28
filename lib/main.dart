@@ -11,7 +11,7 @@ import 'service/isar_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import 'package:flex_gym_inventory/src/utils/pending_metadata_store.dart';
-import 'package:flex_gym_inventory/src/repositories/auth_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
-import 'package:flex_gym_inventory/src/repositories/wishlist_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/wishlist_repository.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import '../helpers/isar_test_util.dart';
 

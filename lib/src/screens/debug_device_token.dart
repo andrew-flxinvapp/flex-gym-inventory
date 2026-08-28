@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flex_gym_inventory/src/services/device_token_manager.dart';
+import 'package:flex_gym_inventory/src/providers/device_token_manager.dart';
 
 class DebugDeviceTokenScreen extends StatefulWidget {
   const DebugDeviceTokenScreen({super.key});

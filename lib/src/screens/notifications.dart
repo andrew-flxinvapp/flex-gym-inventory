@@ -4,7 +4,7 @@ import '../widgets/top_app_bar.dart';
 import '../../theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../repositories/onboarding_repository.dart';
+import '../data/repositories/onboarding_repository.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});

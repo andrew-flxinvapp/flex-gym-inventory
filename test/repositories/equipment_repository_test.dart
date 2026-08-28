@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
-import 'package:flex_gym_inventory/src/repositories/equipment_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/equipment_repository.dart';
 import '../helpers/isar_test_util.dart';
 
 void main() {

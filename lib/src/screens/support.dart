@@ -206,18 +206,12 @@ class _SupportScreenState extends State<SupportScreen> {
         setState(() => _selectedCategory = null);
 
         showFlexSnackbar(context, title: 'Support request submitted', type: SnackbarType.success);
-        Navigator.of(context).pop();
+        // Keep the user on the Support screen after successful submission.
+        // Fields are already cleared above.
       } else {
-        await showDialog<void>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: const Text('Submission failed'),
-            content: SingleChildScrollView(child: Text(res.message ?? 'An error occurred')),
-            actions: [
-              TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('OK')),
-            ],
-          ),
-        );
+        // Show error inline via the app-standard snackbar and remain on screen.
+        showFlexSnackbar(context,
+            title: res.message ?? 'Submission failed', type: SnackbarType.stop);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 
 import 'package:flex_gym_inventory/service/isar_service.dart';
 // import 'package:flex_gym_inventory/src/models/gym_model.dart';
-import 'package:flex_gym_inventory/src/repositories/gym_repository.dart';
+import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 
 import '../helpers/isar_test_util.dart';
 
