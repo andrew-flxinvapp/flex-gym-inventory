@@ -8,6 +8,7 @@ class CustomMultilineTextInput extends StatelessWidget {
   final double width;
   final double height;
   final int maxLines;
+  final int maxLength;
   final bool showAsterisk;
 
   const CustomMultilineTextInput({
@@ -18,6 +19,7 @@ class CustomMultilineTextInput extends StatelessWidget {
     this.width = double.infinity,
     this.height = 120,
     this.maxLines = 5,
+    this.maxLength = 2000,
     this.showAsterisk = false,
   });
 
@@ -31,7 +33,9 @@ class CustomMultilineTextInput extends StatelessWidget {
           controller: controller,
           validator: validator,
           maxLines: maxLines,
+          maxLength: maxLength,
           decoration: InputDecoration(
+            counterText: '',
             alignLabelWithHint: true,
             label: Align(
               alignment: Alignment.topLeft,
