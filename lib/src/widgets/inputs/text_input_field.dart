@@ -25,62 +25,66 @@ class CustomTextInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: Stack(
-          children: [
-            TextFormField(
-              controller: controller,
-              validator: validator,
-              keyboardType: keyboardType,
-              maxLines: maxLines,
-              decoration: InputDecoration(
-                label: RichText(
-                  text: TextSpan(
-                    text: hintText,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                    ),
-                    children:
-                        showAsterisk
-                            ? [
+    return GestureDetector(
+      behavior: HitTestBehavior.deferToChild,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Center(
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            children: [
+              TextFormField(
+                controller: controller,
+                validator: validator,
+                keyboardType: keyboardType,
+                maxLines: maxLines,
+                decoration: InputDecoration(
+                  label: RichText(
+                    text: TextSpan(
+                      text: hintText,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                          ),
+                      children: showAsterisk
+                          ? [
                               TextSpan(
                                 text: ' *',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  color: AppTheme.stopColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: AppTheme.stopColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ]
-                            : [],
+                          : [],
+                    ),
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppTheme.lightTextPrimary,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

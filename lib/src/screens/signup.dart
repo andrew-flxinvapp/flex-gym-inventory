@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import '../../theme/app_theme.dart';
+import '../../constant/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/buttons/primary_button.dart';
-import '../widgets/buttons/disabled_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../view_models/sign_up_view_model.dart';
@@ -22,14 +24,17 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  bool _agreedToTerms = false;
+  // Terms checkbox removed — users no longer need to toggle acceptance here.
   final SignUpViewModel _signUpViewModel = SignUpViewModel();
+  TapGestureRecognizer? _termsTapRecognizer;
+  TapGestureRecognizer? _privacyTapRecognizer;
   // Optional local controllers for additional profile fields
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
 
   /// Kick off the sign-up flow using the view model.
   void _performSignUp() {
+    if (_signUpViewModel.loading) return;
     () async {
       // Build user metadata from first/last name fields (omit empty values)
       final userMetadata = <String, dynamic>{};
@@ -54,14 +59,22 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     super.initState();
+    _termsTapRecognizer = TapGestureRecognizer()
+      ..onTap = () => _openLink(kTermsUrl);
+    _privacyTapRecognizer = TapGestureRecognizer()
+      ..onTap = () => _openLink(kPrivacyUrl);
     _signUpViewModel.addListener(() {
       if (!mounted) return;
       final msg = _signUpViewModel.message;
       if (msg != null) {
         showFlexSnackbarFromUiMessage(context, msg);
-        // If sign-up succeeded, go to verify email screen.
+        // If sign-up succeeded, go to verify email screen. The email hasn't
+        // necessarily been verified yet — this only confirms the link was sent.
         if (msg.type == UiMessageType.success) {
-          Navigator.of(context).pushNamed(AppRoutes.verifyEmail);
+          Navigator.of(context).pushNamed(
+            AppRoutes.verifyEmail,
+            arguments: {'email': _signUpViewModel.emailController.text},
+          );
         }
         _signUpViewModel.clearMessage();
       }
@@ -71,10 +84,28 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
+    _termsTapRecognizer?.dispose();
+    _privacyTapRecognizer?.dispose();
     _signUpViewModel.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _openLink(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!opened) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open link')),
+        );
+      }
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open link')),
+      );
+    }
   }
 
   @override
@@ -88,7 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 32), // Add vertical space to bump the form down
+              SizedBox(height: 16), // Add vertical space to bump the form down
               // Title
               Text(
                 'Sign Up',
@@ -99,153 +130,127 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Your gym. Your equipment. All in one place.',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: AppTheme.lightTextPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Sign up below',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.lightTextPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Spacer(flex: 1),
-              // First Name TextField
-              SizedBox(
+              Expanded(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CustomTextInputField(
-                      hintText: 'First Name',
-                      controller: _firstNameController,
-                      height: 50,
-                    ),
-                    if (_signUpViewModel.firstNameError != null) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        _signUpViewModel.firstNameError!,
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                    // First Name TextField
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomTextInputField(
+                            hintText: 'First Name',
+                            controller: _firstNameController,
+                            height: 50,
+                          ),
+                          if (_signUpViewModel.firstNameError != null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              _signUpViewModel.firstNameError!,
+                              style: const TextStyle(color: Colors.red, fontSize: 12),
+                            ),
+                          ],
+                        ],
                       ),
-                    ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Last Name TextField
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomTextInputField(
+                            hintText: 'Last Name',
+                            controller: _lastNameController,
+                            height: 50,
+                          ),
+                          if (_signUpViewModel.lastNameError != null) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              _signUpViewModel.lastNameError!,
+                              style: const TextStyle(color: Colors.red, fontSize: 12),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    // Email TextField with VM-driven inline error
+                    const SizedBox(height: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CustomTextInputField(
+                          hintText: 'Email',
+                          controller: _signUpViewModel.emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          height: 50,
+                        ),
+                        if (_signUpViewModel.emailError != null) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            _signUpViewModel.emailError!,
+                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              // Last Name TextField
-              SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CustomTextInputField(
-                      hintText: 'Last Name',
-                      controller: _lastNameController,
-                      height: 50,
-                    ),
-                    if (_signUpViewModel.lastNameError != null) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        _signUpViewModel.lastNameError!,
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              // Email TextField with VM-driven inline error
-              const SizedBox(height: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CustomTextInputField(
-                    hintText: 'Email',
-                    controller: _signUpViewModel.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    height: 50,
-                  ),
-                  if (_signUpViewModel.emailError != null) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      _signUpViewModel.emailError!,
-                      style: const TextStyle(color: Colors.red, fontSize: 12),
-                    ),
-                  ],
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Checkbox for Terms and Conditions
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                title: RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.lightTextSecondary,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text.rich(
+                  TextSpan(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.lightTextPrimary,
                       fontFamily: 'Roboto',
                     ),
                     children: [
-                      const TextSpan(text: 'I accept the '),
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: GestureDetector(
-                          onTap: () {
-                            // TODO: Navigate to legal/settings page when implemented
-                            // Use NavigationService or Navigator when route exists
-                            // For now, log the tap
-                            // LoggingHandler.log('Tapped Terms and Privacy Policy link');
-                          },
-                          child: Text(
-                            'Terms and Privacy Policy',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
+                      const TextSpan(text: "By continuing, you agree to Flex Gym Inventory's "),
+                      TextSpan(
+                        text: 'Terms',
+                        style: TextStyle(
+                          color: AppTheme.lightTextSecondary,
+                          decoration: TextDecoration.underline,
                         ),
+                        recognizer: _termsTapRecognizer,
+                      ),
+                      const TextSpan(text: ' and '),
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: TextStyle(
+                          color: AppTheme.lightTextSecondary,
+                          decoration: TextDecoration.underline,
+                        ),
+                        recognizer: _privacyTapRecognizer,
                       ),
                     ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                value: _agreedToTerms,
-                activeColor: Theme.of(context).colorScheme.primary,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _agreedToTerms = value ?? false;
-                  });
-                },
-                controlAffinity: ListTileControlAffinity.leading,
               ),
               const SizedBox(height: 16),
-              // Sign Up Button
-              _agreedToTerms
-                  ? PrimaryButton(
-                    label:
-                        _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
-                    onPressed: () {
-                      if (_signUpViewModel.loading) return;
-                      final firstOk = _signUpViewModel.validateFirstName(
-                        _firstNameController.text,
-                      );
-                      final lastOk = _signUpViewModel.validateLastName(
-                        _lastNameController.text,
-                      );
-                      final emailOk = _signUpViewModel.validateEmail();
-                      if (firstOk && lastOk && emailOk) {
-                        _performSignUp();
-                      }
-                    },
-                  )
-                  : DisabledButton(
-                    label: 'Sign Up',
-                    onPressed: () {}, // No-op when disabled
-                  ),
+              // Sign Up Button (always enabled, disabled while submitting)
+              PrimaryButton(
+                label: _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
+                onPressed: _signUpViewModel.loading
+                    ? null
+                    : () {
+                        final firstOk = _signUpViewModel.validateFirstName(
+                          _firstNameController.text,
+                        );
+                        final lastOk = _signUpViewModel.validateLastName(
+                          _lastNameController.text,
+                        );
+                        final emailOk = _signUpViewModel.validateEmail();
+                        if (firstOk && lastOk && emailOk) {
+                          _performSignUp();
+                        }
+                      },
+              ),
               const SizedBox(height: 16),
               // Already have an account? Sign In link
               Row(

@@ -72,9 +72,12 @@ class CustomMultilineTextInput extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
             ),
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppTheme.lightTextPrimary,
+                width: 4,
+              ),
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide.none,
             ),
           ),
         ),

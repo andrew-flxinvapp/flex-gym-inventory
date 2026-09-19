@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 
 class SignUpViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -22,11 +23,18 @@ class SignUpViewModel extends ChangeNotifier {
   String? get lastNameError => _lastNameError;
 
   Future<void> signUp({Map<String, dynamic>? userMetadata}) async {
-    final email = emailController.text.trim();
+    // Guard against duplicate submissions (e.g. rapid repeated taps).
+    if (_loading) return;
+
+    // Normalize the input so both validation and the network call see the
+    // same trimmed value, and the UI reflects what was actually submitted.
+    emailController.text = emailController.text.trim();
 
     // Use the shared validator to keep messages/regex consistent.
     final valid = validateEmail();
     if (!valid) return;
+
+    final email = emailController.text;
 
     _setLoading(true);
     _setMessage(null);
@@ -46,9 +54,14 @@ class SignUpViewModel extends ChangeNotifier {
       _setMessage(
         UiMessage(ae.message ?? 'Sign up failed.', type: UiMessageType.error),
       );
-    } catch (e) {
+    } catch (e, st) {
+      // Never surface raw exception details to the user; log for diagnostics.
+      LogHandler.error('SignUpViewModel', 'signUp failed', e, st);
       _setMessage(
-        UiMessage('Error: ${e.toString()}', type: UiMessageType.error),
+        UiMessage(
+          "We couldn't send the sign-in link. Please try again.",
+          type: UiMessageType.error,
+        ),
       );
     } finally {
       _setLoading(false);
