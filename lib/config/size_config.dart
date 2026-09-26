@@ -9,7 +9,6 @@ import 'package:flutter/widgets.dart';
 /// Usage: call `SizeConfig.init(context)` once (for example in the
 /// top-level widget's `build`) and then use the helpers below.
 class SizeConfig {
-  static late MediaQueryData _mediaQueryData;
 
   /// Full screen width (including system padding)
   static late double screenWidth;
@@ -30,7 +29,7 @@ class SizeConfig {
   static late double blockSizeVertical;
 
   /// Device text scale factor
-  static late double textScaleFactor;
+  static late double maybeTextScalerOf;
 
   /// Initialize the config with values from the given [context].
   ///
@@ -39,7 +38,6 @@ class SizeConfig {
   /// sizing helpers.
   static void init(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    _mediaQueryData = mediaQuery;
 
     screenWidth = mediaQuery.size.width;
     screenHeight = mediaQuery.size.height;
@@ -51,7 +49,7 @@ class SizeConfig {
     blockSizeHorizontal = safeWidth / 100;
     blockSizeVertical = safeHeight / 100;
 
-    textScaleFactor = mediaQuery.textScaleFactor;
+    maybeTextScalerOf = MediaQuery.textScaleFactorOf(context);
   }
 
   /// Returns a width value proportional to the safe width.

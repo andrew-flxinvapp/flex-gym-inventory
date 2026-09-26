@@ -27,6 +27,8 @@ class AuthRepository {
     : _client = client ?? Supabase.instance.client;
 
   /// Send a magic link sign-in email to [email].
+  ///
+  /// Send a magic link sign-in email to [email]. Used by login/resend flows.
   Future<void> signInWithMagicLink(String email) async {
     try {
       await _client.auth.signInWithOtp(
@@ -46,11 +48,21 @@ class AuthRepository {
   /// calling [updateUserMetadata]. Attempting to pass metadata during the
   /// magic-link sign-up is unreliable across Supabase versions and project
   /// settings, so we avoid doing that here.
-  Future<void> signUp(String email) async {
+  /// Send a magic-link sign-up request for [email].
+  ///
+  /// `firstName` and `lastName` are required named parameters to make the
+  /// intent explicit for callers that collected them during signup. The
+  /// values are not used in the OTP request itself but may be useful for
+  /// downstream analytics or reconciliation flows.
+  Future<void> signUp({required String email, required String firstName, required String lastName}) async {
     try {
       await _client.auth.signInWithOtp(
         email: email.trim(),
         emailRedirectTo: 'flexgyminventory://auth-callback',
+          data: {
+            'firstName': firstName,
+            'lastName': lastName,
+          }
       );
     } catch (e, st) {
       throw _mapToAuthException(e, st);
@@ -61,7 +73,17 @@ class AuthRepository {
   /// user has completed the magic-link verification and a session is active.
   Future<void> updateUserMetadata(Map<String, dynamic> metadata) async {
     try {
-      await _client.auth.updateUser(UserAttributes(data: metadata));
+      // Remove any keys with null values to avoid writing NULLs into
+      // user metadata which can trigger NOT NULL constraint failures
+      // in backend profile sync triggers.
+      final sanitized = <String, dynamic>{};
+      metadata.forEach((k, v) {
+        if (v != null) sanitized[k] = v;
+      });
+
+      if (sanitized.isEmpty) return;
+
+      await _client.auth.updateUser(UserAttributes(data: sanitized));
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }

@@ -16,6 +16,7 @@ class AppScreen extends StatelessWidget {
   final Color? backgroundColor;
   final bool useGradient;
   final Gradient? gradient;
+  final bool unfocusOnTap;
   final bool safeArea;
 
   const AppScreen({
@@ -25,6 +26,7 @@ class AppScreen extends StatelessWidget {
     this.useGradient = false,
     this.gradient,
     this.safeArea = true,
+    this.unfocusOnTap = false,
   }) : super(key: key);
 
   @override
@@ -34,17 +36,29 @@ class AppScreen extends StatelessWidget {
 
     Widget content = safeArea ? SafeArea(child: child) : child;
 
+    Widget result;
+
     if (useGradient) {
       // GradientBackground already expands to fill its parent when used as
       // the top-level child inside a Scaffold body.
-      return GradientBackground(gradient: gradient, child: content);
+      result = GradientBackground(gradient: gradient, child: content);
+    } else {
+      final bg = backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
+      result = Container(
+        constraints: const BoxConstraints.expand(),
+        color: bg,
+        child: content,
+      );
     }
 
-    final bg = backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
-    return Container(
-      constraints: const BoxConstraints.expand(),
-      color: bg,
-      child: content,
-    );
+    if (unfocusOnTap) {
+      result = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: result,
+      );
+    }
+
+    return result;
   }
 }

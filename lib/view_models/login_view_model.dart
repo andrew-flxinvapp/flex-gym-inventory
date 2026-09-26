@@ -26,7 +26,8 @@ class LoginViewModel extends ChangeNotifier {
     _setLoading(true);
     _setMessage(null);
     try {
-      await _authRepository.signInWithMagicLink(email);
+      // Pass empty names; name metadata is reconciled after verification.
+        await _authRepository.signInWithMagicLink(email);
       _setMessage(
         UiMessage(
           'Magic link sent! Check your email.',

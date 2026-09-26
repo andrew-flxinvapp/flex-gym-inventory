@@ -55,8 +55,9 @@ class AuthViewModel extends ChangeNotifier {
     _setMessage(null);
     final email = emailController.text.trim();
     try {
-      // Magic-link only signup
-      await _authRepository.signUp(email);
+      // Magic-link only signup. We don't collect names in this view model,
+      // so pass empty strings for required name parameters.
+      await _authRepository.signUp(email: email, firstName: '', lastName: '');
       _setMessage(
         UiMessage(
           'Sign up successful. Check your email to verify.',

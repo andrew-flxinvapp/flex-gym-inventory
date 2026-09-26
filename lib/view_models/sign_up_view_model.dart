@@ -43,7 +43,17 @@ class SignUpViewModel extends ChangeNotifier {
       // during the magic-link flow across all Supabase setups, so we only
       // request the magic link here. Persist metadata after verification
       // using `AuthRepository.updateUserMetadata` when a session is active.
-      await _authRepository.signUp(email);
+        // Extract names from provided metadata (may be null when caller
+        // didn't collect names). `AuthRepository.signUp` requires named
+        // `firstName`/`lastName`, so default to empty strings when missing.
+        final first = userMetadata != null && userMetadata['first_name'] is String
+            ? userMetadata['first_name'] as String
+            : '';
+        final last = userMetadata != null && userMetadata['last_name'] is String
+            ? userMetadata['last_name'] as String
+            : '';
+
+        await _authRepository.signUp(email: email, firstName: first, lastName: last);
       _setMessage(
         UiMessage(
           'Sign up successful! Please check your email to verify your account.',
@@ -103,8 +113,15 @@ class SignUpViewModel extends ChangeNotifier {
   bool validateFirstName(String value) {
     final v = value.trim();
     if (v.isEmpty) {
-      _firstNameError = null; // optional
-      return true;
+      _firstNameError = 'Please enter your first name';
+      _setMessage(
+        UiMessage(
+          'Please enter your first name.',
+          type: UiMessageType.error,
+        ),
+      );
+      notifyListeners();
+      return false;
     }
     if (v.length < 2) {
       _firstNameError = 'Please enter a valid first name';
@@ -119,8 +136,15 @@ class SignUpViewModel extends ChangeNotifier {
   bool validateLastName(String value) {
     final v = value.trim();
     if (v.isEmpty) {
-      _lastNameError = null; // optional
-      return true;
+      _lastNameError = 'Please enter your last name';
+      _setMessage(
+        UiMessage(
+          'Please enter your last name.',
+          type: UiMessageType.error,
+        ),
+      );
+      notifyListeners();
+      return false;
     }
     if (v.length < 2) {
       _lastNameError = 'Please enter a valid last name';

@@ -5,6 +5,7 @@ import '../../constant/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
+import '../widgets/layouts/app_screen.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../view_models/sign_up_view_model.dart';
 import '../utils/pending_metadata_store.dart';
@@ -112,8 +113,11 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
+      resizeToAvoidBottomInset: false,
       appBar: const OnboardingLogoAppBar(),
-      body: SafeArea(
+      body: AppScreen(
+        unfocusOnTap: true,
+        safeArea: true,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
@@ -135,6 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    
                     // First Name TextField
                     SizedBox(
                       child: Column(
@@ -142,6 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           CustomTextInputField(
                             hintText: 'First Name',
+                            showAsterisk: true,
                             controller: _firstNameController,
                             height: 50,
                           ),
@@ -163,6 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           CustomTextInputField(
                             hintText: 'Last Name',
+                            showAsterisk: true,
                             controller: _lastNameController,
                             height: 50,
                           ),
@@ -183,6 +190,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         CustomTextInputField(
                           hintText: 'Email',
+                          showAsterisk: true,
                           controller: _signUpViewModel.emailController,
                           keyboardType: TextInputType.emailAddress,
                           height: 50,
@@ -194,6 +202,29 @@ class _SignupScreenState extends State<SignupScreen> {
                             style: const TextStyle(color: Colors.red, fontSize: 12),
                           ),
                         ],
+                        const SizedBox(height: 16),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '*',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: AppTheme.stopColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Required field',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: AppTheme.lightTextPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ],
