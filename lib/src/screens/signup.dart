@@ -8,7 +8,6 @@ import '../widgets/onboarding_topappbar.dart';
 import '../widgets/layouts/app_screen.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../../view_models/sign_up_view_model.dart';
-import '../utils/pending_metadata_store.dart';
 import '../widgets/snackbar.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import '../widgets/inputs/text_input_field.dart';
@@ -37,21 +36,6 @@ class _SignupScreenState extends State<SignupScreen> {
   void _performSignUp() {
     if (_signUpViewModel.loading) return;
     () async {
-      // Build user metadata from first/last name fields (omit empty values)
-      final userMetadata = <String, dynamic>{};
-      if (_firstNameController.text.trim().isNotEmpty) {
-        userMetadata['first_name'] = _firstNameController.text.trim();
-      }
-      if (_lastNameController.text.trim().isNotEmpty) {
-        userMetadata['last_name'] = _lastNameController.text.trim();
-      }
-
-      // Persist pending metadata locally so it can be reconciled after the
-      // user completes the magic-link flow and a session exists.
-      if (userMetadata.isNotEmpty) {
-        await PendingMetadataStore.save(userMetadata);
-      }
-
       // Trigger the view model sign-up which handles validation and network
       await _signUpViewModel.signUp();
     }();

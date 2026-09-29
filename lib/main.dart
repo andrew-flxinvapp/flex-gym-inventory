@@ -10,8 +10,7 @@ import 'package:isar/isar.dart';
 import 'service/isar_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
-import 'package:flex_gym_inventory/src/utils/pending_metadata_store.dart';
-import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
+// import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -50,24 +49,6 @@ void main() async {
 
         final user = Supabase.instance.client.auth.currentUser;
         if (user != null) {
-          // If we have pending metadata saved during signup, attempt to
-          // reconcile it to the authenticated user now that a session exists.
-          try {
-            final pending = await PendingMetadataStore.read();
-            if (pending != null && pending.isNotEmpty) {
-              await AuthRepository().updateUserMetadata(pending);
-              await PendingMetadataStore.clear();
-            }
-          } catch (e) {
-            // Don't block navigation on reconciliation failures – log and continue.
-            LogHandler.warning(
-              'Deeplink',
-              'Metadata reconciliation failed: $e',
-              e,
-              null,
-            );
-          }
-
           // Successful sign-in — navigate into the app (startup router will
           // decide whether to show onboarding or main flow).
           navigatorKey.currentState?.pushNamedAndRemoveUntil(

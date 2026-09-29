@@ -20,18 +20,57 @@ class OnboardingRepository {
 
   /// Called at the final step of the onboarding flow.
   ///
-  /// Writes user metadata in a single atomic update:
-  /// {
-  ///   "onboardingComplete": true,
-  ///   "notificationsOn": notificationsOn,
-  ///   "proPlan": proPlan
-  /// }
-  Future<void> completeOnboarding({required bool notificationsOn}) async {
-    await _client.auth.updateUser(
-      UserAttributes(
-        data: {'onboardingComplete': true, 'notificationsOn': notificationsOn},
-      ),
-    );
+  /// Performs an authenticated upsert into `public.profiles` so the DB row
+  /// becomes the canonical source of profile/onboarding data. This method
+  /// is intentionally conservative in this pass:
+  /// - It writes to `public.profiles` using snake_case column names.
+  /// - For compatibility it will set `auth.user_metadata.onboardingComplete`
+  ///   only after the profile upsert succeeds.
+  ///
+  /// Parameters:
+  /// - `notificationsOn` (required): whether notifications are enabled.
+  /// - `firstName`/`lastName` (optional): prefer caller-provided names;
+  ///   otherwise pending metadata and user metadata are consulted.
+  Future<void> completeOnboarding({
+    required bool notificationsOn,
+    String? firstName,
+    String? lastName,
+  }) async {
+    final user = _client.auth.currentUser;
+    if (user == null) throw Exception('No authenticated user for onboarding');
+
+    // Resolve names: prefer explicit params, then pending store, then auth metadata.
+    String? resolvedFirst = firstName;
+    String? resolvedLast = lastName;
+
+    // If caller did not provide names, fall back to auth user metadata.
+
+    final meta = user.userMetadata ?? <String, dynamic>{};
+    if (resolvedFirst == null && meta.containsKey('first_name')) {
+      final v = meta['first_name'];
+      if (v is String && v.trim().isNotEmpty) resolvedFirst = v;
+    }
+    if (resolvedLast == null && meta.containsKey('last_name')) {
+      final v = meta['last_name'];
+      if (v is String && v.trim().isNotEmpty) resolvedLast = v;
+    }
+
+    final row = <String, dynamic>{
+      'id': user.id,
+      'notifications_on': notificationsOn,
+      'onboarding_completed_at': DateTime.now().toUtc().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+
+    if (resolvedFirst != null && resolvedFirst.trim().isNotEmpty) {
+      row['first_name'] = resolvedFirst.trim();
+    }
+    if (resolvedLast != null && resolvedLast.trim().isNotEmpty) {
+      row['last_name'] = resolvedLast.trim();
+    }
+
+    // Upsert the profile row. Let errors bubble up so callers can react.
+    await _client.from('profiles').upsert(row);
   }
 
   /// Update only the `notificationsOn` flag in user metadata.

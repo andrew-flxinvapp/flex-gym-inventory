@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
@@ -25,8 +26,26 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
   Future<void> _handleContinue() async {
     setState(() => _isSubmitting = true);
     try {
+      // Resolve first/last name from authenticated user metadata when
+      // available and pass into the repository so the canonical profile
+      // row is written with the collected values.
+      final user = Supabase.instance.client.auth.currentUser;
+      String? firstName;
+      String? lastName;
+      if (user != null) {
+        final meta = user.userMetadata ?? <String, dynamic>{};
+        if (meta.containsKey('first_name') && meta['first_name'] is String) {
+          firstName = (meta['first_name'] as String).trim();
+        }
+        if (meta.containsKey('last_name') && meta['last_name'] is String) {
+          lastName = (meta['last_name'] as String).trim();
+        }
+      }
+
       await _onboardingRepository.completeOnboarding(
         notificationsOn: widget.notificationsOn,
+        firstName: firstName,
+        lastName: lastName,
       );
       // repository call completed; we don't navigate here to avoid
       // double-navigation — navigation is handled by the button tap.
@@ -109,13 +128,22 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
                   label: 'To Dashboard',
                   variant: PrimaryButtonVariant.dark,
                   // keep a non-null callback (PrimaryButton requires it) but guard inside
-                  onPressed: () {
-                      if (_isSubmitting) return;
-                      // Trigger repository work, but navigate immediately and
-                      // replace onboarding in the stack with the dashboard.
-                      _handleContinue();
+                  onPressed: () async {
+                    if (_isSubmitting) return;
+                    try {
+                      await _handleContinue();
+                      if (!mounted) return;
+                      // Only navigate after onboarding/upsert succeeds
                       Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
-                    },
+                    } catch (e) {
+                      // Surface a brief error to the user; do not navigate.
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to complete onboarding. Please try again.')),
+                        );
+                      }
+                    }
+                  },
                 ),
               ],
             ),
