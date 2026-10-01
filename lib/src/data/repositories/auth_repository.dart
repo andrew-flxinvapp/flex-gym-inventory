@@ -54,15 +54,11 @@ class AuthRepository {
   /// intent explicit for callers that collected them during signup. The
   /// values are not used in the OTP request itself but may be useful for
   /// downstream analytics or reconciliation flows.
-  Future<void> signUp({required String email, required String firstName, required String lastName}) async {
+  Future<void> signUp({required String email}) async {
     try {
       await _client.auth.signInWithOtp(
         email: email.trim(),
         emailRedirectTo: 'flexgyminventory://auth-callback',
-          data: {
-            'firstName': firstName,
-            'lastName': lastName,
-          }
       );
     } catch (e, st) {
       throw _mapToAuthException(e, st);
@@ -143,13 +139,10 @@ class AuthRepository {
   /// `lastDeviceToken` and flips `notificationsOn` to true. Replace this
   /// with a more robust server-side `device_tokens` table when ready.
   Future<void> registerDeviceToken(String token, {String? platform}) async {
+    // Keep device-token storage separate from auth.user_metadata.
+    // Persist tokens into `device_tokens` via `upsertDeviceToken`.
     try {
-      final data = <String, dynamic>{
-        'lastDeviceToken': token,
-        'notificationsOn': true,
-      };
-      if (platform != null) data['lastDevicePlatform'] = platform;
-      await _client.auth.updateUser(UserAttributes(data: data));
+      await upsertDeviceToken(token: token, platform: platform ?? 'unknown');
     } catch (e, st) {
       throw _mapToAuthException(e, st);
     }

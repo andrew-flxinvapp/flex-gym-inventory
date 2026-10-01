@@ -32,28 +32,14 @@ class OnboardingRepository {
   /// - `firstName`/`lastName` (optional): prefer caller-provided names;
   ///   otherwise pending metadata and user metadata are consulted.
   Future<void> completeOnboarding({
+    required String firstName,
+    required String lastName,
     required bool notificationsOn,
-    String? firstName,
-    String? lastName,
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) throw Exception('No authenticated user for onboarding');
 
-    // Resolve names: prefer explicit params, then pending store, then auth metadata.
-    String? resolvedFirst = firstName;
-    String? resolvedLast = lastName;
-
-    // If caller did not provide names, fall back to auth user metadata.
-
-    final meta = user.userMetadata ?? <String, dynamic>{};
-    if (resolvedFirst == null && meta.containsKey('first_name')) {
-      final v = meta['first_name'];
-      if (v is String && v.trim().isNotEmpty) resolvedFirst = v;
-    }
-    if (resolvedLast == null && meta.containsKey('last_name')) {
-      final v = meta['last_name'];
-      if (v is String && v.trim().isNotEmpty) resolvedLast = v;
-    }
+    // Use only the explicit names provided by the caller.
 
     final row = <String, dynamic>{
       'id': user.id,
@@ -62,11 +48,11 @@ class OnboardingRepository {
       'updated_at': DateTime.now().toUtc().toIso8601String(),
     };
 
-    if (resolvedFirst != null && resolvedFirst.trim().isNotEmpty) {
-      row['first_name'] = resolvedFirst.trim();
+    if (firstName.trim().isNotEmpty) {
+      row['first_name'] = firstName.trim();
     }
-    if (resolvedLast != null && resolvedLast.trim().isNotEmpty) {
-      row['last_name'] = resolvedLast.trim();
+    if (lastName.trim().isNotEmpty) {
+      row['last_name'] = lastName.trim();
     }
 
     // Upsert the profile row. Let errors bubble up so callers can react.
@@ -79,11 +65,18 @@ class OnboardingRepository {
   /// (for example immediately after the system permission request) so
   /// that Settings reflects the user's current choice.
   Future<void> updateNotificationsOn(bool enabled) async {
-    await _client.auth.updateUser(
-      UserAttributes(
-        data: {'notificationsOn': enabled},
-      ),
-    );
+    // Persist notifications preference to the canonical `profiles` row
+    // instead of writing it to `auth.user_metadata`.
+    final user = _client.auth.currentUser;
+    if (user == null) throw Exception('No authenticated user for updating notifications');
+
+    final row = <String, dynamic>{
+      'id': user.id,
+      'notifications_on': enabled,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    };
+
+    await _client.from('profiles').upsert(row);
   }
 
   /// (Optional) Convenience getter — reads metadata for current user.
@@ -100,15 +93,54 @@ class OnboardingRepository {
   bool get hasProPlan => metadata['proPlan'] == true;
 
   /// Fetch the `notificationsOn` flag from the current user's metadata.
-  /// Returns `null` if there is no authenticated user or no value set.
+  /// Fetch the `notifications_on` flag from the canonical `public.profiles`
+  /// row for the current user. Returns `null` if there is no authenticated
+  /// user or no value set.
   Future<bool?> fetchNotificationsOn() async {
     final user = _client.auth.currentUser;
     if (user == null) return null;
-    final meta = user.userMetadata ?? <String, dynamic>{};
-    if (meta.containsKey('notificationsOn')) {
-      return meta['notificationsOn'] == true;
+
+    try {
+      final row = await _client
+          .from('profiles')
+          .select('notifications_on')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (row == null) return null;
+      if (row.containsKey('notifications_on')) {
+        return row['notifications_on'] == true;
+      }
+      return null;
+    } catch (_) {
+      return null;
     }
-    return null;
+  }
+
+  /// Fetch whether onboarding is complete by reading the canonical
+  /// `public.profiles.onboarding_completed_at` column for the current user.
+  /// Returns `true` when a non-null timestamp is present, `false` otherwise.
+  /// Any errors are caught and `false` is returned so callers fall back to
+  /// onboarding flow instead of blocking the user.
+  Future<bool> fetchOnboardingCompleteFromProfile() async {
+    final user = _client.auth.currentUser;
+    if (user == null) return false;
+
+    try {
+      final row = await _client
+          .from('profiles')
+          .select('onboarding_completed_at')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (row == null) return false;
+      if (row['onboarding_completed_at'] != null) return true;
+      return false;
+    } catch (_) {
+      // Swallow errors and treat as not complete so routing sends the user
+      // into onboarding. Calling code may surface logs / telemetry.
+      return false;
+    }
   }
 }
 

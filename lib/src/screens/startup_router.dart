@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/repositories/onboarding_repository.dart';
 import '../../theme/app_theme.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import '../../routes/routes.dart';
 
 class StartupRouterScreen extends StatefulWidget {
@@ -69,9 +70,17 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     }
 
     // Session exists → check onboarding metadata and route accordingly.
-    final onboardingRepo =
-        widget.onboardingRepository ?? OnboardingRepository();
-    final onboardingComplete = onboardingRepo.isOnboardingComplete;
+    final onboardingRepo = widget.onboardingRepository ?? OnboardingRepository();
+
+    // Determine onboarding completion from the canonical `public.profiles`
+    // row. This avoids relying on auth.user_metadata which is legacy.
+    bool onboardingComplete = false;
+    try {
+      onboardingComplete = await onboardingRepo.fetchOnboardingCompleteFromProfile();
+    } catch (e, st) {
+      LogHandler.warning('StartupRouter', 'Failed to fetch profile onboarding state: $e', e, st);
+      onboardingComplete = false;
+    }
 
     if (onboardingComplete) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

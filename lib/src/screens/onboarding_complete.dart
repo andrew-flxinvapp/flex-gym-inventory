@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../data/repositories/onboarding_repository.dart';
+import 'package:flex_gym_inventory/providers/profile_data_provider.dart';
 
-class OnboardingCompleteScreen extends StatefulWidget {
-  const OnboardingCompleteScreen({super.key, this.notificationsOn = false});
-
-  final bool notificationsOn;
+class OnboardingCompleteScreen extends ConsumerStatefulWidget {
+  const OnboardingCompleteScreen({super.key});
 
   @override
-  State<OnboardingCompleteScreen> createState() =>
+  ConsumerState<OnboardingCompleteScreen> createState() =>
       _OnboardingCompleteScreenState();
 }
 
-class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
+class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScreen> {
   // Keep the repository as a per-state instance so it can be mocked in tests
   final OnboardingRepository _onboardingRepository = OnboardingRepository();
 
@@ -26,27 +26,45 @@ class _OnboardingCompleteScreenState extends State<OnboardingCompleteScreen> {
   Future<void> _handleContinue() async {
     setState(() => _isSubmitting = true);
     try {
-      // Resolve first/last name from authenticated user metadata when
-      // available and pass into the repository so the canonical profile
-      // row is written with the collected values.
+      // Read profile data collected during signup/onboarding from the
+      // in-memory provider.
+      final profile = ref.read(profileDataProvider);
+      final String? firstName = profile.firstName?.trim();
+      final String? lastName = profile.lastName?.trim();
+      final bool notificationsOn = profile.notificationsOn == true;
+
+      // Require authenticated user before attempting the upsert.
       final user = Supabase.instance.client.auth.currentUser;
-      String? firstName;
-      String? lastName;
-      if (user != null) {
-        final meta = user.userMetadata ?? <String, dynamic>{};
-        if (meta.containsKey('first_name') && meta['first_name'] is String) {
-          firstName = (meta['first_name'] as String).trim();
+      if (user == null) {
+        throw Exception('No authenticated user for onboarding');
+      }
+
+      // Validate required name values before upsert.
+      if (firstName == null || firstName.isEmpty || firstName.length < 2) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please provide a valid first name.')),
+          );
         }
-        if (meta.containsKey('last_name') && meta['last_name'] is String) {
-          lastName = (meta['last_name'] as String).trim();
+        return;
+      }
+      if (lastName == null || lastName.isEmpty || lastName.length < 2) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please provide a valid last name.')),
+          );
         }
+        return;
       }
 
       await _onboardingRepository.completeOnboarding(
-        notificationsOn: widget.notificationsOn,
+        notificationsOn: notificationsOn,
         firstName: firstName,
         lastName: lastName,
       );
+
+      // Clear in-memory profile data only after successful upsert.
+      ref.read(profileDataProvider.notifier).clear();
       // repository call completed; we don't navigate here to avoid
       // double-navigation — navigation is handled by the button tap.
     } catch (e) {

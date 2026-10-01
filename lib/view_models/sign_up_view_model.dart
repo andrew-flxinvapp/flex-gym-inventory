@@ -46,14 +46,10 @@ class SignUpViewModel extends ChangeNotifier {
         // Extract names from provided metadata (may be null when caller
         // didn't collect names). `AuthRepository.signUp` requires named
         // `firstName`/`lastName`, so default to empty strings when missing.
-        final first = userMetadata != null && userMetadata['first_name'] is String
-            ? userMetadata['first_name'] as String
-            : '';
-        final last = userMetadata != null && userMetadata['last_name'] is String
-            ? userMetadata['last_name'] as String
-            : '';
-
-        await _authRepository.signUp(email: email, firstName: first, lastName: last);
+        // We do not send names during the OTP sign-up request. Names are
+        // stored locally in `profile_data_provider` and persisted after the
+        // user verifies the magic link.
+        await _authRepository.signUp(email: email);
       _setMessage(
         UiMessage(
           'Sign up successful! Please check your email to verify your account.',

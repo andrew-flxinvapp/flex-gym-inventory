@@ -35,7 +35,7 @@ class ActiveGymService {
   Future<Gym?> getActiveGym() async {
     try {
       final id = await getActiveGymId();
-      return isar.gyms.where().gymIdEqualTo(id).findFirst();
+      return await isar.gyms.where().gymIdEqualTo(id).findFirst();
     } catch (_) {
       return null;
     }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flex_gym_inventory/providers/profile_data_provider.dart';
 import 'package:flutter/gestures.dart';
 import '../../theme/app_theme.dart';
 import '../../constant/constants.dart';
@@ -16,14 +18,14 @@ import '../widgets/inputs/text_input_field.dart';
 // This scree provides user registration entry.
 // Follows MVVM architecture. Connect to a ViewModel for state management.
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   // Terms checkbox removed — users no longer need to toggle acceptance here.
   final SignUpViewModel _signUpViewModel = SignUpViewModel();
   TapGestureRecognizer? _termsTapRecognizer;
@@ -262,6 +264,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         );
                         final emailOk = _signUpViewModel.validateEmail();
                         if (firstOk && lastOk && emailOk) {
+                          // Store names in the in-memory onboarding provider.
+                          ref.read(profileDataProvider.notifier).setFirstName(
+                                _firstNameController.text.trim(),
+                              );
+                          ref.read(profileDataProvider.notifier).setLastName(
+                                _lastNameController.text.trim(),
+                              );
                           _performSignUp();
                         }
                       },

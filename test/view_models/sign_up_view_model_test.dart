@@ -11,7 +11,7 @@ class _RecordingAuthRepository extends AuthRepository {
   String? email;
   _RecordingAuthRepository() : super(client: _MockSupabaseClient());
   @override
-  Future<void> signUp(String email, {required String firstName, required String lastName}) async {
+  Future<void> signUp({required String email}) async {
     called = true;
     this.email = email;
   }
@@ -21,7 +21,7 @@ class _SuccessfulAuthRepository extends AuthRepository {
   String? receivedEmail;
   _SuccessfulAuthRepository() : super(client: _MockSupabaseClient());
   @override
-  Future<void> signUp(String email, {required String firstName, required String lastName}) async {
+  Future<void> signUp({required String email}) async {
     receivedEmail = email;
   }
 }
@@ -31,7 +31,7 @@ class _ThrowingAuthRepository extends AuthRepository {
   _ThrowingAuthRepository(this.exception)
     : super(client: _MockSupabaseClient());
   @override
-  Future<void> signUp(String email, {required String firstName, required String lastName}) async {
+  Future<void> signUp({required String email}) async {
     throw exception;
   }
 }

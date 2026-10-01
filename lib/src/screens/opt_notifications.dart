@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../data/repositories/onboarding_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flex_gym_inventory/providers/profile_data_provider.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
-class OptNotificationsScreen extends StatefulWidget {
+class OptNotificationsScreen extends ConsumerStatefulWidget {
   const OptNotificationsScreen({super.key});
 
   @override
-  State<OptNotificationsScreen> createState() => _OptNotificationsScreenState();
+  ConsumerState<OptNotificationsScreen> createState() => _OptNotificationsScreenState();
 }
 
-class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
+class _OptNotificationsScreenState extends ConsumerState<OptNotificationsScreen> {
 
   Future<void> _handleEnablePress() async {
     // Check current status first. The system dialog only appears when the
@@ -54,25 +54,11 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
         // Request permission; on first run this will show the system dialog.
         final result = await Permission.notification.request();
 
-        // Persist the user's choice locally so Settings reflects onboarding
-        // and also send a lightweight server update so Supabase is in sync.
-        try {
-          final prefs = await SharedPreferences.getInstance();
-          final repo = OnboardingRepository();
-
-          if (result.isGranted || result.isLimited) {
-            await prefs.setBool('allow_notifications', true);
-            try {
-              await repo.updateNotificationsOn(true);
-            } catch (_) {}
-          } else {
-            await prefs.setBool('allow_notifications', false);
-            try {
-              await repo.updateNotificationsOn(false);
-            } catch (_) {}
-          }
-        } catch (_) {
-          // ignore persistence / network errors
+        // Store the user's choice in the in-memory provider only.
+        if (result.isGranted || result.isLimited) {
+          ref.read(profileDataProvider.notifier).setNotificationsOn(true);
+        } else {
+          ref.read(profileDataProvider.notifier).setNotificationsOn(false);
         }
       }
     } catch (_) {
@@ -133,16 +119,8 @@ class _OptNotificationsScreenState extends State<OptNotificationsScreen> {
               SecondaryButton(
                 label: 'Not Now',
                 onPressed: () async {
-                  try {
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.setBool('allow_notifications', false);
-
-                    try {
-                      final repo = OnboardingRepository();
-                      await repo.updateNotificationsOn(false);
-                    } catch (_) {}
-                  } catch (_) {}
-
+                  // Store the user's choice in the in-memory provider only.
+                  ref.read(profileDataProvider.notifier).setNotificationsOn(false);
                   Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureOne);
                 },
               ),
