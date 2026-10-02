@@ -10,6 +10,7 @@ import 'package:isar/isar.dart';
 import 'service/isar_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
+import 'service/revenuecat_service.dart';
 // import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -75,6 +76,25 @@ void main() async {
     }
   });
   await DeeplinkService.instance.init();
+
+  // Configure RevenueCat if an API key is present in .env
+  try {
+    final rcKey = dotenv.env['REVENUECAT_API_KEY'];
+    if (rcKey != null && rcKey.isNotEmpty) {
+      final rc = RevenueCatService();
+      final enableDebug = dotenv.env['REVENUECAT_DEBUG'] == 'true';
+      await rc.configure(
+        apiKey: rcKey,
+        appUserId: Supabase.instance.client.auth.currentUser?.id,
+        enableDebugLogs: enableDebug,
+      );
+      LogHandler.info('Main', 'RevenueCat configured');
+    } else {
+      LogHandler.info('Main', 'REVENUECAT_API_KEY not set; skipping RevenueCat configuration');
+    }
+  } catch (e, st) {
+    LogHandler.warning('Main', 'RevenueCat configuration failed', e, st);
+  }
 
   runApp(ProviderScope(child: MyApp(isar: IsarService.isar)));
 }

@@ -88,7 +88,7 @@ class NewOnboardingUpgrade extends StatelessWidget {
                                 selected: true,
                                 onTap: () {},
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 16),
                               SubscriptionPlanCard(
                                 title: 'Yearly',
                                 price: PriceProvider.yearlyPrice,

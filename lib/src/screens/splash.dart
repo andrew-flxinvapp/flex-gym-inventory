@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/signup');
+        Navigator.of(context).pushReplacementNamed('/login');
       }
     });
   }
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
             stops: [0.0, 0.3, 0.8, 1.0],
             transform: GradientRotation(
               0.25,
-            ), // Rotate the gradient slightly for a more dynamic look
+            ),
           ),
         ),
         child: SafeArea(

@@ -4,6 +4,8 @@ import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/src/widgets/cards/settings_item.dart';
 import '../widgets/buttons/primary_button.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../widgets/snackbar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -128,8 +130,20 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 PrimaryButton(
                   label: 'Sign Out',
-                  onPressed: () {
-                    // TODO: Implement sign out logic
+                  onPressed: () async {
+                    try {
+                      await Supabase.instance.client.auth.signOut();
+                      await Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.startupRouter,
+                        (route) => false,
+                      );
+                    } catch (e) {
+                      showFlexSnackbar(
+                        context,
+                        title: 'Sign out failed',
+                        type: SnackbarType.stop,
+                      );
+                    }
                   },
                 ),
                 // ...other settings content goes here...
