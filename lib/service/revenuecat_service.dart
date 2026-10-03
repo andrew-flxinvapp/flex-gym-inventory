@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 import '../utilities/logging_handler.dart' as app_log;
 
@@ -26,6 +27,17 @@ class RevenueCatService {
     bool enableDebugLogs = false,
   }) async {
     try {
+      // Prevent accidentally initializing a Test Store API key in non-debug builds.
+      final lowerKey = apiKey.toLowerCase();
+      final isTestKey = lowerKey.contains('test') || lowerKey.startsWith('test_');
+      if (isTestKey && !kDebugMode) {
+        app_log.LogHandler.warning(
+          'RevenueCatService',
+          'Detected a Test Store API key but app is not running in debug mode. Skipping RevenueCat configure to avoid enabling Test Store in release builds.',
+        );
+        return;
+      }
+
       app_log.LogHandler.info('RevenueCatService', 'Configuring RevenueCat');
       final config = PurchasesConfiguration(apiKey);
       await Purchases.configure(config);
