@@ -158,6 +158,11 @@ flutter:
     - lib/assets/images/searching.png
     - lib/assets/images/feature_1.png
     - lib/assets/images/feature_2.png
+    - lib/assets/images/new_complete.png
+    - lib/assets/images/new_email.png
+    - lib/assets/images/new_notifications.png
+    - lib/assets/images/new_waiting.png
+    - lib/assets/images/new_welcome.png
     
 flutter_icons:
     android: true

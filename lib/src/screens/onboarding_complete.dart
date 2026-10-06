@@ -127,7 +127,7 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
                 ),
                 const SizedBox(height: 16),
                 Image.asset(
-                  'lib/assets/images/celebrate.png',
+                  'lib/assets/images/new_complete.png',
                   height: 325,
                   fit: BoxFit.contain,
                 ),

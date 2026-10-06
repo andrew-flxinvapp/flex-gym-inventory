@@ -62,7 +62,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'lib/assets/images/empty_gym.png',
+                        'lib/assets/images/new_waiting.png',
                         height: 350,
                         fit: BoxFit.contain,
                       ),

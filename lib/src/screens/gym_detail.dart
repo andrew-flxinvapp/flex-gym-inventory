@@ -78,7 +78,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'lib/assets/images/empty_gym.png',
+                        'lib/assets/images/new_waiting.png',
                         height: 350,
                         fit: BoxFit.contain,
                       ),
@@ -105,7 +105,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'lib/assets/images/empty_gym.png',
+                        'lib/assets/images/new_waiting.png',
                         height: 350,
                         fit: BoxFit.contain,
                       ),

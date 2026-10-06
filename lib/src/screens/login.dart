@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   Center(
                     child: Image.asset(
-                      'lib/assets/images/waiting.png',
+                      'lib/assets/images/new_waiting.png',
                       height: 350,
                       width: 350,
                       fit: BoxFit.contain,

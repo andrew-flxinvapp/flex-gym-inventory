@@ -93,7 +93,7 @@ class _OptNotificationsScreenState extends ConsumerState<OptNotificationsScreen>
               ),
               const SizedBox(height: 16),
               Image.asset(
-                'lib/assets/images/notifications.png',
+                'lib/assets/images/new_notifications.png',
                 height: 350,
                 fit: BoxFit.contain,
               ),

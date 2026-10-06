@@ -89,10 +89,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final emailLabel =
-        _authViewModel.emailController.text.isNotEmpty
-            ? _authViewModel.emailController.text
-            : '(user-email)';
+    final enteredEmail = _authViewModel.emailController.text.trim();
+    final emailLabel = enteredEmail.isNotEmpty ? enteredEmail : 'your email';
 
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
@@ -123,7 +121,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 // Mascot image
                 Center(
                   child: Image.asset(
-                    'lib/assets/images/check_email.png',
+                    'lib/assets/images/new_email.png',
                     height: 350,
                     width: 350,
                     fit: BoxFit.contain,
