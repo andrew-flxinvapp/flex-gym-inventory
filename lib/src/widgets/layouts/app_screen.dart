@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../config/size_config.dart';
 import 'gradient_background.dart';
@@ -11,6 +12,9 @@ import 'gradient_background.dart';
 /// - Provides a scaffold with a configurable `backgroundColor`.
 /// - When `useGradient` is true, paints the `GradientBackground` behind
 ///   the scaffold body and makes the scaffold background transparent.
+/// - When `lightSystemUi` is non-null, sets the system status bar and
+///   navigation/home indicator style: `true` for light (white) icons on dark
+///   screens, `false` for dark icons on light screens. Null leaves it unchanged.
 class AppScreen extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
@@ -18,6 +22,7 @@ class AppScreen extends StatelessWidget {
   final Gradient? gradient;
   final bool unfocusOnTap;
   final bool safeArea;
+  final bool? lightSystemUi;
 
   const AppScreen({
     Key? key,
@@ -27,6 +32,7 @@ class AppScreen extends StatelessWidget {
     this.gradient,
     this.safeArea = true,
     this.unfocusOnTap = false,
+    this.lightSystemUi,
   }) : super(key: key);
 
   @override
@@ -55,6 +61,20 @@ class AppScreen extends StatelessWidget {
       result = GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusScope.of(context).unfocus(),
+        child: result,
+      );
+    }
+
+    final light = lightSystemUi;
+    if (light != null) {
+      final iconBrightness = light ? Brightness.light : Brightness.dark;
+      result = AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          // iOS status bar: statusBarBrightness describes the background.
+          statusBarBrightness: light ? Brightness.dark : Brightness.light,
+          statusBarIconBrightness: iconBrightness,
+          systemNavigationBarIconBrightness: iconBrightness,
+        ),
         child: result,
       );
     }

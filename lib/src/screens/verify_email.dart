@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
@@ -19,6 +20,7 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  StreamSubscription<AuthState>? _authSub;
   final AuthViewModel _authViewModel = AuthViewModel();
 
   @override
@@ -54,6 +56,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   void dispose() {
+    _authSub?.cancel();
     _authViewModel.dispose();
     super.dispose();
   }
@@ -61,6 +64,14 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   void initState() {
     super.initState();
+    // Continue into the app as soon as the magic link restores a session.
+    _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
+      if (event.session == null || !mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        AppRoutes.startupRouter,
+        (_) => false,
+      );
+    });
     _authViewModel.addListener(() {
       if (!mounted) return;
       final msg = _authViewModel.message;

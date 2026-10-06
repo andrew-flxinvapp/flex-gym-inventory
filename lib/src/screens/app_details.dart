@@ -201,7 +201,7 @@ class AppDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Built with Flutter, Supabase, Isar Database, [other open source libraries]',
+                        'Built with Flutter, Supabase, Isar Database, [other open source libraries]. Landing screen image by Ambitius Studio/Rick Barrett via Unsplash.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppTheme.lightTextPrimary,
                         ),

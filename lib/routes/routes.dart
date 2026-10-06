@@ -14,6 +14,7 @@ import '../src/screens/add_wishlist.dart';
 import '../src/screens/edit_wishlist.dart';
 import '../src/screens/edit_equipment.dart';
 //import '../src/screens/settings.dart';
+import '../src/screens/auth_landing.dart';
 import '../src/screens/signup.dart';
 import '../src/screens/login.dart';
 import '../src/screens/app_details.dart';
@@ -69,6 +70,7 @@ class AppRoutes {
   static const String editWishlist = '/edit-wishlist';
 
   // Auth routes
+  static const String authLanding = '/auth-landing';
   static const String signup = '/signup';
   static const String login = '/login';
   static const String verifyEmail = '/verify-email';
@@ -124,6 +126,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.wishlistDetail: (context) => const WishlistDetailScreen(),
 
   // Auth routes
+  AppRoutes.authLanding: (context) => const AuthLanding(),
   AppRoutes.signup: (context) => const SignupScreen(),
   AppRoutes.login: (context) => const LoginScreen(),
   AppRoutes.verifyEmail: (context) => const VerifyEmailScreen(),

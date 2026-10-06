@@ -48,7 +48,18 @@ void main() async {
           LogHandler.warning('Deeplink', 'getSessionFromUrl failed: $e', e, st);
         }
 
-        final user = Supabase.instance.client.auth.currentUser;
+        var user = Supabase.instance.client.auth.currentUser;
+        // supabase_flutter also consumes the link on its own, so our call can
+        // fail (code already used) while the session is still being set.
+        // Wait briefly for it instead of falling through to verify-email.
+        if (user == null) {
+          try {
+            await Supabase.instance.client.auth.onAuthStateChange
+                .firstWhere((e) => e.session != null)
+                .timeout(const Duration(seconds: 5));
+          } catch (_) {}
+          user = Supabase.instance.client.auth.currentUser;
+        }
         if (user != null) {
           // Successful sign-in — navigate into the app (startup router will
           // decide whether to show onboarding or main flow).

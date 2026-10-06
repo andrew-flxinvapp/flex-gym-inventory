@@ -61,10 +61,10 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
         },
       );
 
-      // No session → User not logged in → Go to Login / Sign Up screen
+      // No session → User not logged in → Go to Auth Landing screen
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+        Navigator.of(context).pushReplacementNamed(AppRoutes.authLanding);
       });
       return;
     }
