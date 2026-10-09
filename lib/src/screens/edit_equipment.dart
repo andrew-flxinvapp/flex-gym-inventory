@@ -16,6 +16,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/layouts/app_screen.dart';
 
 class EditEquipmentScreen extends StatefulWidget {
   const EditEquipmentScreen({super.key});
@@ -122,7 +123,9 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
           });
         },
       ),
-      body: SafeArea(
+      body: AppScreen(
+        safeArea: true,
+        unfocusOnTap: true,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(

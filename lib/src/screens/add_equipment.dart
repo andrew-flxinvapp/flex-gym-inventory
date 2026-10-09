@@ -19,6 +19,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/layouts/app_screen.dart';
 
 class AddEquipmentScreen extends ConsumerStatefulWidget {
   const AddEquipmentScreen({super.key});
@@ -98,7 +99,9 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
           });
         },
       ),
-      body: SafeArea(
+      body: AppScreen(
+        safeArea: true,
+        unfocusOnTap: true,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(

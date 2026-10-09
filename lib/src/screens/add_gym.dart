@@ -13,6 +13,7 @@ import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/inputs/gym_id_display_field.dart';
+import '../widgets/layouts/app_screen.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 
@@ -59,7 +60,9 @@ class _AddGymScreenState extends ConsumerState<AddGymScreen> {
           });
         },
       ),
-      body: SafeArea(
+      body: AppScreen(
+        safeArea: true,
+        unfocusOnTap: true,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Form(

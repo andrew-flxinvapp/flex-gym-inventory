@@ -16,7 +16,7 @@ class DisplayField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 370,
+      width: double.infinity,
       child: Container(
         decoration: BoxDecoration(
           color: AppTheme.lightCard,

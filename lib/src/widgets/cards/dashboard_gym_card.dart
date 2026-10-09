@@ -82,7 +82,7 @@ class DashboardGymCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Equipment Items',
+                            'Items',
                             style: Theme.of(
                               context,
                             ).textTheme.titleSmall?.copyWith(
@@ -116,7 +116,7 @@ class DashboardGymCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Updated $daysAgo Days Ago',
+                        'Created $daysAgo Days Ago',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppTheme.lightTextPrimary,
                         ),

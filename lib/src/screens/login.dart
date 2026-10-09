@@ -5,6 +5,8 @@ import '../widgets/buttons/primary_button.dart';
 import '../../view_models/login_view_model.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../widgets/snackbar.dart';
+import '../widgets/inputs/text_input_field.dart';
+import '../widgets/layouts/app_screen.dart';
 
 // LoginScreen
 //
@@ -28,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Listen for view model state changes to update UI and show messages
     _loginViewModel.addListener(() {
       if (!mounted) return;
       final msg = _loginViewModel.message;
@@ -37,6 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       setState(() {});
     });
+
+    // Clear email error as the user types
+    _loginViewModel.emailController.addListener(_onEmailChanged);
   }
 
   Future<void> _sendMagicLink() async {
@@ -45,8 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    // Remove controller listener before disposing view model
+    _loginViewModel.emailController.removeListener(_onEmailChanged);
     _loginViewModel.dispose();
     super.dispose();
+  }
+
+  void _onEmailChanged() {
+    // Keep email error state in sync while typing
+    _loginViewModel.clearEmailError();
   }
 
   @override
@@ -54,7 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const OnboardingLogoAppBar(),
-      body: SafeArea(
+      body: AppScreen(
+        safeArea: true,
+        unfocusOnTap: true,
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -92,40 +108,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Email',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
-                    child: TextField(
-                      controller: _loginViewModel.emailController,
-                      onChanged: (_) => _loginViewModel.clearEmailError(),
-                      decoration: InputDecoration(
-                        hintText: 'flex@flxinv.com',
-                        hintStyle: TextStyle(
-                          color: AppTheme.lightTextSecondary,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextInputField(
+                          hintText: 'flex@flxinv.com',
+                          controller: _loginViewModel.emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          width: double.infinity,
+                          height: 56,
                         ),
-                        errorText: _loginViewModel.emailError,
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      style: TextStyle(color: AppTheme.lightTextPrimary),
-                      keyboardType: TextInputType.emailAddress,
+                        if (_loginViewModel.emailError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0, left: 6.0),
+                            child: Text(
+                              _loginViewModel.emailError!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),

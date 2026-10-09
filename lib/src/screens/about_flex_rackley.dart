@@ -23,7 +23,7 @@ class AboutFlexRackleyScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 16),
                 Image.asset(
-                  'lib/assets/images/hello.png',
+                  'lib/assets/images/new_welcome.png',
                   height: 350,
                   fit: BoxFit.contain,
                 ),

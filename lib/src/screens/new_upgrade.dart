@@ -7,6 +7,7 @@ import '../widgets/displays/social_proof_display.dart';
 import '../widgets/cards/plan_comparison_card.dart';
 import '../widgets/displays/purchase_reassurance.dart';
 import '../widgets/cards/subscription_plan_card.dart';
+import '../widgets/displays/subscription_display.dart';
 import '../providers/price_provider.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/displays/footer_links.dart';
@@ -81,27 +82,24 @@ class NewUpgrade extends StatelessWidget {
                       const Center(child: PurchaseReassurance()),
                       const SizedBox(height: 8),
                       Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SubscriptionPlanCard(
-                              title: 'Monthly',
-                              price: PriceProvider.monthlyPrice,
-                              badge: '7-day free trial',
-                              variant: SubscriptionPlanCardVariant.monthly,
-                              selected: true,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 16),
-                            SubscriptionPlanCard(
-                              title: 'Yearly',
-                              price: PriceProvider.yearlyPrice,
-                              badge: 'Save 25%',
-                              variant: SubscriptionPlanCardVariant.yearly,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                          ],
+                        child: SubscriptionDisplay(
+                          monthlyCard: SubscriptionPlanCard(
+                            title: 'Monthly',
+                            price: PriceProvider.monthlyPrice,
+                            badge: '7-day free trial',
+                            variant: SubscriptionPlanCardVariant.monthly,
+                            selected: true,
+                            onTap: () {},
+                          ),
+                          yearlyCard: SubscriptionPlanCard(
+                            title: 'Yearly',
+                            price: PriceProvider.yearlyPrice,
+                            badge: 'Save 25%',
+                            variant: SubscriptionPlanCardVariant.yearly,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          spacing: 16,
                         ),
                       ),
                       const SizedBox(height: 20),

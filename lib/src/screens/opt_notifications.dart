@@ -7,6 +7,7 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
+import '../widgets/layouts/app_screen.dart';
 
 class OptNotificationsScreen extends ConsumerStatefulWidget {
   const OptNotificationsScreen({super.key});
@@ -74,7 +75,9 @@ class _OptNotificationsScreenState extends ConsumerState<OptNotificationsScreen>
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const OnboardingLogoAppBar(showBackArrow: true),
-      body: SafeArea(
+      body: AppScreen(
+        useGradient: true,
+        safeArea: true,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(

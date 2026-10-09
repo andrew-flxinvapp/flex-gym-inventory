@@ -12,6 +12,7 @@ import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
+import '../widgets/layouts/app_screen.dart';
 import '../widgets/snackbar.dart';
 
 class EditWishlistScreen extends StatefulWidget {
@@ -89,7 +90,9 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
           });
         },
       ),
-      body: SafeArea(
+      body: AppScreen(
+        safeArea: true,
+        unfocusOnTap: true,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(

@@ -40,7 +40,30 @@ void main() async {
           params.containsKey('refresh_token');
       final hasCode = uri.queryParameters.containsKey('code');
 
-      if (hasToken || hasCode) {
+      // Email templates that use {{ .TokenHash }} (common for the "Confirm
+      // signup" email sent to new users) deliver token_hash + type instead of
+      // a code, so verify those directly.
+      final tokenHash = params['token_hash'];
+      if (tokenHash != null && tokenHash.isNotEmpty) {
+        try {
+          final type = switch (params['type']) {
+            'signup' => OtpType.signup,
+            'invite' => OtpType.invite,
+            'recovery' => OtpType.recovery,
+            'email_change' => OtpType.emailChange,
+            'email' => OtpType.email,
+            _ => OtpType.magiclink,
+          };
+          await Supabase.instance.client.auth.verifyOTP(
+            tokenHash: tokenHash,
+            type: type,
+          );
+        } catch (e, st) {
+          LogHandler.warning('Deeplink', 'verifyOTP failed: $e', e, st);
+        }
+      }
+
+      if (hasToken || hasCode || tokenHash != null) {
         try {
           await Supabase.instance.client.auth.getSessionFromUrl(uri);
         } catch (e, st) {
@@ -71,7 +94,14 @@ void main() async {
         }
       }
 
-      // No tokens/code or session restore failed — navigate to verify email
+      // No tokens/code or session restore failed — show verify email, but
+      // don't stack a second copy if it's already the current screen.
+      var alreadyOnVerify = false;
+      navigatorKey.currentState?.popUntil((route) {
+        alreadyOnVerify = route.settings.name == AppRoutes.verifyEmail;
+        return true;
+      });
+      if (alreadyOnVerify) return;
       navigatorKey.currentState?.pushNamed(
         AppRoutes.verifyEmail,
         arguments: params,
