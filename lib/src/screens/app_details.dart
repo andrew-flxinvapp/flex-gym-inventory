@@ -3,6 +3,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/layouts/app_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../service/app_info_service.dart';
 
 class AppDetailsScreen extends StatelessWidget {
   const AppDetailsScreen({super.key});
@@ -71,13 +72,31 @@ class AppDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 2),
-                                Text(
-                                  'Version 1.0.0',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(
-                                    color: AppTheme.lightTextPrimary,
-                                  ),
+                                Builder(
+                                  builder: (context) {
+                                    // Trigger async initialization if we don't yet have info.
+                                    if (appInfoService.info.value == null) {
+                                      appInfoService.init();
+                                    }
+
+                                    return ValueListenableBuilder(
+                                      valueListenable: appInfoService.info,
+                                      builder: (context, pi, _) {
+                                        final display = pi != null
+                                            ? 'Version ${pi.version}${pi.buildNumber.isNotEmpty ? '+${pi.buildNumber}' : ''}'
+                                            : 'Version ${appInfoService.displayVersion}';
+
+                                        return Text(
+                                          display,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium?.copyWith(
+                                            color: AppTheme.lightTextPrimary,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ),

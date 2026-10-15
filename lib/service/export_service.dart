@@ -24,10 +24,19 @@ class ExportService {
   static Future<File> exportPdfSummary(
     Isar isar,
     String gymId, {
+    required String userId,
     String? fileName,
   }) async {
-    // Query gym and its equipment
-    final gym = await isar.gyms.filter().gymIdEqualTo(gymId).findFirst();
+    final gym =
+        await isar.gyms
+            .filter()
+            .userIdEqualTo(userId)
+            .and()
+            .gymIdEqualTo(gymId)
+            .findFirst();
+    if (gym == null) {
+      throw StateError('Gym not found for the current user.');
+    }
     final equipments =
         await isar.equipments.filter().gymIdEqualTo(gymId).findAll();
 
@@ -39,35 +48,52 @@ class ExportService {
 
     doc.addPage(
       pw.MultiPage(
-        build: (pw.Context context) => [
-          pw.Header(
-            level: 0,
-            child: pw.Text(gym?.name ?? 'Gym Summary', style: pw.TextStyle(font: robotoBold, fontSize: 20)),
-          ),
-          pw.Text('Location: ${gym?.location ?? '—'}', style: pw.TextStyle(font: roboto)),
-          pw.SizedBox(height: 8),
-          pw.Text('Created: ${DateTime.now()}', style: pw.TextStyle(font: roboto, fontSize: 12)),
-          pw.SizedBox(height: 12),
-          pw.Text(
-            'Equipment',
-            style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: robotoBold),
-          ),
-          pw.SizedBox(height: 8),
-          pw.TableHelper.fromTextArray(
-            context: context,
-            headers: ['Name', 'Qty', 'Condition', 'Value'],
-            data: equipments
-                .map((e) => [
-                      e.name,
-                      e.quantity.toString(),
-                      e.condition.toString().split('.').last,
-                      e.value?.toStringAsFixed(2) ?? '-',
-                    ])
-                .toList(),
-            headerStyle: pw.TextStyle(font: robotoBold),
-            cellStyle: pw.TextStyle(font: roboto),
-          ),
-        ],
+        build:
+            (pw.Context context) => [
+              pw.Header(
+                level: 0,
+                child: pw.Text(
+                  gym.name,
+                  style: pw.TextStyle(font: robotoBold, fontSize: 20),
+                ),
+              ),
+              pw.Text(
+                'Location: ${gym.location ?? '—'}',
+                style: pw.TextStyle(font: roboto),
+              ),
+              pw.SizedBox(height: 8),
+              pw.Text(
+                'Created: ${DateTime.now()}',
+                style: pw.TextStyle(font: roboto, fontSize: 12),
+              ),
+              pw.SizedBox(height: 12),
+              pw.Text(
+                'Equipment',
+                style: pw.TextStyle(
+                  fontSize: 16,
+                  fontWeight: pw.FontWeight.bold,
+                  font: robotoBold,
+                ),
+              ),
+              pw.SizedBox(height: 8),
+              pw.TableHelper.fromTextArray(
+                context: context,
+                headers: ['Name', 'Qty', 'Condition', 'Value'],
+                data:
+                    equipments
+                        .map(
+                          (e) => [
+                            e.name,
+                            e.quantity.toString(),
+                            e.condition.toString().split('.').last,
+                            e.value?.toStringAsFixed(2) ?? '-',
+                          ],
+                        )
+                        .toList(),
+                headerStyle: pw.TextStyle(font: robotoBold),
+                cellStyle: pw.TextStyle(font: roboto),
+              ),
+            ],
       ),
     );
 
@@ -75,10 +101,10 @@ class ExportService {
     final dir = await getApplicationDocumentsDirectory();
     // Use the gym name in the filename when available. Sanitize to remove
     // unsafe characters and replace spaces with underscores.
-    final rawName = gym?.name ?? gymId;
+    final rawName = gym.name;
     final safeBase = rawName
-      .replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '')
-      .replaceAll(RegExp(r'\s+'), '_');
+        .replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '')
+        .replaceAll(RegExp(r'\s+'), '_');
     final outName = fileName ?? '${safeBase}_summary.pdf';
     final outFile = File(p.join(dir.path, outName));
     await outFile.writeAsBytes(bytes);
@@ -89,10 +115,16 @@ class ExportService {
   static Future<void> exportPdfAndShare(
     Isar isar,
     String gymId, {
+    required String userId,
     String? fileName,
     String? shareText,
   }) async {
-    final file = await exportPdfSummary(isar, gymId, fileName: fileName);
+    final file = await exportPdfSummary(
+      isar,
+      gymId,
+      userId: userId,
+      fileName: fileName,
+    );
     final bytes = await file.readAsBytes();
     final filename = p.basename(file.path);
     await Printing.sharePdf(bytes: bytes, filename: filename);

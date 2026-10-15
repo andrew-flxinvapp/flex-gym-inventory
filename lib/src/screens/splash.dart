@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../service/app_info_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,6 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // Kick off async retrieval of package info; don't await — allow splash to
+    // continue showing and navigating on the existing timer.
+    appInfoService.init();
+
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/startup-router');
@@ -59,13 +64,22 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 32.0),
-                child: Text(
-                  'Version 1.0.0',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    color: AppTheme.darkTextPrimary,
-                  ),
+                child: ValueListenableBuilder(
+                  valueListenable: appInfoService.info,
+                  builder: (context, pi, _) {
+                    final display = pi != null
+                        ? 'Version ${pi.version}${pi.buildNumber.isNotEmpty ? '+${pi.buildNumber}' : ''}'
+                        : 'Version ${appInfoService.displayVersion}';
+
+                    return Text(
+                      display,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: AppTheme.darkTextPrimary,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
