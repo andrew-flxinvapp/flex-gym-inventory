@@ -160,18 +160,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   ),
                 ),
                 const SizedBox(height: 16),
-                if (gyms.isNotEmpty)
+                for (final gym in gyms) ...[
                   InkWell(
                     onTap: () async {
                       final service = ActiveGymService(IsarService.isar);
-                      await service.setActiveGymId(gyms[0].gymId);
+                      await service.setActiveGymId(gym.gymId);
+                      if (!context.mounted) return;
                       Navigator.of(context).pushNamed(AppRoutes.gymDetail);
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: DashboardGymCard(
-                      gymName: gyms[0].gymName,
-                      equipmentCount: gyms[0].equipmentCount,
-                      lastUpdated: gyms[0].lastUpdated,
+                      key: ValueKey(gym.gymId),
+                      gymName: gym.gymName,
+                      equipmentCount: gym.equipmentCount,
+                      lastUpdated: gym.lastUpdated,
                       onDelete: () {
                         showDialog(
                           context: context,
@@ -184,9 +186,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                                 onConfirm: () async {
                                   // Resolve gym by gymId then delete
                                   final repo = GymRepository();
-                                  final g = await repo.getByGymId(
-                                    gyms[0].gymId,
-                                  );
+                                  final g = await repo.getByGymId(gym.gymId);
                                   if (g != null) {
                                     await repo.deleteGym(g.id);
                                   }
@@ -199,7 +199,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                       },
                     ),
                   ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                ],
                 PrimaryButton(
                   label: 'Add Gym',
                   onPressed: () async {
