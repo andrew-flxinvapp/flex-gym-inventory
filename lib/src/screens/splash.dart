@@ -71,13 +71,26 @@ class _SplashScreenState extends State<SplashScreen> {
                         ? 'Version ${pi.version}${pi.buildNumber.isNotEmpty ? '+${pi.buildNumber}' : ''}'
                         : 'Version ${appInfoService.displayVersion}';
 
-                    return Text(
-                      display,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                        color: AppTheme.darkTextPrimary,
-                      ),
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          display,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: AppTheme.darkTextPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'ALPHA TEST',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: AppTheme.darkTextPrimary),
+                        ),
+                      ],
                     );
                   },
                 ),

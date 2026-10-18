@@ -259,10 +259,17 @@ class _DashboardArcChartState extends State<DashboardArcChart> {
             Center(child: chartWidget()),
             const SizedBox(height: 24),
             Theme(
-              data: theme.copyWith(dividerColor: Colors.transparent),
+              data: theme.copyWith(
+                dividerColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+              ),
               child: Material(
                 color: Colors.transparent,
                 child: ExpansionTile(
+                  backgroundColor: Colors.transparent,
+                  collapsedBackgroundColor: Colors.transparent,
                   title: Text(
                     'Legend',
                     style: theme.textTheme.bodyLarge?.copyWith(
