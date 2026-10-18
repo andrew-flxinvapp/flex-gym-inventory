@@ -4,14 +4,15 @@ import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/buttons/primary_button.dart';
+import '../widgets/displays/purchase_info_item.dart';
+
 // import 'package:flex_gym_inventory/routes/routes.dart';
 
 class UpgradeScreen extends StatefulWidget {
   const UpgradeScreen({super.key});
 
   @override
-  State<UpgradeScreen> createState() =>
-      _UpgradeScreenState();
+  State<UpgradeScreen> createState() => _UpgradeScreenState();
 }
 
 class _UpgradeScreenState extends State<UpgradeScreen> {
@@ -391,74 +392,100 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextButton(
-                            onPressed: () async {
-                              final uri = Uri.parse('https://flexgyminventory.app/terms-and-conditions');
+                          PurchaseInfoItem(
+                            label: 'Terms of Use',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontFamily: 'Roboto',
+                            ),
+                            onTap: () async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final uri = Uri.parse(
+                                'https://flexgyminventory.app/terms-and-conditions',
+                              );
                               try {
-                                if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Could not open Terms and Conditions')),
+                                if (!await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                )) {
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Could not open Terms and Conditions',
+                                      ),
+                                    ),
                                   );
                                 }
                               } catch (_) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Could not open Terms and Conditions')),
+                                if (!mounted) return;
+                                messenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Could not open Terms and Conditions',
+                                    ),
+                                  ),
                                 );
                               }
                             },
-                            child: Text(
-                              'Terms of Use',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelSmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                                fontFamily: 'Roboto',
-                              ),
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24.0,
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                // TODO: Restore purchases
-                              },
-                              child: Text(
-                                'Restore',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.labelSmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              final uri = Uri.parse('https://flexgyminventory.app/privacy-policy');
-                              try {
-                                if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Could not open Privacy Policy')),
-                                  );
-                                }
-                              } catch (_) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Could not open Privacy Policy')),
-                                );
-                              }
-                            },
-                            child: Text(
-                              'Privacy Policy',
+                            child: PurchaseInfoItem(
+                              label: 'Restore',
                               style: Theme.of(
                                 context,
                               ).textTheme.labelSmall?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
                               ),
+                              onTap: () {
+                                // TODO: Restore purchases
+                              },
                             ),
+                          ),
+                          PurchaseInfoItem(
+                            label: 'Privacy Policy',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontFamily: 'Roboto',
+                            ),
+                            onTap: () async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final uri = Uri.parse(
+                                'https://flexgyminventory.app/privacy-policy',
+                              );
+                              try {
+                                if (!await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                )) {
+                                  if (!mounted) return;
+                                  messenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Could not open Privacy Policy',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } catch (_) {
+                                if (!mounted) return;
+                                messenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Could not open Privacy Policy',
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),

@@ -163,7 +163,7 @@ class _ExportScreenState extends State<ExportScreen> {
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: AppTheme.lightTextPrimary),
                         )
-                        : ListView.builder(
+                        : ListView.separated(
                           itemCount: _gyms.length,
                           itemBuilder: (context, index) {
                             final g = _gyms[index];
@@ -176,6 +176,8 @@ class _ExportScreenState extends State<ExportScreen> {
                                       setState(() => _selectedGymId = g.gymId),
                             );
                           },
+                          separatorBuilder:
+                              (context, index) => const SizedBox(height: 16),
                         ),
               ),
 

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/displays/user_count.dart';
 import '../widgets/displays/user_ratings.dart';
-import '../widgets/displays/purchase_reassurance.dart';
+import '../widgets/displays/purchase_info_item.dart';
+import '../widgets/placeholders/vertical_divider.dart';
 import '../widgets/displays/footer_links.dart';
 import '../data/dtos/social_proof_content.dart';
 import '../widgets/displays/social_proof_display.dart';
@@ -38,7 +39,48 @@ class ComponentGallery extends StatelessWidget {
                       const SizedBox(height: 12),
                       SocialProofDisplay(data: socialProofContent),
                       const SizedBox(height: 12),
-                      const PurchaseReassurance(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: PurchaseInfoItem(
+                              label: '7-day free trial',
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 40,
+                            height: 32,
+                            child: Center(
+                              child: CustomVerticalDivider(height: 16),
+                            ),
+                          ),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: PurchaseInfoItem(
+                              label: 'No commitment',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 40,
+                            height: 32,
+                            child: Center(
+                              child: CustomVerticalDivider(height: 16),
+                            ),
+                          ),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: PurchaseInfoItem(
+                              label: 'Cancel anytime',
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 12),
                       const PlanComparisonCard(),
                       const SizedBox(height: 12),
@@ -72,7 +114,9 @@ class ComponentGallery extends StatelessWidget {
                       FooterLinks(
                         onRestore: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Restore Purchases pressed')),
+                            const SnackBar(
+                              content: Text('Restore Purchases pressed'),
+                            ),
                           );
                         },
                       ),

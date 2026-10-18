@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/buttons/primary_button.dart';
+import '../widgets/displays/purchase_info_item.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
 class OnboardingUpgradeScreen extends StatefulWidget {
@@ -404,52 +405,46 @@ class _OnboardingUpgradeScreenState extends State<OnboardingUpgradeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextButton(
-                            onPressed: () {
+                          PurchaseInfoItem(
+                            label: 'Terms of Use',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontFamily: 'Roboto',
+                            ),
+                            onTap: () {
                               // TODO: Open Terms of Use
                             },
-                            child: Text(
-                              'Terms of Use',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelSmall?.copyWith(
-                                color: AppTheme.lightTextPrimary,
-                                fontFamily: 'Roboto',
-                              ),
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24.0,
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                // TODO: Restore purchases
-                              },
-                              child: Text(
-                                'Restore',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.labelSmall?.copyWith(
-                                  color: AppTheme.lightTextPrimary,
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // TODO: Open Privacy Policy
-                            },
-                            child: Text(
-                              'Privacy Policy',
+                            child: PurchaseInfoItem(
+                              label: 'Restore',
                               style: Theme.of(
                                 context,
                               ).textTheme.labelSmall?.copyWith(
                                 color: AppTheme.lightTextPrimary,
                                 fontFamily: 'Roboto',
                               ),
+                              onTap: () {
+                                // TODO: Restore purchases
+                              },
                             ),
+                          ),
+                          PurchaseInfoItem(
+                            label: 'Privacy Policy',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontFamily: 'Roboto',
+                            ),
+                            onTap: () {
+                              // TODO: Open Privacy Policy
+                            },
                           ),
                         ],
                       ),

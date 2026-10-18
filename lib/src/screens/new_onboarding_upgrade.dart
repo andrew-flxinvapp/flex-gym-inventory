@@ -5,7 +5,8 @@ import '../widgets/layouts/gradient_background.dart';
 import '../../routes/routes.dart';
 import '../widgets/displays/social_proof_display.dart';
 import '../widgets/cards/plan_comparison_card.dart';
-import '../widgets/displays/purchase_reassurance.dart';
+import '../widgets/displays/purchase_info_item.dart';
+import '../widgets/placeholders/vertical_divider.dart';
 import '../widgets/cards/subscription_plan_card.dart';
 import '../providers/price_provider.dart';
 import '../widgets/buttons/primary_button.dart';
@@ -34,13 +35,15 @@ class NewOnboardingUpgrade extends StatelessWidget {
                     children: [
                       Text(
                         'Upgrade to PRO',
-                        style:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: AppTheme.darkTextPrimary,
-                                ),
+                        style: Theme.of(context).textTheme.displayMedium
+                            ?.copyWith(color: AppTheme.darkTextPrimary),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.pushNamed(context, AppRoutes.complete),
+                        onPressed:
+                            () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.complete,
+                            ),
                         style: TextButton.styleFrom(
                           foregroundColor: AppTheme.darkTextPrimary,
                           textStyle: Theme.of(context).textTheme.bodySmall,
@@ -58,23 +61,64 @@ class NewOnboardingUpgrade extends StatelessWidget {
                         const SizedBox(height: 16),
                         Text(
                           'Get more out of Flex Gym Inventory',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: AppTheme.darkTextPrimary,
-                              ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(color: AppTheme.darkTextPrimary),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Unlock unlimited everything, plus powerful tools to manage your gym with ease.',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppTheme.darkTextPrimary,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppTheme.darkTextPrimary),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         const Center(child: PlanComparisonCard()),
                         const SizedBox(height: 8),
-                        const Center(child: PurchaseReassurance()),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: PurchaseInfoItem(
+                                  label: '7-day free trial',
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 40,
+                                height: 32,
+                                child: Center(
+                                  child: CustomVerticalDivider(height: 16),
+                                ),
+                              ),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: PurchaseInfoItem(
+                                  label: 'No commitment',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 40,
+                                height: 32,
+                                child: Center(
+                                  child: CustomVerticalDivider(height: 16),
+                                ),
+                              ),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: PurchaseInfoItem(
+                                  label: 'Cancel anytime',
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         Center(
                           child: Row(
@@ -113,7 +157,9 @@ class NewOnboardingUpgrade extends StatelessWidget {
                           child: FooterLinks(
                             onRestore: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Restore Purchases pressed')),
+                                const SnackBar(
+                                  content: Text('Restore Purchases pressed'),
+                                ),
                               );
                             },
                           ),

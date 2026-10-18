@@ -7,6 +7,37 @@ import '../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import '../../routes/routes.dart';
 
+/// Decides where the app should go on startup. Shared by [SplashScreen] and
+/// [StartupRouterScreen] so the decision rules live in one place.
+///
+/// - No session → [AppRoutes.authLanding]
+/// - Session + onboarding complete → [AppRoutes.dashboard]
+/// - Session + onboarding incomplete → [AppRoutes.optNotifications]
+Future<String> resolveStartupRoute({
+  OnboardingRepository? onboardingRepository,
+  Session? testSession,
+}) async {
+  // Prefer an injected test session to avoid touching Supabase in tests.
+  final session =
+      testSession ?? Supabase.instance.client.auth.currentSession;
+
+  if (session == null) return AppRoutes.authLanding;
+
+  final onboardingRepo = onboardingRepository ?? OnboardingRepository();
+
+  // Determine onboarding completion from the canonical `public.profiles`
+  // row. This avoids relying on auth.user_metadata which is legacy.
+  bool onboardingComplete = false;
+  try {
+    onboardingComplete = await onboardingRepo.fetchOnboardingCompleteFromProfile();
+  } catch (e, st) {
+    LogHandler.warning('StartupRouter', 'Failed to fetch profile onboarding state: $e', e, st);
+    onboardingComplete = false;
+  }
+
+  return onboardingComplete ? AppRoutes.dashboard : AppRoutes.optNotifications;
+}
+
 class StartupRouterScreen extends StatefulWidget {
   /// Optional injection point for `OnboardingRepository` to make the screen
   /// testable. If not provided, a default instance is created.
@@ -36,16 +67,14 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
   }
 
   Future<void> _bootstrap() async {
-    // Prefer an injected test session to avoid touching Supabase in tests.
-    Session? session = widget.testSession;
-    if (session == null) {
-      final client = Supabase.instance.client;
-      session = client.auth.currentSession;
-    }
+    final target = await resolveStartupRoute(
+      onboardingRepository: widget.onboardingRepository,
+      testSession: widget.testSession,
+    );
 
     if (!mounted) return;
 
-    if (session == null) {
+    if (target == AppRoutes.authLanding) {
       // No session right now — listen for an auth state change so that when
       // the magic link flow restores a session we can navigate into the app.
       _authSub = Supabase.instance.client.auth.onAuthStateChange.listen(
@@ -60,42 +89,12 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
           }
         },
       );
-
-      // No session → User not logged in → Go to Auth Landing screen
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed(AppRoutes.authLanding);
-      });
-      return;
     }
 
-    // Session exists → check onboarding metadata and route accordingly.
-    final onboardingRepo = widget.onboardingRepository ?? OnboardingRepository();
-
-    // Determine onboarding completion from the canonical `public.profiles`
-    // row. This avoids relying on auth.user_metadata which is legacy.
-    bool onboardingComplete = false;
-    try {
-      onboardingComplete = await onboardingRepo.fetchOnboardingCompleteFromProfile();
-    } catch (e, st) {
-      LogHandler.warning('StartupRouter', 'Failed to fetch profile onboarding state: $e', e, st);
-      onboardingComplete = false;
-    }
-
-    if (onboardingComplete) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
-      });
-    } else {
-      // Not complete — send the user into the onboarding flow.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(
-          context,
-        ).pushReplacementNamed(AppRoutes.optNotifications);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed(target);
+    });
   }
 
   @override
