@@ -85,9 +85,9 @@ Flex Gym Inventory is designed for iOS and Android, with iOS prioritized for ini
 ## Developer
 
 Flex Gym Inventory is developed and published by **HEAVY DEV Co. LLC**.
-Substack: @hevydevco
-Bluesky: @heavydevco.bsky.social
-X/Twitter: @heavydevco
+- Substack: @hevydevco
+- Bluesky: @heavydevco.bsky.social
+- X/Twitter: @heavydevco
 
 ## License
 
