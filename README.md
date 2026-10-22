@@ -1,88 +1,94 @@
-# Flex Gym Inventory
+<p align="center">
+  <img src="lib/assets/images/fgi_logo_navy.png" alt="Flex Gym Inventory" width="360">
+</p>
 
-Flex Gym Inventory 
+<p align="center"><strong>A clearer view of every gym and every piece of equipment.</strong></p>
 
-Lightweight. Powerful. Purpose-Built.
+Flex Gym Inventory (FGI) is a mobile inventory app for home gym enthusiasts and small gym owners. Organize multiple gyms, keep equipment details in one place, plan future purchases, and understand your inventory without relying on scattered notes or spreadsheets.
 
-## Description
+## About
 
-Flex Gym Inventory is a lightweight, powerful mobile app designed for home and small gym owners to track, manage, and organize their equipment. 
-
-Built in Flutter for iOS and Android.
-
-## Build in Public
-
-This app is being developed in public to share the process, learn out loud, and invite feedback from fellow lifters and developers.
-
-Follow along:
--	Instagram: @flxinv.app
--	Bluesky: @flxinvapp.bsky.social
--	Twitter/X: @flxinvapp
-- Substack: www.substack.com/@heavydevco
-
-
-
+Whether you manage a single garage gym or equipment across several locations, FGI helps keep your inventory organized and easy to review. Each gym has its own equipment list, while wishlists help you keep track of gear you may want to add next.
 
 ## Features
 
-- Add and manage multiple gym locations
-- Track equipment with custom categories
-# Flex Gym Inventory
+### Gym management
 
-Lightweight mobile app to track and manage gym equipment — built with Flutter for iOS and Android.
+- Create, update, and remove gyms.
+- Keep equipment organized by gym.
+- Record useful gym details such as location and notes.
 
-Status: In development (public)
+### Equipment management
 
-What is this
-- Purpose: track equipment across multiple gym locations, view history, and export CSVs.
-- Target: small gyms, garage gyms, and individual owners who need a simple inventory tool.
+- Add, edit, and remove equipment associated with a gym.
+- Record quantities and details such as category, brand, model, condition, value, and maintenance notes.
+- Review equipment and gym statistics from the dashboard.
 
-Quick start (development)
-1. Install Flutter (stable channel) and ensure Dart 3.
-2. From the project root:
+### Wishlists
 
-```bash
-cd flex_gym_inventory
-flutter pub get
-flutter run
-```
+- Save equipment you are considering for a future purchase.
+- Organize wishlist entries with details such as category, brand, priority, price, product link, and notes.
 
-Prerequisites
-- Flutter SDK (stable)
-- Xcode (for iOS) or Android Studio (for Android)
-- Optional: Supabase project (for auth). Provide `SUPABASE_URL` and `SUPABASE_ANON_KEY` via environment variables for local testing.
+### Dashboard and insights
 
-Project structure (high level)
-- `lib/` — app code (routes, screens, widgets, view_models)
-- `android/`, `ios/` — platform runners and configuration
-- `test/` — unit and widget tests
-- `docs/` — design notes and onboarding docs (see `docs/auth_onboarding_review.md`)
+- View a centralized summary of gyms and equipment.
+- Explore inventory statistics and category breakdowns.
 
-Auth & onboarding
-- Uses Supabase magic-link authentication by default. See `docs/auth_onboarding_review.md` for flow, gaps, and recommended fixes.
+### Data export
 
-Notifications
-- The app requests runtime notification permission on iOS and Android. No push provider is configured by default — follow docs in `docs/` before enabling server push.
+- Create and share a PDF summary of a selected gym's inventory.
 
-Running tests
-```bash
-cd flex_gym_inventory
-flutter test
-# or run a specific test
-flutter test test/view_models/sign_up_view_model_test.dart
-```
+### Authentication and account management
 
-Development notes
-- iOS: enable the "Push Notifications" capability in Xcode when you integrate APNs.
-- Android: Android 13+ requires `POST_NOTIFICATIONS` runtime permission (already added to the manifest).
-- Keep secrets out of VCS; use environment variables or a local `.env` not checked into source control.
+- Sign in using passwordless email authentication.
+- Complete onboarding and manage account settings.
 
-Contributing
-- Open issues or PRs. Keep changes small and include tests for new behavior.
+## Screenshots
 
-License & contact
-- This repository is authored by the project owner. Contact via repository issues or the social links below for collaboration.
+Product screenshots will be added here when approved application captures are available.
 
-Social
-- Bluesky: @heavydevco.bsky.social
-- X/Twitter: @heavydevco
+## Technology
+
+FGI is built with Flutter and Dart for iOS and Android. Its intended v1.0 production stack includes:
+
+- **Flutter and Dart** — cross-platform mobile application development.
+- **Supabase** — passwordless authentication and associated backend services.
+- **Isar** — on-device persistence for gym, equipment, and wishlist data.
+- **RevenueCat** — purchase and restoration handling, and the source of truth for PRO subscription entitlements.
+- **Resend** — transactional email delivery for applicable product workflows.
+
+Subscription access is determined by RevenueCat entitlements. Supabase account records and locally stored Isar data are not the authority for whether an account has PRO access.
+
+## Free and PRO
+
+The v1.0 plan structure is:
+
+| Feature | Free | PRO |
+| --- | --- | --- |
+| Gyms | 1 | Unlimited |
+| Equipment items | Up to 20 | Unlimited |
+| Wishlists | 1 | Unlimited |
+| Gym inventory PDF export | — | Included |
+| Priority support | — | Included |
+
+Purchase pricing is configured through the app stores and RevenueCat; prices are not listed here.
+
+## Availability
+
+Flex Gym Inventory is designed for iOS and Android, with iOS prioritized for initial distribution. Official store links will be added here when the listings are available.
+
+## Feedback and support
+
+- **Product support:** Use **Contact Support** in the app or email support@heavydev.co
+- **Product feedback:** Use **App Feedback** in the app or email feedback@heavydev.co
+
+## Developer
+
+Flex Gym Inventory is developed and published by **HEAVY DEV Co. LLC**.
+Substack: @hevydevco
+Bluesky: @heavydevco.bsky.social
+X/Twitter: @heavydevco
+
+## License
+
+This repository is authored by the project owner. Contact via repository issues or the social links below for collaboration.
