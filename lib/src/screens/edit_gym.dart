@@ -1,4 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
@@ -30,14 +32,44 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
   final TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
   String gymId = 'GYM-0001';
+  StreamSubscription<AuthState>? _authSubscription;
+  String? _activeUserId;
+  int _loadGeneration = 0;
 
   @override
   void initState() {
     super.initState();
+    _activeUserId = Supabase.instance.client.auth.currentUser?.id;
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      authState,
+    ) {
+      final userId = authState.session?.user.id;
+      if (!mounted || userId == _activeUserId) return;
+      _activeUserId = userId;
+      _loadGeneration++;
+      nameController.clear();
+      locationController.clear();
+      notesController.clear();
+      setState(() {
+        selectedDate = null;
+        gymId = 'GYM-0001';
+      });
+      _loadExistingGym();
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadExistingGym());
   }
 
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    nameController.dispose();
+    locationController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadExistingGym() async {
+    final generation = ++_loadGeneration;
     final args = ModalRoute.of(context)?.settings.arguments;
     int? isarId;
     if (args is int) isarId = args;
@@ -47,7 +79,7 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
       final repo = GymRepository();
       final gym = await repo.getByIsarId(isarId);
       if (gym == null) return;
-      if (!mounted) return;
+      if (!mounted || generation != _loadGeneration) return;
       setState(() {
         nameController.text = gym.name;
         locationController.text = gym.location ?? '';
@@ -175,11 +207,23 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
                                   : notesController.text.trim(),
                         );
                         if (!mounted) return;
+                        if (updated == null) {
+                          showFlexSnackbarFromUiMessage(
+                            ctx,
+                            UiMessage(
+                              'Gym unavailable',
+                              subtitle:
+                                  'This gym is not available for the current account.',
+                              type: UiMessageType.error,
+                            ),
+                          );
+                          return;
+                        }
                         showFlexSnackbarFromUiMessage(
                           ctx,
                           UiMessage(
                             'Gym updated',
-                            subtitle: 'Updated ${updated?.name ?? ''}',
+                            subtitle: 'Updated ${updated.name}',
                             type: UiMessageType.success,
                           ),
                         );

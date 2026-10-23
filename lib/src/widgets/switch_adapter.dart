@@ -13,6 +13,7 @@ class AdaptiveSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return material.Material(
+      color: material.Colors.transparent,
       child: material.Switch.adaptive(value: value, onChanged: onChanged),
     );
   }

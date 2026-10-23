@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously
@@ -43,14 +45,60 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
       TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController valueController = TextEditingController();
+  StreamSubscription<AuthState>? _authSubscription;
+  String? _activeUserId;
+  int _loadGeneration = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadGyms().then((_) => _loadExistingEquipment());
+    _activeUserId = Supabase.instance.client.auth.currentUser?.id;
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      authState,
+    ) {
+      final userId = authState.session?.user.id;
+      if (!mounted || userId == _activeUserId) return;
+      _activeUserId = userId;
+      _loadGeneration++;
+      nameController.clear();
+      brandController.clear();
+      modelController.clear();
+      maintenanceNotesController.clear();
+      quantityController.clear();
+      valueController.clear();
+      setState(() {
+        gyms = [];
+        selectedGym = null;
+        selectedImageSource = null;
+        selectedCategory = null;
+        selectedTrainingStyle = null;
+        selectedCondition = null;
+        selectedPurchaseDate = null;
+      });
+      _loadCurrentUserData();
+    });
+    _loadCurrentUserData();
   }
 
-  Future<void> _loadExistingEquipment() async {
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    nameController.dispose();
+    brandController.dispose();
+    modelController.dispose();
+    maintenanceNotesController.dispose();
+    quantityController.dispose();
+    valueController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadCurrentUserData() async {
+    final generation = ++_loadGeneration;
+    await _loadGyms(generation);
+    await _loadExistingEquipment(generation);
+  }
+
+  Future<void> _loadExistingEquipment(int generation) async {
     try {
       final args = ModalRoute.of(context)?.settings.arguments;
       int? isarId;
@@ -59,7 +107,9 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
       if (isarId == null) return;
       final repo = EquipmentRepository();
       final equipment = await repo.getByIsarId(isarId);
-      if (equipment == null) return;
+      if (!mounted || generation != _loadGeneration || equipment == null) {
+        return;
+      }
       // Find gym object if available
       Gym? foundGym;
       for (final g in gyms) {
@@ -84,12 +134,13 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
     } catch (_) {}
   }
 
-  Future<void> _loadGyms() async {
+  Future<void> _loadGyms(int generation) async {
     try {
       final user = Supabase.instance.client.auth.currentUser;
       final userId = user?.id ?? 'local';
       final repo = GymRepository();
       final list = await repo.getAllForUser(userId);
+      if (!mounted || generation != _loadGeneration) return;
       setState(() {
         gyms = list;
       });
@@ -352,11 +403,23 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                                     : maintenanceNotesController.text.trim(),
                           );
                           if (!mounted) return;
+                          if (updated == null) {
+                            showFlexSnackbarFromUiMessage(
+                              ctx,
+                              UiMessage(
+                                'Equipment unavailable',
+                                subtitle:
+                                    'This equipment is not available for the current account.',
+                                type: UiMessageType.error,
+                              ),
+                            );
+                            return;
+                          }
                           showFlexSnackbarFromUiMessage(
                             ctx,
                             UiMessage(
                               'Equipment updated',
-                              subtitle: 'Updated ${updated?.name ?? ''}',
+                              subtitle: 'Updated ${updated.name}',
                               type: UiMessageType.success,
                             ),
                           );

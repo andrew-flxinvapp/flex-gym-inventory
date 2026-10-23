@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/equipment/equipment_image.dart';
@@ -25,15 +28,40 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
   Equipment? equipment;
   bool isLoading = true;
   String? error;
+  StreamSubscription<AuthState>? _authSubscription;
+  String? _activeUserId;
+  int _loadGeneration = 0;
 
   @override
   void initState() {
     super.initState();
+    _activeUserId = Supabase.instance.client.auth.currentUser?.id;
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      authState,
+    ) {
+      final userId = authState.session?.user.id;
+      if (!mounted || userId == _activeUserId) return;
+      _activeUserId = userId;
+      _loadGeneration++;
+      setState(() {
+        equipment = null;
+        error = null;
+        isLoading = true;
+      });
+      _loadEquipment();
+    });
     // Delay to allow ModalRoute to be available
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadEquipment());
   }
 
-  void _loadEquipment() async {
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadEquipment() async {
+    final generation = ++_loadGeneration;
     final args = ModalRoute.of(context)?.settings.arguments;
     int? isarId;
     if (args is int) isarId = args;
@@ -49,13 +77,13 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
     try {
       final repo = EquipmentRepository();
       final e = await repo.getByIsarId(isarId);
-      if (!mounted) return;
+      if (!mounted || generation != _loadGeneration) return;
       setState(() {
         equipment = e;
         isLoading = false;
       });
     } catch (e) {
-      if (!mounted) return;
+      if (!mounted || generation != _loadGeneration) return;
       setState(() {
         error = e.toString();
         isLoading = false;
@@ -79,9 +107,9 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
   Future<void> _deleteEquipment() async {
     if (equipment == null) return;
     final repo = EquipmentRepository();
-    await repo.deleteEquipment(equipment!.id);
+    final deleted = await repo.deleteEquipment(equipment!.id);
     if (!mounted) return;
-    Navigator.of(context).pop();
+    if (deleted != null) Navigator.of(context).pop();
   }
 
   @override

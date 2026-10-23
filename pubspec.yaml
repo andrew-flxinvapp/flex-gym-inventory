@@ -102,6 +102,9 @@ flutter:
     - lib/assets/images/fgi_logo.svg
     - lib/assets/images/db_logo.svg
     - lib/assets/app_icon/fgi_app_icon.png
+    - lib/assets/images/logo_pro.png
+
+
    # Icons
     - lib/assets/icons/add.png
     - lib/assets/icons/add_filled.png

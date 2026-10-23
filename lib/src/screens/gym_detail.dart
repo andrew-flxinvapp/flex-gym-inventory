@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/buttons/warning_button.dart';
@@ -15,6 +17,8 @@ import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 // import '../widgets/buttons/primary_button.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
+import 'package:flex_gym_inventory/service/ownership_context.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GymDetailScreen extends StatefulWidget {
   const GymDetailScreen({super.key});
@@ -24,14 +28,53 @@ class GymDetailScreen extends StatefulWidget {
 }
 
 class _GymDetailScreenState extends State<GymDetailScreen> {
+  late Future<Map<String, dynamic>> _dataFuture;
+  StreamSubscription<AuthState>? _authSubscription;
+  String? _activeUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    _activeUserId = Supabase.instance.client.auth.currentUser?.id;
+    _dataFuture = _fetchData();
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      authState,
+    ) {
+      final userId = authState.session?.user.id;
+      if (!mounted || userId == _activeUserId) return;
+      _activeUserId = userId;
+      setState(() => _dataFuture = _fetchData());
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<Map<String, dynamic>> _fetchData() async {
-    final service = ActiveGymService(IsarService.isar);
+    final ownershipContext = OwnershipContext();
+    final userId = ownershipContext.currentUserId;
+    if (userId == null) {
+      return {'gym': null, 'items': <Equipment>[]};
+    }
+
+    final service = ActiveGymService(
+      IsarService.isar,
+      ownershipContext: ownershipContext,
+    );
     final gym = await service.getActiveGym();
-    if (gym == null) {
+    if (gym == null ||
+        gym.userId != userId ||
+        !ownershipContext.isCurrentUser(userId)) {
       return {'gym': null, 'items': <Equipment>[]};
     }
     final repo = EquipmentRepository();
     final items = await repo.getAllForGym(gym.gymId);
+    if (!ownershipContext.isCurrentUser(userId)) {
+      return {'gym': null, 'items': <Equipment>[]};
+    }
     return {'gym': gym, 'items': items};
   }
 
@@ -47,6 +90,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
           // Navigate to edit with current gym's Isar id if available
           final service = ActiveGymService(IsarService.isar);
           final gym = await service.getActiveGym();
+          if (!context.mounted) return;
           if (gym != null) {
             Navigator.of(
               context,
@@ -58,7 +102,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
       ),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(
-          future: _fetchData(),
+          future: _dataFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(child: CircularProgressIndicator());
@@ -129,9 +173,13 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       SecondaryButton(
                         label: 'Add Equipment',
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(AppRoutes.addEquipment)
-                              .then((_) => setState(() {}));
+                          Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.addEquipment).then((_) {
+                            if (mounted) {
+                              setState(() => _dataFuture = _fetchData());
+                            }
+                          });
                         },
                       ),
                     ],
@@ -179,9 +227,13 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                         constraints: const BoxConstraints(),
                         icon: Image.asset(AppIcons.plus, height: 22, width: 22),
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(AppRoutes.addEquipment)
-                              .then((_) => setState(() {}));
+                          Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.addEquipment).then((_) {
+                            if (mounted) {
+                              setState(() => _dataFuture = _fetchData());
+                            }
+                          });
                         },
                       ),
                     ],
@@ -232,10 +284,12 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                         final gym = await service.getActiveGym();
                         if (gym != null) {
                           final repo = GymRepository();
-                          await repo.deleteGym(gym.id);
-                          await service.clearActiveGym();
+                          final deleted = await repo.deleteGym(gym.id);
+                          if (deleted != null) {
+                            await service.clearActiveGym();
+                          }
                         }
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         Navigator.of(
                           context,
                         ).popUntil((route) => route.isFirst);

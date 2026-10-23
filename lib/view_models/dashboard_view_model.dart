@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
@@ -48,49 +50,95 @@ class DashboardState {
   }
 }
 
-/// StateNotifier that manages the dashboard data. Start with sample data and
-/// provide refresh() for later wiring to repositories.
-class DashboardViewModel extends StateNotifier<DashboardState> {
-  final Ref ref;
+DashboardState _emptyDashboardState({bool loading = false, String? error}) {
+  return DashboardState(
+    categoryCounts: {
+      for (final category in EquipmentCategory.values) category: 0,
+    },
+    gyms: const [],
+    loading: loading,
+    error: error,
+  );
+}
 
-  DashboardViewModel(this.ref)
-    : super(
-        DashboardState(
-          // Ensure every `EquipmentCategory` has at least one item for
-          // demo purposes so the dashboard arc chart always displays all
-          // categories in the legend and slices.
-          categoryCounts: {
-            EquipmentCategory.weights: 0,
-            EquipmentCategory.specialty: 0,
-            EquipmentCategory.machines: 0,
-            EquipmentCategory.storage: 0,
-            EquipmentCategory.racks: 0,
-            EquipmentCategory.attachments: 0,
-            EquipmentCategory.benches: 0,
-            EquipmentCategory.accessories: 0,
-            EquipmentCategory.safety: 0,
-            EquipmentCategory.other: 0,
-          },
-          gyms: [],
-        ),
-      ) {
-    // Trigger a refresh after construction so the dashboard loads when the
-    // provider is first created (e.g., on app startup or when the dashboard
-    // view is first shown).
-    Future.microtask(() => refresh());
+/// StateNotifier that manages user-scoped dashboard data.
+class DashboardViewModel extends StateNotifier<DashboardState> {
+  DashboardViewModel({
+    required String? Function() currentUserIdReader,
+    GymRepository? gymRepository,
+    EquipmentRepository? equipmentRepository,
+  }) : _currentUserIdReader = currentUserIdReader,
+       _gymRepository = gymRepository ?? GymRepository(),
+       _equipmentRepository = equipmentRepository ?? EquipmentRepository(),
+       super(_emptyDashboardState());
+
+  final String? Function() _currentUserIdReader;
+  final GymRepository _gymRepository;
+  final EquipmentRepository _equipmentRepository;
+  String? _activeUserId;
+  int _requestGeneration = 0;
+  bool _hasAuthState = false;
+  bool _authUnavailable = false;
+  bool _disposed = false;
+
+  /// Synchronizes state with an authenticated identity.
+  ///
+  /// Repeated auth events for the same user do not cause duplicate refreshes.
+  Future<void> onAuthChanged(String? userId) {
+    if (_disposed) return Future<void>.value();
+    final normalizedUserId = userId == null || userId.isEmpty ? null : userId;
+    if (_hasAuthState &&
+        !_authUnavailable &&
+        normalizedUserId == _activeUserId) {
+      return Future<void>.value();
+    }
+
+    _hasAuthState = true;
+    _authUnavailable = false;
+    _activeUserId = normalizedUserId;
+    _requestGeneration++;
+    state = _emptyDashboardState(loading: normalizedUserId != null);
+
+    if (normalizedUserId == null) return Future<void>.value();
+    return _refreshForUser(normalizedUserId);
+  }
+
+  /// Clears user-scoped state when authentication is loading or unavailable.
+  void onAuthUnavailable([Object? error]) {
+    if (_disposed) return;
+    final errorMessage = error?.toString();
+    if (_hasAuthState &&
+        _authUnavailable &&
+        _activeUserId == null &&
+        state.error == errorMessage) {
+      return;
+    }
+
+    _hasAuthState = true;
+    _authUnavailable = true;
+    _activeUserId = null;
+    _requestGeneration++;
+    state = _emptyDashboardState(error: errorMessage);
   }
 
   /// Refresh dashboard data from repositories.
-  Future<void> refresh() async {
+  Future<void> refresh() {
+    final currentUserId = _currentUserIdReader();
+    if (!_hasAuthState || _authUnavailable || currentUserId != _activeUserId) {
+      return onAuthChanged(currentUserId);
+    }
+    if (currentUserId == null) return Future<void>.value();
+    return _refreshForUser(currentUserId);
+  }
+
+  Future<void> _refreshForUser(String userId) async {
+    if (!_isActiveUser(userId)) return;
+
+    final generation = ++_requestGeneration;
     state = state.copyWith(loading: true, error: null);
     try {
-      final auth = ref.read(authServiceProvider);
-      final userId = auth.currentUser?.id ?? 'local';
-
-      final gymRepo = GymRepository();
-      final equipmentRepo = EquipmentRepository();
-
-      final gyms = await gymRepo.getAllForUser(userId);
+      final gyms = await _gymRepository.getAllForUser(userId);
+      if (!_canApplyResult(userId, generation)) return;
 
       // Initialize category counts with zero for every enum value
       final Map<EquipmentCategory, int> counts = {
@@ -100,7 +148,9 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
       final List<DashboardGym> dashboardGyms = [];
 
       for (final g in gyms) {
-        final items = await equipmentRepo.getAllForGym(g.gymId);
+        if (!_canApplyResult(userId, generation)) return;
+        final items = await _equipmentRepository.getAllForGym(g.gymId);
+        if (!_canApplyResult(userId, generation)) return;
         // Sum quantities (if quantity is not present, default to 1)
         final equipmentCount = items.fold<int>(0, (acc, e) => acc + e.quantity);
 
@@ -128,6 +178,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
         );
       }
 
+      if (!_canApplyResult(userId, generation)) return;
       state = state.copyWith(
         loading: false,
         categoryCounts: counts,
@@ -135,13 +186,52 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
         error: null,
       );
     } catch (e) {
+      if (!_canApplyResult(userId, generation)) return;
       state = state.copyWith(loading: false, error: e.toString());
     }
+  }
+
+  bool _isActiveUser(String userId) =>
+      !_disposed &&
+      _hasAuthState &&
+      !_authUnavailable &&
+      _activeUserId == userId;
+
+  bool _canApplyResult(String userId, int generation) {
+    if (!_isActiveUser(userId) || generation != _requestGeneration) {
+      return false;
+    }
+    final currentUserId = _currentUserIdReader();
+    if (currentUserId == userId) return true;
+    unawaited(onAuthChanged(currentUserId));
+    return false;
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _requestGeneration++;
+    super.dispose();
   }
 }
 
 /// Provider exposing the dashboard state and notifier.
 final dashboardProvider =
     StateNotifierProvider<DashboardViewModel, DashboardState>((ref) {
-      return DashboardViewModel(ref);
+      final viewModel = DashboardViewModel(
+        currentUserIdReader:
+            () => ref.read(authServiceProvider).currentUser?.id,
+      );
+      ref.listen(authStateProvider, (previous, next) {
+        if (next.isLoading) {
+          viewModel.onAuthUnavailable();
+        } else if (next.hasError) {
+          viewModel.onAuthUnavailable(next.error);
+        } else if (next.hasValue) {
+          unawaited(viewModel.onAuthChanged(next.value?.id));
+        } else {
+          viewModel.onAuthUnavailable();
+        }
+      });
+      return viewModel;
     });

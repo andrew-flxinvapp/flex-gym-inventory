@@ -87,8 +87,17 @@ class DeleteAccountService {
     final isar = IsarService.isar;
     try {
       await isar.writeTxn(() async {
+        if (_client.auth.currentUser?.id != user.id) {
+          throw StateError('Authentication changed before local cleanup.');
+        }
         final gyms = await isar.gyms.filter().userIdEqualTo(user.id).findAll();
+        if (_client.auth.currentUser?.id != user.id) {
+          throw StateError('Authentication changed during local cleanup.');
+        }
         for (final gym in gyms) {
+          if (_client.auth.currentUser?.id != user.id) {
+            throw StateError('Authentication changed during local cleanup.');
+          }
           await isar.equipments.filter().gymIdEqualTo(gym.gymId).deleteAll();
           await isar.gyms.delete(gym.id);
         }
@@ -96,10 +105,16 @@ class DeleteAccountService {
         await isar.wishlists.filter().userIdEqualTo(user.id).deleteAll();
         await isar.userPrefs.filter().userIdEqualTo(user.id).deleteAll();
 
+        if (_client.auth.currentUser?.id != user.id) {
+          throw StateError('Authentication changed during local cleanup.');
+        }
         final state = await isar.appStates.get(1);
         if (state != null) {
           state.activeGymId = null;
           await isar.appStates.put(state);
+        }
+        if (_client.auth.currentUser?.id != user.id) {
+          throw StateError('Authentication changed during local cleanup.');
         }
       });
 
@@ -116,7 +131,9 @@ class DeleteAccountService {
         await prefs.remove(key);
       }
     } catch (e, st) {
-      debugPrint('DeleteAccountService: clearLocalDataForCurrentUser failed: $e\n$st');
+      debugPrint(
+        'DeleteAccountService: clearLocalDataForCurrentUser failed: $e\n$st',
+      );
       rethrow;
     }
   }
@@ -138,7 +155,8 @@ class DeleteAccountService {
         return json.decode(s) as Map<String, dynamic>?;
       }
 
-      if (candidate is String) return json.decode(candidate) as Map<String, dynamic>?;
+      if (candidate is String)
+        return json.decode(candidate) as Map<String, dynamic>?;
       if (candidate is Map) return Map<String, dynamic>.from(candidate);
       return null;
     } catch (e) {

@@ -40,7 +40,7 @@ class _AppToggleState extends State<AppToggle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 370,
+      width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
         color: AppTheme.lightCard,

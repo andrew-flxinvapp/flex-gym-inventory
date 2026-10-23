@@ -4,20 +4,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:path/path.dart' as p;
+import 'ownership_context.dart';
 import '../src/models/gym_model.dart';
 import '../src/models/equipment_model.dart';
 
 /// Service for exporting and importing Isar database data.
 class ExportService {
-  /// Export the Isar database to a backup file (e.g., for user download or cloud backup).
+  /// Whole-database backup is disabled because Isar is shared by all users.
   static Future<File> exportIsarBackup(
     Isar isar, {
     String fileName = 'isar_backup.isar',
   }) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final backupFile = File('${dir.path}/$fileName');
-    await isar.copyToFile(backupFile.path);
-    return backupFile;
+    throw StateError(
+      'Whole-database backup is disabled because the local database is shared '
+      'between user accounts.',
+    );
   }
 
   /// Generate a PDF summary for a gym and save it to disk.
@@ -27,6 +28,11 @@ class ExportService {
     required String userId,
     String? fileName,
   }) async {
+    final ownershipContext = OwnershipContext();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('An authenticated owner is required to export a gym.');
+    }
+
     final gym =
         await isar.gyms
             .filter()
@@ -37,12 +43,21 @@ class ExportService {
     if (gym == null) {
       throw StateError('Gym not found for the current user.');
     }
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed while exporting the gym.');
+    }
     final equipments =
         await isar.equipments.filter().gymIdEqualTo(gymId).findAll();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed while exporting the gym.');
+    }
 
     // Load PDF-safe fonts from Google Fonts so PDF rendering includes required glyphs.
     final roboto = await PdfGoogleFonts.robotoRegular();
     final robotoBold = await PdfGoogleFonts.robotoBold();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed while exporting the gym.');
+    }
 
     final doc = pw.Document();
 
@@ -98,7 +113,13 @@ class ExportService {
     );
 
     final bytes = await doc.save();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed while exporting the gym.');
+    }
     final dir = await getApplicationDocumentsDirectory();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed while exporting the gym.');
+    }
     // Use the gym name in the filename when available. Sanitize to remove
     // unsafe characters and replace spaces with underscores.
     final rawName = gym.name;
@@ -119,6 +140,10 @@ class ExportService {
     String? fileName,
     String? shareText,
   }) async {
+    final ownershipContext = OwnershipContext();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('An authenticated owner is required to export a gym.');
+    }
     final file = await exportPdfSummary(
       isar,
       gymId,
@@ -126,6 +151,9 @@ class ExportService {
       fileName: fileName,
     );
     final bytes = await file.readAsBytes();
+    if (!ownershipContext.isCurrentUser(userId)) {
+      throw StateError('Authentication changed before sharing the export.');
+    }
     final filename = p.basename(file.path);
     await Printing.sharePdf(bytes: bytes, filename: filename);
   }

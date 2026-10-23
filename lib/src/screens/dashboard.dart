@@ -164,7 +164,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   InkWell(
                     onTap: () async {
                       final service = ActiveGymService(IsarService.isar);
-                      await service.setActiveGymId(gym.gymId);
+                      final selected = await service.setActiveGymId(gym.gymId);
+                      if (!selected) return;
                       if (!context.mounted) return;
                       Navigator.of(context).pushNamed(AppRoutes.gymDetail);
                     },
