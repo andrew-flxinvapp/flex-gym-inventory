@@ -129,10 +129,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 16),
@@ -233,6 +235,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
               ],
             ),
           ),
+        ),
         ),
         // bottomNavigationBar removed; now managed by HomeScreen
       ),

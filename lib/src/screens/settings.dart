@@ -26,11 +26,10 @@ class SettingsScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 16.0,
-            ),
-            child: Column(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -54,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
                 SettingsItem(
                   title: 'Upgrade Account',
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.newUpgrade);
+                    Navigator.of(context).pushNamed(AppRoutes.upgradeInfo);
                   },
                 ),
                 const SizedBox(height: 12),
@@ -143,6 +142,7 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

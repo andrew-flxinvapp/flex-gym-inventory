@@ -16,6 +16,7 @@ import '../widgets/cards/purchase_card.dart';
 import '../widgets/cards/notes_card.dart';
 import '../widgets/buttons/warning_button.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
+import '../widgets/layouts/app_screen.dart';
 
 class EquipmentDetailScreen extends StatefulWidget {
   const EquipmentDetailScreen({super.key});
@@ -118,7 +119,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: TopAppBar(
-          title: 'Equipment Detail',
+          title: equipment?.name ?? 'Equipment Detail',
           showBackArrow: true,
           showRightIcon: true,
           rightIcon: AppIcons.edit,
@@ -131,7 +132,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
           },
         ),
       ),
-      body: SafeArea(
+      body: AppScreen(
         child:
             isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -141,8 +142,9 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 24),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Overview',
                           style: Theme.of(context).textTheme.displaySmall
@@ -150,12 +152,18 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Center(
-                        child: EquipmentImage(imageId: equipment?.imageId),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+                        child: Center(
+                          child: EquipmentImage(
+                            imageId: equipment?.imageId,
+                            width: double.infinity,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           equipment?.name ?? '-',
                           style: Theme.of(context).textTheme.displaySmall
@@ -164,7 +172,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Details',
                           style: Theme.of(context).textTheme.displaySmall
@@ -173,7 +181,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: DetailsCard(
                           details: [
                             MapEntry('Brand', equipment?.brand ?? '-'),
@@ -195,7 +203,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Purchase Info',
                           style: Theme.of(context).textTheme.displaySmall
@@ -204,7 +212,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: PurchaseCard(
                           details: [
                             MapEntry(
@@ -236,7 +244,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Notes',
                           style: Theme.of(context).textTheme.displaySmall
@@ -245,14 +253,14 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: NotesCard(
                           notes: equipment?.maintenanceNotes ?? '-',
                         ),
                       ),
                       const SizedBox(height: 32),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: WarningButton(
                           label: 'Delete Item',
                           onPressed: () {

@@ -70,8 +70,10 @@ class _SupportScreenState extends State<SupportScreen> {
         showRightIcon: false,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
@@ -176,6 +178,7 @@ class _SupportScreenState extends State<SupportScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

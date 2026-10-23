@@ -16,7 +16,7 @@ class WishlistCard extends StatelessWidget {
     );
 
     return Container(
-      width: 370,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: AppTheme.lightCard,
         borderRadius: BorderRadius.circular(16),

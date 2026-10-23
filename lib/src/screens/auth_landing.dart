@@ -55,8 +55,10 @@ class AuthLanding extends StatelessWidget {
                   ),
                   const Spacer(),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-                    child: Column(
+                    padding: const EdgeInsets.only(bottom: 32.0),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+                      child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
@@ -83,8 +85,8 @@ class AuthLanding extends StatelessWidget {
                                     () => Navigator.of(
                                       context,
                                     ).pushNamed(AppRoutes.login),
+                                ),
                               ),
-                            ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: SmallAuthButton(
@@ -99,6 +101,7 @@ class AuthLanding extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
                   ),
                 ],
               ),

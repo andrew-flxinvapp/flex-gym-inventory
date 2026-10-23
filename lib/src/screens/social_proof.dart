@@ -44,7 +44,7 @@ class SocialProofScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 32),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                   child: Text(
                     'Trusted by gym owners everywhere',
                     textAlign: TextAlign.center,
@@ -55,7 +55,7 @@ class SocialProofScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                   child: Text(
                     'Rated 4.9 by early adopters',
                     textAlign: TextAlign.center,
@@ -110,7 +110,7 @@ class SocialProofScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                   child: Text(
                     '"Flex Gym Inventory makes it so much easier to keep track of my home gym. I can see what I have at a glance and plan what to add next without digging through notes or spreadsheets."',
                     textAlign: TextAlign.center,

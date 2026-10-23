@@ -5,6 +5,7 @@ class BaseCard extends StatelessWidget {
   final double? width; // default applied in build
   final double? height;
   final Color? color;
+  final BoxBorder? border;
   final EdgeInsetsGeometry padding;
   final BorderRadiusGeometry borderRadius;
   final List<BoxShadow>? boxShadow;
@@ -21,6 +22,7 @@ class BaseCard extends StatelessWidget {
     this.width,
     this.height,
     this.color,
+    this.border,
     this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     this.boxShadow,
@@ -38,6 +40,7 @@ class BaseCard extends StatelessWidget {
     final decoration = BoxDecoration(
       color: color ?? AppTheme.lightCard,
       borderRadius: borderRadius,
+      border: border,
       boxShadow:
           boxShadow ??
           [

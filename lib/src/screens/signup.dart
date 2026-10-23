@@ -105,7 +105,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         unfocusOnTap: true,
         safeArea: true,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

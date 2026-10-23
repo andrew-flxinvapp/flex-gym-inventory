@@ -6,6 +6,7 @@ class SecondaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double? width;
   final double? height;
+  final Color? foregroundColor;
 
   const SecondaryButton({
     super.key,
@@ -13,12 +14,14 @@ class SecondaryButton extends StatelessWidget {
     required this.onPressed,
     this.width,
     this.height,
+    this.foregroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final btnWidth = width ?? double.infinity;
     final btnHeight = height ?? 50;
+    final color = foregroundColor ?? AppTheme.lightTextPrimary;
 
     return SizedBox(
       width: btnWidth,
@@ -26,8 +29,8 @@ class SecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppTheme.lightTextPrimary,
-          side: BorderSide(color: AppTheme.lightTextPrimary, width: 2),
+          foregroundColor: color,
+          side: BorderSide(color: color, width: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -35,7 +38,7 @@ class SecondaryButton extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: AppTheme.lightTextPrimary,
+            color: color,
             fontWeight: FontWeight.bold,
           ),
         ),

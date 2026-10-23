@@ -166,6 +166,7 @@ flutter:
     - lib/assets/images/new_notifications.png
     - lib/assets/images/new_waiting.png
     - lib/assets/images/new_welcome.png
+    - lib/assets/images/flex_pro.png
     
 flutter_icons:
     android: true

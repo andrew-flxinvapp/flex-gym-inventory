@@ -81,24 +81,33 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopAppBar(
-        title: 'Gym Details',
-        showBackArrow: true,
-        showRightIcon: true,
-        rightIcon: AppIcons.edit,
-        onRightIconPressed: () async {
-          // Navigate to edit with current gym's Isar id if available
-          final service = ActiveGymService(IsarService.isar);
-          final gym = await service.getActiveGym();
-          if (!context.mounted) return;
-          if (gym != null) {
-            Navigator.of(
-              context,
-            ).pushNamed(AppRoutes.editGym, arguments: gym.id);
-          } else {
-            Navigator.of(context).pushNamed(AppRoutes.editGym);
-          }
-        },
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: _dataFuture,
+          builder: (context, snapshot) {
+            final gym = snapshot.data?['gym'] as Gym?;
+
+            return TopAppBar(
+              title: gym?.name ?? 'Gym Details',
+              showBackArrow: true,
+              showRightIcon: true,
+              rightIcon: AppIcons.edit,
+              onRightIconPressed: () async {
+                final service = ActiveGymService(IsarService.isar);
+                final activeGym = await service.getActiveGym();
+                if (!context.mounted) return;
+                if (activeGym != null) {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoutes.editGym, arguments: activeGym.id);
+                } else {
+                  Navigator.of(context).pushNamed(AppRoutes.editGym);
+                }
+              },
+            );
+          },
+        ),
       ),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(

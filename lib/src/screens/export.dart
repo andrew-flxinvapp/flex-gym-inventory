@@ -125,8 +125,10 @@ class _ExportScreenState extends State<ExportScreen> {
       appBar: const TopAppBar(title: 'Export', showBackArrow: true),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -191,6 +193,7 @@ class _ExportScreenState extends State<ExportScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

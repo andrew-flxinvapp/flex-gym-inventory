@@ -179,13 +179,12 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
         unfocusOnTap: true,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 16.0,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Column(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              child: Form(
+                key: _formKey,
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
@@ -474,6 +473,7 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                     },
                   ),
                 ],
+                ),
               ),
             ),
           ),

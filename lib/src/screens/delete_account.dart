@@ -156,11 +156,10 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 16.0,
-            ),
-            child: Column(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -264,6 +263,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

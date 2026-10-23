@@ -68,10 +68,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
+          padding: const EdgeInsets.symmetric(vertical: 32.0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+            child: Form(
+              key: _formKey,
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -153,6 +155,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

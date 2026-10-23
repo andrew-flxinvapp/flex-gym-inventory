@@ -8,7 +8,7 @@ class NotesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 370,
+      width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
         color: AppTheme.lightCard,

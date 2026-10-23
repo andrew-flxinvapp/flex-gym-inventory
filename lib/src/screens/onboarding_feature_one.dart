@@ -39,7 +39,7 @@ class OnboardingFeatureOneScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                 child: Text(
                   'Manage all of your gym equipment',
                   textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class OnboardingFeatureOneScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                 child: Text(
                   'Keep track of all your bars, plates, machines, and accessories all in one place.',
                   textAlign: TextAlign.center,

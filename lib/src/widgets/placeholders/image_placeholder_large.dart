@@ -12,7 +12,7 @@ class ImagePlaceholderLarge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
-      width: width,
+      width: double.infinity,
       body: Container(
         height: height ?? 210,
         decoration: BoxDecoration(

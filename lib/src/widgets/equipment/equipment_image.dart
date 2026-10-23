@@ -141,7 +141,7 @@ class EquipmentImage extends StatelessWidget {
         }
         return Stack(
           children: [
-            ImagePlaceholderLarge(width: width, height: height),
+            ImagePlaceholderLarge(width: double.infinity, height: height),
             Positioned(
               top: 12,
               right: 12,

@@ -99,8 +99,9 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 24),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Overview',
                           style: Theme.of(context).textTheme.displaySmall
@@ -108,16 +109,19 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Center(
-                        child: EquipmentImage(
-                          imageId: item?.imagePath,
-                          width: 370,
-                          height: 208,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+                        child: Center(
+                          child: EquipmentImage(
+                            imageId: item?.imagePath,
+                            width: double.infinity,
+                            height: 208,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           item?.name ?? '-',
                           style: Theme.of(context).textTheme.displaySmall
@@ -126,7 +130,7 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Details',
                           style: Theme.of(context).textTheme.displaySmall
@@ -135,7 +139,7 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: WishlistCard(
                           details: [
                             MapEntry('Brand', item?.brand ?? '-'),
@@ -149,7 +153,7 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Notes',
                           style: Theme.of(context).textTheme.displaySmall
@@ -158,12 +162,12 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: NotesCard(notes: item?.notes ?? '-'),
                       ),
                       const SizedBox(height: 32),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: PrimaryButton(
                           label: 'Delete Item',
                           onPressed: () {

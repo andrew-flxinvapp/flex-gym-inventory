@@ -39,7 +39,7 @@ class OnboardingFeatureTwoScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                 child: Text(
                   'Track wishlists and upgrades',
                   textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class OnboardingFeatureTwoScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                 child: Text(
                   'Save the equipment you want and plan your next purchase.',
                   textAlign: TextAlign.center,

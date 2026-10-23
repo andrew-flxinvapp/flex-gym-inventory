@@ -40,7 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
             child: Column(
               mainAxisAlignment:
                   MainAxisAlignment.start,
