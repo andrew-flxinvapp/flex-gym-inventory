@@ -2,15 +2,9 @@
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Handles all onboarding-related updates to Supabase user_metadata.
+/// Writes onboarding state to the authenticated user's `profiles` row.
 ///
-/// Fields written:
-/// - onboardingComplete : bool
-/// - notificationsOn    : bool
-/// - proPlan            : bool
-///
-/// This repository does NOT handle routing or UI state.
-/// It simply updates the authenticated user's metadata in Supabase.
+/// This repository does not handle routing or UI state.
 class OnboardingRepository {
   final SupabaseClient _client;
 
@@ -27,10 +21,8 @@ class OnboardingRepository {
   /// - For compatibility it will set `auth.user_metadata.onboardingComplete`
   ///   only after the profile upsert succeeds.
   ///
-  /// Parameters:
-  /// - `notificationsOn` (required): whether notifications are enabled.
-  /// - `firstName`/`lastName` (optional): prefer caller-provided names;
-  ///   otherwise pending metadata and user metadata are consulted.
+  /// The profile ID is always taken from the authenticated Supabase user.
+  /// Empty names are omitted so they cannot overwrite existing values.
   Future<void> completeOnboarding({
     required String firstName,
     required String lastName,
@@ -68,7 +60,9 @@ class OnboardingRepository {
     // Persist notifications preference to the canonical `profiles` row
     // instead of writing it to `auth.user_metadata`.
     final user = _client.auth.currentUser;
-    if (user == null) throw Exception('No authenticated user for updating notifications');
+    if (user == null) {
+      throw Exception('No authenticated user for updating notifications');
+    }
 
     final row = <String, dynamic>{
       'id': user.id,
@@ -79,13 +73,13 @@ class OnboardingRepository {
     await _client.from('profiles').upsert(row);
   }
 
-  /// (Optional) Convenience getter — reads metadata for current user.
+  /// (Optional) Convenience getter — reads auth metadata for current user.
   Map<String, dynamic> get metadata {
     final user = _client.auth.currentUser;
     return user?.userMetadata ?? <String, dynamic>{};
   }
 
-  /// (Optional) Typed convenience flags.
+  /// (Optional) Legacy auth-metadata convenience flags.
   bool get isOnboardingComplete => metadata['onboardingComplete'] == true;
 
   bool get notificationsEnabled => metadata['notificationsOn'] == true;
@@ -101,11 +95,12 @@ class OnboardingRepository {
     if (user == null) return null;
 
     try {
-      final row = await _client
-          .from('profiles')
-          .select('notifications_on')
-          .eq('id', user.id)
-          .maybeSingle();
+      final row =
+          await _client
+              .from('profiles')
+              .select('notifications_on')
+              .eq('id', user.id)
+              .maybeSingle();
 
       if (row == null) return null;
       if (row.containsKey('notifications_on')) {
@@ -127,11 +122,12 @@ class OnboardingRepository {
     if (user == null) return false;
 
     try {
-      final row = await _client
-          .from('profiles')
-          .select('onboarding_completed_at')
-          .eq('id', user.id)
-          .maybeSingle();
+      final row =
+          await _client
+              .from('profiles')
+              .select('onboarding_completed_at')
+              .eq('id', user.id)
+              .maybeSingle();
 
       if (row == null) return false;
       if (row['onboarding_completed_at'] != null) return true;
@@ -143,4 +139,3 @@ class OnboardingRepository {
     }
   }
 }
-

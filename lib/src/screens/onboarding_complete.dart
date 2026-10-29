@@ -7,6 +7,7 @@ import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../data/repositories/onboarding_repository.dart';
 import 'package:flex_gym_inventory/providers/profile_data_provider.dart';
+import '../../service/pending_onboarding_profile_service.dart';
 
 class OnboardingCompleteScreen extends ConsumerStatefulWidget {
   const OnboardingCompleteScreen({super.key});
@@ -16,28 +17,48 @@ class OnboardingCompleteScreen extends ConsumerStatefulWidget {
       _OnboardingCompleteScreenState();
 }
 
-class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScreen> {
+class _OnboardingCompleteScreenState
+    extends ConsumerState<OnboardingCompleteScreen> {
   // Keep the repository as a per-state instance so it can be mocked in tests
   final OnboardingRepository _onboardingRepository = OnboardingRepository();
 
   // Submission state used to disable the button / show progress
   bool _isSubmitting = false;
 
-  Future<void> _handleContinue() async {
+  Future<bool> _handleContinue() async {
+    if (_isSubmitting) return false;
     setState(() => _isSubmitting = true);
     try {
       // Read profile data collected during signup/onboarding from the
       // in-memory provider.
       final profile = ref.read(profileDataProvider);
-      final String? firstName = profile.firstName?.trim();
-      final String? lastName = profile.lastName?.trim();
-      final bool notificationsOn = profile.notificationsOn == true;
-
       // Require authenticated user before attempting the upsert.
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
         throw Exception('No authenticated user for onboarding');
       }
+
+      final pendingNames = await PendingOnboardingProfileService.load(
+        user.email,
+      );
+      if (!mounted) return false;
+
+      final profileBelongsToUser = profile.belongsToEmail(user.email);
+      final savedFirstName = pendingNames?.firstName.trim();
+      final savedLastName = pendingNames?.lastName.trim();
+      final firstName =
+          savedFirstName != null && savedFirstName.isNotEmpty
+              ? savedFirstName
+              : profileBelongsToUser
+              ? profile.firstName?.trim()
+              : null;
+      final lastName =
+          savedLastName != null && savedLastName.isNotEmpty
+              ? savedLastName
+              : profileBelongsToUser
+              ? profile.lastName?.trim()
+              : null;
+      final bool notificationsOn = profile.notificationsOn == true;
 
       // Validate required name values before upsert.
       if (firstName == null || firstName.isEmpty || firstName.length < 2) {
@@ -46,7 +67,7 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
             const SnackBar(content: Text('Please provide a valid first name.')),
           );
         }
-        return;
+        return false;
       }
       if (lastName == null || lastName.isEmpty || lastName.length < 2) {
         if (mounted) {
@@ -54,7 +75,7 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
             const SnackBar(content: Text('Please provide a valid last name.')),
           );
         }
-        return;
+        return false;
       }
 
       await _onboardingRepository.completeOnboarding(
@@ -63,11 +84,13 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
         lastName: lastName,
       );
 
-      if (!mounted) return;
+      if (!mounted) return false;
       // Clear in-memory profile data only after successful upsert.
       ref.read(profileDataProvider.notifier).clear();
+      await PendingOnboardingProfileService.clear(user.email);
       // repository call completed; we don't navigate here to avoid
       // double-navigation — navigation is handled by the button tap.
+      return true;
     } catch (e) {
       // Optionally surface error to the user. For now, rethrow so callers/tests see it.
       rethrow;
@@ -150,15 +173,21 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
                   onPressed: () async {
                     if (_isSubmitting) return;
                     try {
-                      await _handleContinue();
-                      if (!context.mounted) return;
+                      final completed = await _handleContinue();
+                      if (!completed || !context.mounted) return;
                       // Only navigate after onboarding/upsert succeeds
-                      Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+                      Navigator.of(
+                        context,
+                      ).pushReplacementNamed(AppRoutes.dashboard);
                     } catch (e) {
                       // Surface a brief error to the user; do not navigate.
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to complete onboarding. Please try again.')),
+                          SnackBar(
+                            content: Text(
+                              'Failed to complete onboarding. Please try again.',
+                            ),
+                          ),
                         );
                       }
                     }

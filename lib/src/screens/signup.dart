@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flex_gym_inventory/providers/profile_data_provider.dart';
@@ -13,6 +15,8 @@ import '../../view_models/sign_up_view_model.dart';
 import '../widgets/snackbar.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import '../widgets/inputs/text_input_field.dart';
+import '../../service/pending_onboarding_profile_service.dart';
+import '../../utilities/logging_handler.dart';
 
 // SignupScreen
 // This scree provides user registration entry.
@@ -46,27 +50,55 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   void initState() {
     super.initState();
-    _termsTapRecognizer = TapGestureRecognizer()
-      ..onTap = () => _openLink(kTermsUrl);
-    _privacyTapRecognizer = TapGestureRecognizer()
-      ..onTap = () => _openLink(kPrivacyUrl);
+    _termsTapRecognizer =
+        TapGestureRecognizer()..onTap = () => _openLink(kTermsUrl);
+    _privacyTapRecognizer =
+        TapGestureRecognizer()..onTap = () => _openLink(kPrivacyUrl);
     _signUpViewModel.addListener(() {
       if (!mounted) return;
       final msg = _signUpViewModel.message;
       if (msg != null) {
-        showFlexSnackbarFromUiMessage(context, msg);
-        // If sign-up succeeded, go to verify email screen. The email hasn't
-        // necessarily been verified yet — this only confirms the link was sent.
-        if (msg.type == UiMessageType.success) {
-          Navigator.of(context).pushNamed(
-            AppRoutes.verifyEmail,
-            arguments: {'email': _signUpViewModel.emailController.text},
-          );
-        }
         _signUpViewModel.clearMessage();
+        if (msg.type == UiMessageType.success) {
+          unawaited(_continueAfterSignUp(msg));
+        } else {
+          showFlexSnackbarFromUiMessage(context, msg);
+        }
       }
       setState(() {});
     });
+  }
+
+  Future<void> _continueAfterSignUp(UiMessage message) async {
+    try {
+      await PendingOnboardingProfileService.save(
+        email: _signUpViewModel.emailController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+      );
+    } catch (e, st) {
+      LogHandler.error(
+        'SignupScreen',
+        'Failed to save pending onboarding names',
+        e,
+        st,
+      );
+      if (!mounted) return;
+      showFlexSnackbar(
+        context,
+        title: 'Could not save signup details',
+        subtitle: 'Please try signing up again.',
+        type: SnackbarType.stop,
+      );
+      return;
+    }
+
+    if (!mounted) return;
+    showFlexSnackbarFromUiMessage(context, message);
+    Navigator.of(context).pushNamed(
+      AppRoutes.verifyEmail,
+      arguments: {'email': _signUpViewModel.emailController.text},
+    );
   }
 
   @override
@@ -85,15 +117,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!mounted) return;
       if (!opened) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Could not open link')));
       }
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open link')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Could not open link')));
     }
   }
 
@@ -127,7 +159,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    
                     // First Name TextField
                     SizedBox(
                       child: Column(
@@ -143,7 +174,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             const SizedBox(height: 6),
                             Text(
                               _signUpViewModel.firstNameError!,
-                              style: const TextStyle(color: Colors.red, fontSize: 12),
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ],
@@ -165,7 +199,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             const SizedBox(height: 6),
                             Text(
                               _signUpViewModel.lastNameError!,
-                              style: const TextStyle(color: Colors.red, fontSize: 12),
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ],
@@ -187,7 +224,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           const SizedBox(height: 6),
                           Text(
                             _signUpViewModel.emailError!,
-                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                         const SizedBox(height: 16),
@@ -198,7 +238,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             children: [
                               Text(
                                 '*',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
                                   color: AppTheme.stopColor,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -206,7 +248,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               const SizedBox(width: 4),
                               Text(
                                 'Required field',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
                                   color: AppTheme.lightTextPrimary,
                                 ),
                               ),
@@ -228,7 +272,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       fontFamily: 'Roboto',
                     ),
                     children: [
-                      const TextSpan(text: "By continuing, you agree to Flex Gym Inventory's "),
+                      const TextSpan(
+                        text:
+                            "By continuing, you agree to Flex Gym Inventory's ",
+                      ),
                       TextSpan(
                         text: 'Terms',
                         style: TextStyle(
@@ -255,27 +302,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               // Sign Up Button (always enabled, disabled while submitting)
               PrimaryButton(
                 label: _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
-                onPressed: _signUpViewModel.loading
-                    ? null
-                    : () {
-                        final firstOk = _signUpViewModel.validateFirstName(
-                          _firstNameController.text,
-                        );
-                        final lastOk = _signUpViewModel.validateLastName(
-                          _lastNameController.text,
-                        );
-                        final emailOk = _signUpViewModel.validateEmail();
-                        if (firstOk && lastOk && emailOk) {
-                          // Store names in the in-memory onboarding provider.
-                          ref.read(profileDataProvider.notifier).setFirstName(
-                                _firstNameController.text.trim(),
-                              );
-                          ref.read(profileDataProvider.notifier).setLastName(
-                                _lastNameController.text.trim(),
-                              );
-                          _performSignUp();
-                        }
-                      },
+                onPressed:
+                    _signUpViewModel.loading
+                        ? null
+                        : () {
+                          final firstOk = _signUpViewModel.validateFirstName(
+                            _firstNameController.text,
+                          );
+                          final lastOk = _signUpViewModel.validateLastName(
+                            _lastNameController.text,
+                          );
+                          final emailOk = _signUpViewModel.validateEmail();
+                          if (firstOk && lastOk && emailOk) {
+                            // Store names in the in-memory onboarding provider.
+                            ref
+                                .read(profileDataProvider.notifier)
+                                .setSignupDetails(
+                                  email: _signUpViewModel.emailController.text,
+                                  firstName: _firstNameController.text,
+                                  lastName: _lastNameController.text,
+                                );
+                            _performSignUp();
+                          }
+                        },
               ),
               const SizedBox(height: 16),
               // Already have an account? Sign In link

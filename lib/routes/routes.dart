@@ -1,6 +1,7 @@
 import '../src/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../src/screens/pro_purchase.dart';
+import '../src/screens/ob_pro_purchase.dart';
 import '../src/screens/splash.dart';
 //import '../src/screens/dashboard.dart';
 //import '../src/screens/wishlist.dart';
@@ -79,6 +80,7 @@ class AppRoutes {
   static const String welcome = '/welcome';
   static const String socialProof = '/social-proof';
   static const String onboardingUpgradeInfo = '/onboarding-upgrade-info';
+  static const String obProPurchase = '/ob-pro-purchase';
   static const String newOnboardingUpgrade = '/new-onboarding-upgrade';
   static const String complete = '/complete';
 
@@ -138,6 +140,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   AppRoutes.welcome: (context) => const WelcomeScreen(),
   AppRoutes.socialProof: (context) => const SocialProofScreen(),
   AppRoutes.onboardingUpgradeInfo: (context) => const OnboardingUpgradeInfo(),
+  AppRoutes.obProPurchase: (context) => const ObProPurchase(),
   AppRoutes.complete: (context) => const OnboardingCompleteScreen(),
 
   // Settings routes

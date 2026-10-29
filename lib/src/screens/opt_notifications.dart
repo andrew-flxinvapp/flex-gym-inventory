@@ -109,7 +109,7 @@ class _OptNotificationsScreenState
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     height: 1.2,
-                    color: AppTheme.lightTextPrimary,
+                    color: AppTheme.darkTextPrimary,
                     fontFamily: 'Roboto',
                   ),
                 ),

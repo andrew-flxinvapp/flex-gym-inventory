@@ -54,7 +54,7 @@ class OnboardingUpgradeInfo extends StatelessWidget {
                         Center(
                           child: Image.asset(
                             'lib/assets/images/flex_pro.png',
-                            height: 160,
+                            height: 300,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -80,7 +80,7 @@ class OnboardingUpgradeInfo extends StatelessWidget {
                           onPressed:
                               () => Navigator.pushNamed(
                                 context,
-                                AppRoutes.proPurchase,
+                                AppRoutes.obProPurchase,
                                 arguments: true,
                               ),
                           variant: PrimaryButtonVariant.dark,
