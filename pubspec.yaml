@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.6.2+6  
+version: 0.6.3+7  
 
 environment:
   sdk: ^3.7.2
@@ -146,6 +146,17 @@ flutter:
     - lib/assets/icons/more.png
     - lib/assets/icons/laurel_left.png
     - lib/assets/icons/laurel_right.png
+    - lib/assets/icons/accessories_blue.png
+    - lib/assets/icons/attachment_blue.png
+    - lib/assets/icons/bench_blue.png
+    - lib/assets/icons/rack_blue.png
+    - lib/assets/icons/weights_blue.png
+    - lib/assets/icons/machine_blue.png
+    - lib/assets/icons/other_blue.png
+    - lib/assets/icons/safety_blue.png
+    - lib/assets/icons/sparkles_blue.png
+    - lib/assets/icons/specialty_blue.png
+    - lib/assets/icons/storage_blue.png
 
 
 

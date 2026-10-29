@@ -38,6 +38,7 @@ class _ImageInputState extends State<ImageInput> {
     try {
       final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
       if (picked == null) return;
+      if (!mounted) return;
 
       // Convert XFile to dart:io File for downstream APIs
       final File originalFile = File(picked.path);
@@ -53,6 +54,7 @@ class _ImageInputState extends State<ImageInput> {
         quality: 85,
         keepExif: false,
       );
+      if (!mounted) return;
 
       if (compressedFile == null) {
         showFlexSnackbar(
@@ -70,6 +72,7 @@ class _ImageInputState extends State<ImageInput> {
 
       // Optionally enforce size limit (10 MB)
       final bytes = await savedFile.length();
+      if (!mounted) return;
       if (bytes > 10 * 1024 * 1024) {
         showFlexSnackbar(
           context,
@@ -95,6 +98,7 @@ class _ImageInputState extends State<ImageInput> {
         type: SnackbarType.success,
       );
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isProcessing = false);
       showFlexSnackbar(
         context,

@@ -8,13 +8,13 @@ import 'package:flex_gym_inventory/theme/app_theme.dart';
 class CustomVerticalDivider extends StatelessWidget {
 	/// Creates a vertical divider.
 	const CustomVerticalDivider({
-		Key? key,
+		super.key,
 		this.height = 16.0,
 		this.thickness = 1.0,
 		this.color = AppTheme.darkDividers,
 		this.indent = 0.0,
 		this.endIndent = 0.0,
-	}) : super(key: key);
+	});
 
 	/// The height of the divider. If null, the divider will expand to fit
 	/// the available vertical space of its parent.
@@ -44,4 +44,3 @@ class CustomVerticalDivider extends StatelessWidget {
 		);
 	}
 }
-

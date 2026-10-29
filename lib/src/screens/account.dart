@@ -158,11 +158,13 @@ class AccountScreen extends ConsumerWidget {
                   onPressed: () async {
                     try {
                       await Supabase.instance.client.auth.signOut();
+                      if (!context.mounted) return;
                       await Navigator.of(context).pushNamedAndRemoveUntil(
                         AppRoutes.startupRouter,
                         (route) => false,
                       );
                     } catch (e) {
+                      if (!context.mounted) return;
                       showFlexSnackbar(
                         context,
                         title: 'Sign out failed',

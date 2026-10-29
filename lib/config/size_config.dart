@@ -9,7 +9,6 @@ import 'package:flutter/widgets.dart';
 /// Usage: call `SizeConfig.init(context)` once (for example in the
 /// top-level widget's `build`) and then use the helpers below.
 class SizeConfig {
-
   /// Full screen width (including system padding)
   static late double screenWidth;
 
@@ -28,8 +27,8 @@ class SizeConfig {
   /// 1% of the available height
   static late double blockSizeVertical;
 
-  /// Device text scale factor
-  static late double maybeTextScalerOf;
+  /// Device text scaler
+  static late TextScaler textScaler;
 
   /// Initialize the config with values from the given [context].
   ///
@@ -49,15 +48,17 @@ class SizeConfig {
     blockSizeHorizontal = safeWidth / 100;
     blockSizeVertical = safeHeight / 100;
 
-    maybeTextScalerOf = MediaQuery.textScaleFactorOf(context);
+    textScaler = MediaQuery.textScalerOf(context);
   }
 
   /// Returns a width value proportional to the safe width.
   ///
   /// [baseWidth] is the design/reference width used in your mockups
   /// (defaults to 402 which is a common mobile reference). Adjust if needed.
-  static double getProportionateScreenWidth(double inputWidth,
-      {double baseWidth = 402.0}) {
+  static double getProportionateScreenWidth(
+    double inputWidth, {
+    double baseWidth = 402.0,
+  }) {
     return (inputWidth / baseWidth) * safeWidth;
   }
 
@@ -65,8 +66,10 @@ class SizeConfig {
   ///
   /// [baseHeight] is the design/reference height used in your mockups
   /// (defaults to 874 which is a common mobile reference). Adjust if needed.
-  static double getProportionateScreenHeight(double inputHeight,
-      {double baseHeight = 874.0}) {
+  static double getProportionateScreenHeight(
+    double inputHeight, {
+    double baseHeight = 874.0,
+  }) {
     return (inputHeight / baseHeight) * safeHeight;
   }
 

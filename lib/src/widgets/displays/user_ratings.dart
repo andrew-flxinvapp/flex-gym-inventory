@@ -4,7 +4,7 @@ import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/src/data/dtos/social_proof_content.dart';
 
 class UserRatings extends StatelessWidget {
-  const UserRatings({Key? key}) : super(key: key);
+  const UserRatings({super.key});
 
   @override
   Widget build(BuildContext context) {

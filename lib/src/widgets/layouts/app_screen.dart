@@ -25,7 +25,7 @@ class AppScreen extends StatelessWidget {
   final bool? lightSystemUi;
 
   const AppScreen({
-    Key? key,
+    super.key,
     required this.child,
     this.backgroundColor,
     this.useGradient = false,
@@ -33,7 +33,7 @@ class AppScreen extends StatelessWidget {
     this.safeArea = true,
     this.unfocusOnTap = false,
     this.lightSystemUi,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

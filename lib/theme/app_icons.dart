@@ -48,4 +48,17 @@ class AppIcons {
   static const String user = 'lib/assets/icons/user.png';
   static const String email = 'lib/assets/icons/email.png';
   static const String phone = 'lib/assets/icons/phone.png';
+
+  // New Placeholder Icons
+  static const String accessories = 'lib/assets/icons/accessories_blue.png';
+  static const String attachments = 'lib/assets/icons/attachments_blue.png';
+  static const String benches = 'lib/assets/icons/bench_blue.png';  
+  static const String racks = 'lib/assets/icons/rack_blue.png';
+  static const String weights = 'lib/assets/icons/weights_blue.png';
+  static const String machines = 'lib/assets/icons/machine_blue.png';
+  static const String other = 'lib/assets/icons/other_blue.png';
+  static const String safety = 'lib/assets/icons/safety_blue.png';
+  static const String sparkles = 'lib/assets/icons/sparkles_blue.png';
+  static const String specialty = 'lib/assets/icons/specialty_blue.png';
+  static const String storage = 'lib/assets/icons/storage_blue.png';
 }

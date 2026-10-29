@@ -22,8 +22,8 @@ class DeleteAccountSelector extends StatelessWidget {
           Checkbox(
             value: selected,
             onChanged: (_) => onTap?.call(),
-            fillColor: MaterialStateProperty.resolveWith<Color?>((states) {
-              if (states.contains(MaterialState.selected)) {
+            fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(WidgetState.selected)) {
                 return AppTheme.lightAppBar;
               }
               return null; // use default unselected color

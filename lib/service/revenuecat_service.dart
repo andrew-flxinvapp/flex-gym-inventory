@@ -42,9 +42,7 @@ class RevenueCatService {
       final config = PurchasesConfiguration(apiKey);
       await Purchases.configure(config);
       if (enableDebugLogs) {
-        try {
-          await Purchases.setDebugLogsEnabled(true);
-        } catch (_) {}
+        await Purchases.setLogLevel(LogLevel.debug);
       }
 
       // Optionally identify the user immediately if provided.
@@ -102,23 +100,10 @@ class RevenueCatService {
   /// and failure. Do not treat user cancellation as an error.
   Future<RevenueCatPurchaseResult> purchasePackage(Package package) async {
     try {
-      final purchaseResult = await Purchases.purchasePackage(package);
-      // In recent SDKs purchasePackage may return a CustomerInfo object or
-      // an SDK-specific wrapper. Handle common shapes conservatively.
-      if (purchaseResult is CustomerInfo) {
-        return RevenueCatPurchaseResult.success(purchaseResult as CustomerInfo);
-      }
-
-      try {
-        final info = (purchaseResult as dynamic).customerInfo as CustomerInfo?;
-        if (info != null) return RevenueCatPurchaseResult.success(info);
-      } catch (_) {}
-
-      // Fallback: fetch latest customer info
-      final info = await getCustomerInfo();
-      if (info != null) return RevenueCatPurchaseResult.success(info);
-
-      return RevenueCatPurchaseResult.failure('Purchase completed but customer info unavailable');
+      final purchaseResult = await Purchases.purchase(
+        PurchaseParams.package(package),
+      );
+      return RevenueCatPurchaseResult.success(purchaseResult.customerInfo);
     } on PlatformException catch (e, st) {
       final code = e.code.toString().toLowerCase();
       final message = e.message?.toString() ?? e.toString();
@@ -214,4 +199,3 @@ class RevenueCatPurchaseResult {
   factory RevenueCatPurchaseResult.failure(String message) =>
       RevenueCatPurchaseResult._from(success: false, cancelled: false, errorMessage: message);
 }
-

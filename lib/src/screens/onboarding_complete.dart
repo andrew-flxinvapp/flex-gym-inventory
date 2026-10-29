@@ -63,6 +63,7 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
         lastName: lastName,
       );
 
+      if (!mounted) return;
       // Clear in-memory profile data only after successful upsert.
       ref.read(profileDataProvider.notifier).clear();
       // repository call completed; we don't navigate here to avoid
@@ -150,12 +151,12 @@ class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScr
                     if (_isSubmitting) return;
                     try {
                       await _handleContinue();
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       // Only navigate after onboarding/upsert succeeds
                       Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
                     } catch (e) {
                       // Surface a brief error to the user; do not navigate.
-                      if (mounted) {
+                      if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Failed to complete onboarding. Please try again.')),
                         );

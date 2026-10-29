@@ -20,13 +20,12 @@ class UserCount extends StatelessWidget {
 	final String label;
 
 	const UserCount({
-		Key? key,
+		super.key,
 		this.count,
 		this.data,
 		this.label = 'Happy gym\nowners',
 	})  : assert(count != null || data != null,
-						'Either count or data must be provided'),
-				super(key: key);
+						'Either count or data must be provided');
 
 	Widget _buildCountFromStrings(BuildContext context, String topText, String label) {
 		final theme = Theme.of(context).textTheme;
@@ -55,9 +54,10 @@ class UserCount extends StatelessWidget {
 
 	String _ensureTwoLineLabel(String input) {
 		if (input.contains('\n')) return input;
-		final idx = input.trim().lastIndexOf(' ');
+		final trimmed = input.trim();
+		final idx = trimmed.lastIndexOf(' ');
 		if (idx <= 0) return input;
-		return input.trim().substring(0, idx) + '\n' + input.trim().substring(idx + 1);
+		return '${trimmed.substring(0, idx)}\n${trimmed.substring(idx + 1)}';
 	}
 
 	String _intToTopText(int value) {
@@ -94,4 +94,3 @@ class UserCount extends StatelessWidget {
 		);
 	}
 }
-

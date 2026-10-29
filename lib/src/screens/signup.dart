@@ -83,12 +83,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final uri = Uri.parse(url);
     try {
       final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!mounted) return;
       if (!opened) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not open link')),
         );
       }
     } catch (_) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Could not open link')),
       );

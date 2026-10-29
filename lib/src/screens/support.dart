@@ -199,6 +199,7 @@ class _SupportScreenState extends State<SupportScreen> {
       );
 
       final res = await _supportService.submitSupportRequest(dto);
+      if (!mounted) return;
 
       if (res.success) {
         // Clear fields after confirmed success, then show success UI.

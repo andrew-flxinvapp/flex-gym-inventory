@@ -8,10 +8,10 @@ class GradientBackground extends StatelessWidget {
   final Gradient? gradient;
 
   const GradientBackground({
-    Key? key,
+    super.key,
     this.child,
     this.gradient,
-  }) : super(key: key);
+  });
 
   static const Gradient defaultGradient = RadialGradient(
     center: Alignment(0.9, -0.62),

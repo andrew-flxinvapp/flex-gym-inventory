@@ -44,10 +44,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
 
   Future<void> _loadNotificationPreference() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
 
     // Prefer system permission as source-of-truth when possible.
     try {
       final status = await Permission.notification.status;
+      if (!mounted) return;
       // system permission status checked
       if (status.isGranted || status.isLimited) {
         allowNotifications = true;
@@ -56,19 +58,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
         try {
           final repo = OnboardingRepository();
           final server = await repo.fetchNotificationsOn();
+          if (!mounted) return;
           if (server != null) {
             allowNotifications = server;
           } else {
             allowNotifications = prefs.getBool('allow_notifications') ?? false;
           }
         } catch (_) {
+          if (!mounted) return;
           allowNotifications = prefs.getBool('allow_notifications') ?? false;
         }
       }
     } catch (_) {
+      if (!mounted) return;
       allowNotifications = prefs.getBool('allow_notifications') ?? false;
     }
 
+    if (!mounted) return;
     // Load sub-option prefs
     maintenanceReminders = prefs.getBool('allow_notifications_maintenance') ?? false;
     newFeatureAnnouncements = prefs.getBool('allow_notifications_new_features') ?? false;
@@ -82,19 +88,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
 
   Future<void> _updateNotificationPreference(bool value) async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
 
     if (!value) {
       await prefs.setBool('allow_notifications', false);
+      if (!mounted) return;
       setState(() => allowNotifications = false);
       return;
     }
 
     // Request runtime notification permission when enabling notifications.
     final status = await Permission.notification.request();
+    if (!mounted) return;
     // permission request result available in `status`
 
     if (status.isGranted || status.isLimited) {
       await prefs.setBool('allow_notifications', true);
+      if (!mounted) return;
       setState(() => allowNotifications = true);
       try {
         final repo = OnboardingRepository();
@@ -104,6 +114,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
     } else {
       // Persist the negative choice locally.
       await prefs.setBool('allow_notifications', false);
+      if (!mounted) return;
       setState(() => allowNotifications = false);
 
       try {
@@ -113,6 +124,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
       } catch (_) {}
 
       if (status.isPermanentlyDenied) {
+        if (!mounted) return;
         final open = await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
@@ -141,24 +153,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> with WidgetsB
   Future<void> _setMaintenance(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('allow_notifications_maintenance', v);
+    if (!mounted) return;
     setState(() => maintenanceReminders = v);
   }
 
   Future<void> _setNewFeatures(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('allow_notifications_new_features', v);
+    if (!mounted) return;
     setState(() => newFeatureAnnouncements = v);
   }
 
   Future<void> _setWeekly(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('allow_notifications_weekly', v);
+    if (!mounted) return;
     setState(() => weeklySummaries = v);
   }
 
   Future<void> _setAppUpdates(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('allow_notifications_app_updates', v);
+    if (!mounted) return;
     setState(() => appUpdates = v);
   }
 

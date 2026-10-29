@@ -155,8 +155,9 @@ class DeleteAccountService {
         return json.decode(s) as Map<String, dynamic>?;
       }
 
-      if (candidate is String)
+      if (candidate is String) {
         return json.decode(candidate) as Map<String, dynamic>?;
+      }
       if (candidate is Map) return Map<String, dynamic>.from(candidate);
       return null;
     } catch (e) {

@@ -11,9 +11,9 @@ class SocialProofDisplay extends StatelessWidget {
  	final SocialProofData? data;
 
  	const SocialProofDisplay({
- 		Key? key,
+ 		super.key,
  		this.data,
- 	}) : super(key: key);
+ 	});
 
  	@override
  	Widget build(BuildContext context) {
@@ -30,4 +30,3 @@ class SocialProofDisplay extends StatelessWidget {
  		);
  	}
 }
-
