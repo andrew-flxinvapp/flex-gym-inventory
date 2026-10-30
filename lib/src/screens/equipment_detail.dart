@@ -247,7 +247,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                         padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(
                           'Notes',
-                          style: Theme.of(context).textTheme.displaySmall
+                          style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
                       ),
