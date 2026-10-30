@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/onboarding_bottom_action_layout.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '../data/repositories/onboarding_repository.dart';
@@ -131,12 +132,10 @@ class _OnboardingCompleteScreenState
             transform: GradientRotation(0.25),
           ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+        child: OnboardingBottomActionLayout(
+          content: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.start, // Changed from center to start
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 32), // Added controlled top spacing
@@ -165,36 +164,30 @@ class _OnboardingCompleteScreenState
                     fontFamily: 'Roboto',
                   ),
                 ),
-                const SizedBox(height: 82),
-                PrimaryButton(
-                  label: 'To Dashboard',
-                  variant: PrimaryButtonVariant.dark,
-                  // keep a non-null callback (PrimaryButton requires it) but guard inside
-                  onPressed: () async {
-                    if (_isSubmitting) return;
-                    try {
-                      final completed = await _handleContinue();
-                      if (!completed || !context.mounted) return;
-                      // Only navigate after onboarding/upsert succeeds
-                      Navigator.of(
-                        context,
-                      ).pushReplacementNamed(AppRoutes.dashboard);
-                    } catch (e) {
-                      // Surface a brief error to the user; do not navigate.
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Failed to complete onboarding. Please try again.',
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                ),
               ],
             ),
+          ),
+          action: PrimaryButton(
+            label: 'To Dashboard',
+            variant: PrimaryButtonVariant.dark,
+            onPressed: () async {
+              if (_isSubmitting) return;
+              try {
+                final completed = await _handleContinue();
+                if (!completed || !context.mounted) return;
+                Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Failed to complete onboarding. Please try again.',
+                      ),
+                    ),
+                  );
+                }
+              }
+            },
           ),
         ),
       ),

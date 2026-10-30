@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/app_screen.dart';
+import '../widgets/layouts/onboarding_bottom_action_layout.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import '/theme/app_theme.dart';
 
@@ -16,25 +18,12 @@ class OnboardingFeatureOneScreen extends StatelessWidget {
         showBackArrow: true,
         theme: OnboardingAppBarTheme.dark,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0.9, -0.62),
-            radius: 1.6,
-            focal: Alignment(0.9, -0.7),
-            focalRadius: 0.001,
-            colors: [
-              Color(0xFF1F4F66), // 0%
-              Color(0xFF023246), // 28%
-              Color(0xFF010D1B), // 64%
-              Color(0xFF000000), // 100%
-            ],
-            stops: [0.0, 0.3, 0.8, 1.0],
-            transform: GradientRotation(0.25),
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
+      body: AppScreen(
+        useGradient: true,
+        safeArea: false,
+        lightSystemUi: true,
+        child: OnboardingBottomActionLayout(
+          content: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
@@ -68,15 +57,14 @@ class OnboardingFeatureOneScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 32),
-              PrimaryButton(
-                label: 'Continue',
-                variant: PrimaryButtonVariant.dark,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureTwo);
-                },
-              ),
             ],
+          ),
+          action: PrimaryButton(
+            label: 'Continue',
+            variant: PrimaryButtonVariant.dark,
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.onboardingFeatureTwo);
+            },
           ),
         ),
       ),

@@ -102,9 +102,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Color(0xFF000000), // 100%
             ],
             stops: [0.0, 0.3, 0.8, 1.0],
-            transform: GradientRotation(
-              0.25,
-            ),
+            transform: GradientRotation(0.25),
           ),
         ),
         child: SafeArea(
@@ -147,9 +145,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: ValueListenableBuilder(
                   valueListenable: appInfoService.info,
                   builder: (context, pi, _) {
-                    final display = pi != null
-                        ? 'Version ${pi.version}${pi.buildNumber.isNotEmpty ? '+${pi.buildNumber}' : ''}'
-                        : 'Version ${appInfoService.displayVersion}';
+                    final display =
+                        pi != null
+                            ? 'Version ${pi.version}${pi.buildNumber.isNotEmpty ? '+${pi.buildNumber}' : ''}'
+                            : 'Version ${appInfoService.displayVersion}';
 
                     return Column(
                       mainAxisSize: MainAxisSize.min,

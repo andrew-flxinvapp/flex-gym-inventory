@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/onboarding_bottom_action_layout.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 
@@ -38,12 +39,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             transform: GradientRotation(0.25),
           ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+        child: OnboardingBottomActionLayout(
+          content: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 32),
@@ -82,16 +81,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     fontFamily: 'Roboto',
                   ),
                 ),
-                const SizedBox(height: 50),
-                PrimaryButton(
-                  label: 'Continue',
-                  variant: PrimaryButtonVariant.dark,
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.socialProof);
-                  },
-                ),
               ],
             ),
+          ),
+          action: PrimaryButton(
+            label: 'Continue',
+            variant: PrimaryButtonVariant.dark,
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.socialProof);
+            },
           ),
         ),
       ),

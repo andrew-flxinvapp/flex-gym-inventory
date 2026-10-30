@@ -75,68 +75,84 @@ class _OptNotificationsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.lightBackground,
-      appBar: const OnboardingLogoAppBar(showBackArrow: true),
+      backgroundColor: AppTheme.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: const OnboardingLogoAppBar(
+        showBackArrow: false,
+        theme: OnboardingAppBarTheme.light,
+      ),
       body: AppScreen(
-        useGradient: true,
+        useGradient: false,
         safeArea: true,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 32),
-                Text(
-                  'Enable Notifications?',
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto',
+        lightSystemUi: true,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 32),
+                        Text(
+                          'Enable Notifications?',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        Image.asset(
+                          'lib/assets/images/new_notifications.png',
+                          height: 350,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Would you like to enable notifications for future features and reminders?',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            height: 1.2,
+                            color: AppTheme.lightTextPrimary,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        const Spacer(),
+                        PrimaryButton(
+                          label: 'Enable Notifications',
+                          onPressed: () async {
+                            await _handleEnablePress();
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        SecondaryButton(
+                          label: 'Not Now',
+                          onPressed: () async {
+                            // Store the user's choice in the in-memory provider only.
+                            ref
+                                .read(profileDataProvider.notifier)
+                                .setNotificationsOn(false);
+                            Navigator.of(
+                              context,
+                            ).pushNamed(AppRoutes.onboardingFeatureOne);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
-                Image.asset(
-                  'lib/assets/images/new_notifications.png',
-                  height: 350,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Would you like to enable notifications for future features and reminders?',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.2,
-                    color: AppTheme.darkTextPrimary,
-                    fontFamily: 'Roboto',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const SizedBox(height: 40),
-                PrimaryButton(
-                  label: 'Enable Notifications',
-                  onPressed: () async {
-                    await _handleEnablePress();
-                  },
-                ),
-                const SizedBox(height: 16),
-                SecondaryButton(
-                  label: 'Not Now',
-                  onPressed: () async {
-                    // Store the user's choice in the in-memory provider only.
-                    ref
-                        .read(profileDataProvider.notifier)
-                        .setNotificationsOn(false);
-                    Navigator.of(
-                      context,
-                    ).pushNamed(AppRoutes.onboardingFeatureOne);
-                  },
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -27,11 +27,12 @@ Widget _app(
 
 void main() {
   testWidgets('routes to dashboard, onboarding and auth landing', (t) async {
-    for (final entry in {
-      AppRoutes.dashboard: 'Dashboard',
-      AppRoutes.optNotifications: 'Onboarding',
-      AppRoutes.authLanding: 'Auth',
-    }.entries) {
+    for (final entry
+        in {
+          AppRoutes.dashboard: 'Dashboard',
+          AppRoutes.optNotifications: 'Onboarding',
+          AppRoutes.authLanding: 'Auth',
+        }.entries) {
       await t.pumpWidget(const SizedBox());
       await t.pumpWidget(_app(() async => entry.key));
       await t.pump(const Duration(milliseconds: 1500));
@@ -71,8 +72,10 @@ void main() {
 
   testWidgets('timeout falls back to startup router', (t) async {
     await t.pumpWidget(
-      _app(() => Completer<String>().future,
-          checkTimeout: const Duration(seconds: 2)),
+      _app(
+        () => Completer<String>().future,
+        checkTimeout: const Duration(seconds: 2),
+      ),
     );
     await t.pump(const Duration(seconds: 2));
     await t.pump();
