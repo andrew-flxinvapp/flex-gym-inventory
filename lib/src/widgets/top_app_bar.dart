@@ -36,7 +36,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppTheme.lightAppBar,
+      backgroundColor: AppTheme.darkAppBar,
       elevation: 0,
       centerTitle: false,
       toolbarHeight: 60,
