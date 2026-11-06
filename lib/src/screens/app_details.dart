@@ -15,7 +15,7 @@ class AppDetailsScreen extends StatelessWidget {
       appBar: const TopAppBar(title: 'App Details', showBackArrow: true),
       body: AppScreen(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.only(bottom: 16.0),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
             child: Column(
@@ -24,7 +24,9 @@ class AppDetailsScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // App Info Section
@@ -236,6 +238,7 @@ class AppDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                     ],
+                  ),
                   ),
                 ),
               ),

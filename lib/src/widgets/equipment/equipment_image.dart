@@ -9,6 +9,7 @@ import '../placeholders/image_placeholder_large.dart';
 
 class EquipmentImage extends StatelessWidget {
   final String? imageId;
+  final File? resolvedFile;
   final double? width;
   final double? height;
   final BoxFit fit;
@@ -17,6 +18,7 @@ class EquipmentImage extends StatelessWidget {
   const EquipmentImage({
     super.key,
     this.imageId,
+    this.resolvedFile,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -25,6 +27,9 @@ class EquipmentImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (resolvedFile != null) {
+      return _buildFileImage(resolvedFile!);
+    }
     if (imageId == null) {
       return Stack(
         children: [
@@ -103,41 +108,7 @@ class EquipmentImage extends StatelessWidget {
         }
         final file = snap.data;
         if (file != null) {
-          return Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(file, width: width, height: height, fit: fit),
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: PopupMenuButton<ImageAction>(
-                  icon: const ImageIcon(
-                    AssetImage(AppIcons.more),
-                    size: 20,
-                    color: AppTheme.lightTextPrimary,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  color: Colors.white,
-                  itemBuilder:
-                      (context) => [
-                        const PopupMenuItem(
-                          value: ImageAction.edit,
-                          child: Text('Edit'),
-                        ),
-                        const PopupMenuItem(
-                          value: ImageAction.delete,
-                          child: Text('Delete'),
-                        ),
-                      ],
-                  onSelected: (value) => onImageActionSelected?.call(value),
-                ),
-              ),
-            ],
-          );
+          return _buildFileImage(file);
         }
         return Stack(
           children: [
@@ -172,6 +143,44 @@ class EquipmentImage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildFileImage(File file) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(file, width: width, height: height, fit: fit),
+        ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: PopupMenuButton<ImageAction>(
+            icon: const ImageIcon(
+              AssetImage(AppIcons.more),
+              size: 20,
+              color: AppTheme.lightTextPrimary,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: Colors.white,
+            itemBuilder:
+                (context) => [
+                  const PopupMenuItem(
+                    value: ImageAction.edit,
+                    child: Text('Edit'),
+                  ),
+                  const PopupMenuItem(
+                    value: ImageAction.delete,
+                    child: Text('Delete'),
+                  ),
+                ],
+            onSelected: (value) => onImageActionSelected?.call(value),
+          ),
+        ),
+      ],
     );
   }
 }

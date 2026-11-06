@@ -16,10 +16,10 @@ class AboutFlexRackleyScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-            child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

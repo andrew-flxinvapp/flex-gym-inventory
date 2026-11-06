@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flex_gym_inventory/service/image_service.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/equipment/equipment_image.dart';
@@ -32,6 +34,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
   StreamSubscription<AuthState>? _authSubscription;
   String? _activeUserId;
   int _loadGeneration = 0;
+  Future<File?>? _imageFileFuture;
 
   @override
   void initState() {
@@ -46,6 +49,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
       _loadGeneration++;
       setState(() {
         equipment = null;
+        _imageFileFuture = null;
         error = null;
         isLoading = true;
       });
@@ -81,6 +85,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
       if (!mounted || generation != _loadGeneration) return;
       setState(() {
         equipment = e;
+        _imageFileFuture = _resolveImageFile(e?.imageId);
         isLoading = false;
       });
     } catch (e) {
@@ -89,6 +94,28 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
         error = e.toString();
         isLoading = false;
       });
+    }
+  }
+
+  Future<File?>? _resolveImageFile(String? imageId) {
+    final normalizedImageId = imageId?.trim();
+    if (normalizedImageId == null || normalizedImageId.isEmpty) return null;
+    return _loadImageFile(normalizedImageId);
+  }
+
+  Future<File?> _loadImageFile(String imageId) async {
+    try {
+      return await ImageService.instance.fileFor(imageId);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'Flex Gym Inventory',
+          context: ErrorDescription('while resolving an equipment image'),
+        ),
+      );
+      return null;
     }
   }
 
@@ -115,9 +142,10 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final imageFileFuture = _imageFileFuture;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
+        preferredSize: const Size.fromHeight(70),
         child: TopAppBar(
           title: equipment?.name ?? 'Equipment Detail',
           showBackArrow: true,
@@ -152,16 +180,39 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                        child: Center(
-                          child: EquipmentImage(
-                            imageId: equipment?.imageId,
-                            width: double.infinity,
-                          ),
+                      if (imageFileFuture != null)
+                        FutureBuilder<File?>(
+                          future: imageFileFuture,
+                          builder: (context, snapshot) {
+                            final file = snapshot.data;
+                            if (snapshot.connectionState !=
+                                    ConnectionState.done ||
+                                snapshot.hasError ||
+                                file == null) {
+                              return const SizedBox.shrink();
+                            }
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16.0,
+                                    0,
+                                    16.0,
+                                    0,
+                                  ),
+                                  child: Center(
+                                    child: EquipmentImage(
+                                      imageId: equipment?.imageId,
+                                      resolvedFile: file,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            );
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                         child: Text(

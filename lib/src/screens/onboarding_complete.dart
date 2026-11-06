@@ -175,7 +175,10 @@ class _OnboardingCompleteScreenState
               try {
                 final completed = await _handleContinue();
                 if (!completed || !context.mounted) return;
-                Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRoutes.dashboard,
+                  (route) => false,
+                );
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
