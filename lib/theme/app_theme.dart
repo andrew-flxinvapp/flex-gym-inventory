@@ -34,6 +34,35 @@ class AppTheme {
   static const Color updateColor = Color(0xFF4BB4E9);
   static const Color proColor = Color(0xFFC7A109);
 
+  // Apple System Colors
+  // Light appearance
+  static const red = Color(0xFFFF383C);
+  static const orange = Color(0xFFFF8D28);
+  static const yellow = Color(0xFFFFCC00);
+  static const green = Color(0xFF34C759);
+  static const mint = Color(0xFF00C8B3);
+  static const teal = Color(0xFF00C3D0);
+  static const cyan = Color(0xFF00C0E8);
+  static const blue = Color(0xFF0088FF);
+  static const indigo = Color(0xFF6155F5);
+  static const purple = Color(0xFFCB30E0);
+  static const pink = Color(0xFFFF2D55);
+  static const brown = Color(0xFFAC7F5E);
+
+  // Dark appearance
+  static const redDark = Color(0xFFFF4245);
+  static const orangeDark = Color(0xFFFF9230);
+  static const yellowDark = Color(0xFFFFD600);
+  static const greenDark = Color(0xFF30D158);
+  static const mintDark = Color(0xFF00DAC3);
+  static const tealDark = Color(0xFF00D2E0);
+  static const cyanDark = Color(0xFF3CD3FE);
+  static const blueDark = Color(0xFF0091FF);
+  static const indigoDark = Color(0xFF6D7CFF);
+  static const purpleDark = Color(0xFFDB34F2);
+  static const pinkDark = Color(0xFFFF375F);
+  static const brownDark = Color(0xFFB78A66);
+
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: lightBackground,

@@ -1,6 +1,7 @@
 // lib/enum/app_enums.dart
 // Enum definitions used across the Flex Gym Inventory app.
 import 'package:flutter/material.dart';
+import 'package:flex_gym_inventory/theme/app_theme.dart';
 
 // Upgrade priorities for planned upgrades
 enum WishlistPriority { low, medium, high }
@@ -65,25 +66,25 @@ extension EquipmentCategoryColor on EquipmentCategory {
   Color get color {
     switch (this) {
       case EquipmentCategory.weights:
-        return const Color(0xFFE63946);
+        return AppTheme.red;
       case EquipmentCategory.specialty:
-        return const Color(0xFFF4A261);
+        return AppTheme.orange;
       case EquipmentCategory.machines:
-        return const Color(0xFFE9C46A);
+        return AppTheme.indigo;
       case EquipmentCategory.storage:
-        return const Color(0xFF2A9D8F);
+        return AppTheme.yellow;
       case EquipmentCategory.racks:
-        return const Color(0xFF457B9D);
+        return AppTheme.blue;
       case EquipmentCategory.attachments:
-        return const Color(0xFF6A4C93);
+        return AppTheme.teal;
       case EquipmentCategory.benches:
-        return const Color(0xFFA8A8A8);
+        return AppTheme.green;
       case EquipmentCategory.accessories:
-        return const Color(0xFF264653);
+        return AppTheme.purple;
       case EquipmentCategory.safety:
-        return const Color(0xFFDE6D87);
+        return AppTheme.mint;
       case EquipmentCategory.other:
-        return const Color(0xFF3A8F7D);
+        return AppTheme.pink;
     }
   }
 }
