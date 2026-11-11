@@ -30,6 +30,9 @@ class GymDetailScreen extends StatefulWidget {
 class _GymDetailScreenState extends State<GymDetailScreen> {
   late Future<Map<String, dynamic>> _dataFuture;
   StreamSubscription<AuthState>? _authSubscription;
+  StreamSubscription<void>? _equipmentChangesSubscription;
+  String? _watchedGymId;
+  String? _watchedGymOwnerId;
   String? _activeUserId;
 
   @override
@@ -43,6 +46,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
       final userId = authState.session?.user.id;
       if (!mounted || userId == _activeUserId) return;
       _activeUserId = userId;
+      _stopWatchingEquipment();
       setState(() => _dataFuture = _fetchData());
     });
   }
@@ -50,13 +54,73 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
   @override
   void dispose() {
     _authSubscription?.cancel();
+    _stopWatchingEquipment();
     super.dispose();
+  }
+
+  void _watchEquipmentForGym(Gym gym, EquipmentRepository repository) {
+    if (_watchedGymId == gym.gymId &&
+        _watchedGymOwnerId == gym.userId &&
+        _equipmentChangesSubscription != null) {
+      return;
+    }
+    _stopWatchingEquipment();
+    _watchedGymId = gym.gymId;
+    _watchedGymOwnerId = gym.userId;
+    _equipmentChangesSubscription = repository
+        .watchForGym(gym)
+        .listen(
+          (_) {
+            if (!mounted ||
+                _watchedGymId != gym.gymId ||
+                _activeUserId != gym.userId) {
+              return;
+            }
+            setState(() => _dataFuture = _fetchData());
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            FlutterError.reportError(
+              FlutterErrorDetails(
+                exception: error,
+                stack: stackTrace,
+                library: 'gym detail equipment watcher',
+              ),
+            );
+          },
+        );
+  }
+
+  void _stopWatchingEquipment({String? ownerId}) {
+    if (ownerId != null && _watchedGymOwnerId != ownerId) return;
+    final subscription = _equipmentChangesSubscription;
+    _equipmentChangesSubscription = null;
+    _watchedGymId = null;
+    _watchedGymOwnerId = null;
+    if (subscription != null) unawaited(subscription.cancel());
+  }
+
+  Future<void> _openEquipmentRoute(
+    String route, {
+    Object? arguments,
+    bool refreshWhenNoResult = false,
+  }) async {
+    final previousDataFuture = _dataFuture;
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(route, arguments: arguments);
+    if (!mounted ||
+        !identical(previousDataFuture, _dataFuture) ||
+        (result == null && !refreshWhenNoResult)) {
+      return;
+    }
+    setState(() => _dataFuture = _fetchData());
   }
 
   Future<Map<String, dynamic>> _fetchData() async {
     final ownershipContext = OwnershipContext();
     final userId = ownershipContext.currentUserId;
     if (userId == null) {
+      _stopWatchingEquipment();
       return {'gym': null, 'items': <Equipment>[]};
     }
 
@@ -68,9 +132,11 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
     if (gym == null ||
         gym.userId != userId ||
         !ownershipContext.isCurrentUser(userId)) {
+      _stopWatchingEquipment(ownerId: userId);
       return {'gym': null, 'items': <Equipment>[]};
     }
     final repo = EquipmentRepository();
+    _watchEquipmentForGym(gym, repo);
     final items = await repo.getAllForGym(gym.gymId);
     if (!ownershipContext.isCurrentUser(userId)) {
       return {'gym': null, 'items': <Equipment>[]};
@@ -181,15 +247,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       const SizedBox(height: 24),
                       SecondaryButton(
                         label: 'Add Equipment',
-                        onPressed: () {
-                          Navigator.of(
-                            context,
-                          ).pushNamed(AppRoutes.addEquipment).then((_) {
-                            if (mounted) {
-                              setState(() => _dataFuture = _fetchData());
-                            }
-                          });
-                        },
+                        onPressed:
+                            () => _openEquipmentRoute(AppRoutes.addEquipment),
                       ),
                     ],
                   ),
@@ -235,15 +294,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         icon: Image.asset(AppIcons.plus, height: 22, width: 22),
-                        onPressed: () {
-                          Navigator.of(
-                            context,
-                          ).pushNamed(AppRoutes.addEquipment).then((_) {
-                            if (mounted) {
-                              setState(() => _dataFuture = _fetchData());
-                            }
-                          });
-                        },
+                        onPressed:
+                            () => _openEquipmentRoute(AppRoutes.addEquipment),
                       ),
                     ],
                   ),
@@ -275,12 +327,12 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       quantity: e.quantity,
                       category: e.category,
                       isarId: e.id,
-                      onTapCallback: () async {
-                        await Navigator.of(
-                          context,
-                        ).pushNamed(AppRoutes.equipmentDetail, arguments: e.id);
-                        if (mounted) setState(() {});
-                      },
+                      onTapCallback:
+                          () => _openEquipmentRoute(
+                            AppRoutes.equipmentDetail,
+                            arguments: e.id,
+                            refreshWhenNoResult: true,
+                          ),
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -296,6 +348,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                           final deleted = await repo.deleteGym(gym.id);
                           if (deleted != null) {
                             await service.clearActiveGym();
+                            _stopWatchingEquipment();
                           }
                         }
                         if (!context.mounted) return;

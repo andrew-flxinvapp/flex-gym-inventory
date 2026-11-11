@@ -46,6 +46,10 @@ void main() {
       expect(viewModel.state.gyms.single.gymName, 'Gym account-b');
       expect(viewModel.state.gyms.single.equipmentCount, 3);
       expect(viewModel.state.categoryCounts[EquipmentCategory.weights], 3);
+      expect(
+        viewModel.state.gymCategoryCounts['gym-b']?[EquipmentCategory.weights],
+        3,
+      );
 
       gymsByUser['account-a']!.complete([_gym('account-a', 'gym-a')]);
       await accountARefresh;
@@ -212,6 +216,79 @@ void main() {
       viewModel.dispose();
     },
   );
+
+  test(
+    'equipment and gym changes automatically refresh dashboard data',
+    () async {
+      var gyms = [_gym('account-a', 'gym-a')];
+      var equipmentByGym = <String, List<Equipment>>{
+        'gym-a': [_equipment('gym-a', quantity: 2)],
+      };
+      final gymChanges = StreamController<void>.broadcast(sync: true);
+      final equipmentChanges = StreamController<void>.broadcast(sync: true);
+      final viewModel = _createViewModel(
+        () => 'account-a',
+        _StubGymRepository(
+          (_) async => List.of(gyms),
+          watch: (_) => gymChanges.stream,
+        ),
+        _StubEquipmentRepository(
+          (gymId) async => List.of(equipmentByGym[gymId] ?? const []),
+          watch: () => equipmentChanges.stream,
+        ),
+      );
+
+      await viewModel.onAuthChanged('account-a');
+      expect(viewModel.state.gyms.single.equipmentCount, 2);
+
+      equipmentByGym['gym-a'] = [
+        _equipment('gym-a', quantity: 7),
+        _equipment('gym-a', quantity: 1, category: EquipmentCategory.racks),
+      ];
+      final equipmentRefresh = Completer<void>();
+      final removeEquipmentListener = viewModel.addListener((state) {
+        if (state.gyms.singleOrNull?.equipmentCount == 8 &&
+            state.categoryCounts[EquipmentCategory.weights] == 7 &&
+            state.categoryCounts[EquipmentCategory.racks] == 1) {
+          equipmentRefresh.complete();
+        }
+      }, fireImmediately: false);
+      equipmentChanges.add(null);
+      await equipmentRefresh.future.timeout(const Duration(seconds: 2));
+      removeEquipmentListener();
+
+      gyms = [...gyms, _gym('account-a', 'gym-b')];
+      final gymRefresh = Completer<void>();
+      final removeGymListener = viewModel.addListener((state) {
+        if (state.gyms.length == 2) gymRefresh.complete();
+      }, fireImmediately: false);
+      gymChanges.add(null);
+      await gymRefresh.future.timeout(const Duration(seconds: 2));
+      removeGymListener();
+      expect(
+        viewModel.state.gymCategoryCounts['gym-b']!.values.every((n) => n == 0),
+        isTrue,
+      );
+
+      equipmentByGym.remove('gym-a');
+      gyms = gyms.where((gym) => gym.gymId != 'gym-a').toList();
+      final deletionRefresh = Completer<void>();
+      final removeDeletionListener = viewModel.addListener((state) {
+        if (state.gyms.length == 1 &&
+            state.gyms.single.gymId == 'gym-b' &&
+            state.categoryCounts.values.every((count) => count == 0)) {
+          deletionRefresh.complete();
+        }
+      }, fireImmediately: false);
+      gymChanges.add(null);
+      await deletionRefresh.future.timeout(const Duration(seconds: 2));
+      removeDeletionListener();
+
+      viewModel.dispose();
+      await gymChanges.close();
+      await equipmentChanges.close();
+    },
+  );
 }
 
 DashboardViewModel _createViewModel(
@@ -235,11 +312,15 @@ Gym _gym(String userId, String gymId) {
   );
 }
 
-Equipment _equipment(String gymId, {required int quantity}) {
+Equipment _equipment(
+  String gymId, {
+  required int quantity,
+  EquipmentCategory category = EquipmentCategory.weights,
+}) {
   return Equipment(
     gymId: gymId,
     name: 'Equipment',
-    category: EquipmentCategory.weights,
+    category: category,
     brand: 'Brand',
     model: 'Model',
     trainingStyle: TrainingStyle.general,
@@ -249,9 +330,10 @@ Equipment _equipment(String gymId, {required int quantity}) {
 }
 
 class _StubGymRepository extends GymRepository {
-  _StubGymRepository(this._load);
+  _StubGymRepository(this._load, {this.watch});
 
   final Future<List<Gym>> Function(String userId) _load;
+  final Stream<void> Function(String userId)? watch;
 
   @override
   Future<List<Gym>> getAllForUser(
@@ -261,12 +343,17 @@ class _StubGymRepository extends GymRepository {
   }) {
     return _load(userId);
   }
+
+  @override
+  Stream<void> watchForUser(String userId) =>
+      watch?.call(userId) ?? const Stream<void>.empty();
 }
 
 class _StubEquipmentRepository extends EquipmentRepository {
-  _StubEquipmentRepository(this._load);
+  _StubEquipmentRepository(this._load, {this.watch});
 
   final Future<List<Equipment>> Function(String gymId) _load;
+  final Stream<void> Function()? watch;
 
   @override
   Future<List<Equipment>> getAllForGym(
@@ -278,4 +365,7 @@ class _StubEquipmentRepository extends EquipmentRepository {
   }) {
     return _load(gymId);
   }
+
+  @override
+  Stream<void> watchChanges() => watch?.call() ?? const Stream<void>.empty();
 }

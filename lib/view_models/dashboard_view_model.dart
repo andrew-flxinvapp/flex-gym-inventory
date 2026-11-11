@@ -24,12 +24,14 @@ class DashboardGym {
 /// Immutable state for the dashboard UI.
 class DashboardState {
   final Map<EquipmentCategory, int> categoryCounts;
+  final Map<String, Map<EquipmentCategory, int>> gymCategoryCounts;
   final List<DashboardGym> gyms;
   final bool loading;
   final String? error;
 
   const DashboardState({
     required this.categoryCounts,
+    this.gymCategoryCounts = const {},
     required this.gyms,
     this.loading = false,
     this.error,
@@ -37,12 +39,14 @@ class DashboardState {
 
   DashboardState copyWith({
     Map<EquipmentCategory, int>? categoryCounts,
+    Map<String, Map<EquipmentCategory, int>>? gymCategoryCounts,
     List<DashboardGym>? gyms,
     bool? loading,
     String? error,
   }) {
     return DashboardState(
       categoryCounts: categoryCounts ?? this.categoryCounts,
+      gymCategoryCounts: gymCategoryCounts ?? this.gymCategoryCounts,
       gyms: gyms ?? this.gyms,
       loading: loading ?? this.loading,
       error: error,
@@ -55,6 +59,7 @@ DashboardState _emptyDashboardState({bool loading = false, String? error}) {
     categoryCounts: {
       for (final category in EquipmentCategory.values) category: 0,
     },
+    gymCategoryCounts: const {},
     gyms: const [],
     loading: loading,
     error: error,
@@ -77,6 +82,10 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
   final EquipmentRepository _equipmentRepository;
   String? _activeUserId;
   int _requestGeneration = 0;
+  StreamSubscription<void>? _gymChangesSubscription;
+  StreamSubscription<void>? _equipmentChangesSubscription;
+  bool _refreshQueued = false;
+  String? _pendingRefreshUserId;
   bool _hasAuthState = false;
   bool _authUnavailable = false;
   bool _disposed = false;
@@ -97,9 +106,11 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     _authUnavailable = false;
     _activeUserId = normalizedUserId;
     _requestGeneration++;
+    _stopWatching();
     state = _emptyDashboardState(loading: normalizedUserId != null);
 
     if (normalizedUserId == null) return Future<void>.value();
+    _startWatching(normalizedUserId);
     return _refreshForUser(normalizedUserId);
   }
 
@@ -118,6 +129,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     _authUnavailable = true;
     _activeUserId = null;
     _requestGeneration++;
+    _stopWatching();
     state = _emptyDashboardState(error: errorMessage);
   }
 
@@ -146,6 +158,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
       };
 
       final List<DashboardGym> dashboardGyms = [];
+      final Map<String, Map<EquipmentCategory, int>> gymCategoryCounts = {};
 
       for (final g in gyms) {
         if (!_canApplyResult(userId, generation)) return;
@@ -153,12 +166,18 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
         if (!_canApplyResult(userId, generation)) return;
         // Sum quantities (if quantity is not present, default to 1)
         final equipmentCount = items.fold<int>(0, (acc, e) => acc + e.quantity);
+        final countsForGym = {
+          for (final category in EquipmentCategory.values) category: 0,
+        };
 
         // Increment category counts
         for (final e in items) {
           final existing = counts[e.category] ?? 0;
           counts[e.category] = existing + e.quantity;
+          countsForGym[e.category] =
+              (countsForGym[e.category] ?? 0) + e.quantity;
         }
+        gymCategoryCounts[g.gymId] = countsForGym;
 
         // Determine lastUpdated: newest purchaseDate among equipments, or gym.createdDate
         DateTime lastUpdated = g.createdDate;
@@ -182,6 +201,7 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
       state = state.copyWith(
         loading: false,
         categoryCounts: counts,
+        gymCategoryCounts: gymCategoryCounts,
         gyms: dashboardGyms,
         error: null,
       );
@@ -207,10 +227,68 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     return false;
   }
 
+  void _startWatching(String userId) {
+    try {
+      _gymChangesSubscription = _gymRepository
+          .watchForUser(userId)
+          .listen(
+            (_) => _scheduleRefresh(userId),
+            onError: (Object error, StackTrace stackTrace) {
+              _reportWatchError(userId, error);
+            },
+          );
+      _equipmentChangesSubscription = _equipmentRepository
+          .watchChanges()
+          .listen(
+            (_) => _scheduleRefresh(userId),
+            onError: (Object error, StackTrace stackTrace) {
+              _reportWatchError(userId, error);
+            },
+          );
+    } catch (error) {
+      _reportWatchError(userId, error);
+    }
+  }
+
+  void _scheduleRefresh(String userId) {
+    _pendingRefreshUserId = userId;
+    if (_refreshQueued) return;
+    _refreshQueued = true;
+    scheduleMicrotask(() {
+      _refreshQueued = false;
+      final pendingUserId = _pendingRefreshUserId;
+      _pendingRefreshUserId = null;
+      if (pendingUserId != null && _isActiveUser(pendingUserId)) {
+        unawaited(refresh());
+      }
+    });
+  }
+
+  void _reportWatchError(String userId, Object error) {
+    if (!_isActiveUser(userId)) return;
+    state = state.copyWith(
+      loading: false,
+      error: 'Dashboard updates failed: $error',
+    );
+  }
+
+  void _stopWatching() {
+    _pendingRefreshUserId = null;
+    final gymSubscription = _gymChangesSubscription;
+    final equipmentSubscription = _equipmentChangesSubscription;
+    _gymChangesSubscription = null;
+    _equipmentChangesSubscription = null;
+    if (gymSubscription != null) unawaited(gymSubscription.cancel());
+    if (equipmentSubscription != null) {
+      unawaited(equipmentSubscription.cancel());
+    }
+  }
+
   @override
   void dispose() {
     _disposed = true;
     _requestGeneration++;
+    _stopWatching();
     super.dispose();
   }
 }

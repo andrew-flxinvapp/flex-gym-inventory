@@ -26,6 +26,23 @@ class EquipmentRepository {
 
   Isar get _database => _isar ?? IsarService.isar;
 
+  /// Emits change notifications without exposing equipment from other gyms.
+  Stream<void> watchChanges() => _database.equipments.where().watchLazy();
+
+  /// Emits change notifications for one already-authorized gym.
+  Stream<void> watchForGym(Gym gym) {
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null ||
+        gym.userId != userId ||
+        !_ownershipContext.isCurrentUser(userId)) {
+      return const Stream<void>.empty();
+    }
+    return _database.equipments
+        .filter()
+        .gymIdEqualTo(gym.gymId)
+        .watchLazy();
+  }
+
   Future<bool> _ownsGym(String gymId, String userId) async {
     if (!_ownershipContext.isCurrentUser(userId)) return false;
     final gym =

@@ -189,6 +189,14 @@ class GymRepository {
     return items;
   }
 
+  /// Emits when the authenticated user's gym query changes.
+  Stream<void> watchForUser(String userId) {
+    if (!_ownershipContext.isCurrentUser(userId)) {
+      return const Stream<void>.empty();
+    }
+    return _database.gyms.filter().userIdEqualTo(userId).watchLazy();
+  }
+
   // -------------------- Stats ------------------------------------------------
 
   /// Count gyms for a user (useful for dashboard tiles).
