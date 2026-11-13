@@ -23,7 +23,7 @@ class GymStatsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Total Equipment',
+            'Equipment Total',
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               color: AppTheme.lightTextPrimary,
             ),

@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import '../../models/ui_message.dart';
 import '../../../theme/app_theme.dart';
+import '../snackbar.dart';
 
 class ConfirmDialog extends StatelessWidget {
   final String title;
@@ -80,6 +84,69 @@ class ConfirmDialog extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+void showDeleteConfirmation<T>({
+  required BuildContext context,
+  required String title,
+  required String content,
+  required Future<T?> Function() delete,
+  VoidCallback? onDeleted,
+}) {
+  showDialog<void>(
+    context: context,
+    builder:
+        (_) => ConfirmDialog(
+          title: title,
+          content: content,
+          confirmText: 'Delete',
+          cancelText: 'Cancel',
+          onConfirm: () {
+            unawaited(_deleteAndReport(context, delete, onDeleted));
+          },
+        ),
+  );
+}
+
+Future<void> _deleteAndReport<T>(
+  BuildContext context,
+  Future<T?> Function() delete,
+  VoidCallback? onDeleted,
+) async {
+  try {
+    final deleted = await delete();
+    if (!context.mounted) return;
+    if (deleted == null) {
+      showFlexSnackbarFromUiMessage(
+        context,
+        UiMessage(
+          'Delete failed',
+          subtitle: 'The item could not be deleted.',
+          type: UiMessageType.error,
+        ),
+      );
+      return;
+    }
+    onDeleted?.call();
+  } catch (error, stackTrace) {
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'Flex Gym Inventory',
+        context: ErrorDescription('while deleting an item'),
+      ),
+    );
+    if (!context.mounted) return;
+    showFlexSnackbarFromUiMessage(
+      context,
+      UiMessage(
+        'Delete failed',
+        subtitle: error.toString(),
+        type: UiMessageType.error,
+      ),
     );
   }
 }

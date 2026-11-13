@@ -75,7 +75,7 @@ class _EquipmentDistributionChartState
                 borderRadius: BorderRadius.circular(8),
                 child: ColoredBox(
                   key: const ValueKey('equipment-distribution-bar'),
-                  color: AppTheme.dividers,
+                  color: AppTheme.transparent,
                   child: TweenAnimationBuilder<_ChartDistribution>(
                     tween: _ChartDistributionTween(end: target),
                     duration: duration,

@@ -15,6 +15,7 @@ class EquipmentCard extends StatelessWidget {
   final String brand;
   final int? isarId;
   final VoidCallback? onTapCallback;
+  final ValueChanged<int>? onDeleteCallback;
 
   const EquipmentCard({
     super.key,
@@ -24,6 +25,7 @@ class EquipmentCard extends StatelessWidget {
     required this.brand,
     this.isarId,
     this.onTapCallback,
+    this.onDeleteCallback,
   });
 
   @override
@@ -50,7 +52,8 @@ class EquipmentCard extends StatelessWidget {
           ),
           SlidableAction(
             onPressed: (context) {
-              // TODO: Implement delete functionality
+              final id = isarId;
+              if (id != null) onDeleteCallback?.call(id);
             },
             backgroundColor: AppTheme.stopColor,
             foregroundColor: AppTheme.lightBackground,

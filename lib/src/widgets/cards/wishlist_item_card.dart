@@ -14,6 +14,7 @@ class WishlistItemCard extends StatelessWidget {
   final String priority;
   final int? isarId;
   final ValueChanged<int?>? onTapCallback;
+  final ValueChanged<int>? onDeleteCallback;
 
   const WishlistItemCard({
     super.key,
@@ -23,18 +24,23 @@ class WishlistItemCard extends StatelessWidget {
     required this.priority,
     this.isarId,
     this.onTapCallback,
+    this.onDeleteCallback,
   });
 
-  WishlistItemCard.fromWishlist(Wishlist item, {super.key, this.onTapCallback})
-    : itemName = item.name,
-      brand = item.brand,
-      price =
-          double.tryParse(
-            item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '',
-          ) ??
-          0.0,
-      priority = item.priority.label,
-      isarId = item.id;
+  WishlistItemCard.fromWishlist(
+    Wishlist item, {
+    super.key,
+    this.onTapCallback,
+    this.onDeleteCallback,
+  }) : itemName = item.name,
+       brand = item.brand,
+       price =
+           double.tryParse(
+             item.price?.replaceAll(RegExp('[^0-9.]'), '') ?? '',
+           ) ??
+           0.0,
+       priority = item.priority.label,
+       isarId = item.id;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +66,8 @@ class WishlistItemCard extends StatelessWidget {
           ),
           SlidableAction(
             onPressed: (context) {
-              // TODO: Implement delete functionality
+              final id = isarId;
+              if (id != null) onDeleteCallback?.call(id);
             },
             backgroundColor: AppTheme.stopColor,
             foregroundColor: AppTheme.lightBackground,

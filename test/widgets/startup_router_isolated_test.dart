@@ -23,14 +23,16 @@ void main() {
     testWidgets('navigates to onboarding when onboarding incomplete', (
       tester,
     ) async {
-      when(() => mockRepo.isOnboardingComplete).thenReturn(false);
+      when(
+        () => mockRepo.fetchOnboardingCompleteFromProfile(),
+      ).thenAnswer((_) async => false);
       final fakeSession = FakeSession();
 
       // Build a routes map without the '/' entry to avoid MaterialApp assertion
       final routes = Map<String, WidgetBuilder>.from(appRoutes);
       routes.remove(AppRoutes.splash);
       // Replace heavy onboarding/dashboard routes with placeholders for test isolation
-      routes[AppRoutes.onboardingFeatureOne] =
+      routes[AppRoutes.optNotifications] =
           (_) => const Scaffold(body: Center(child: Text('Onboarding')));
 
       await tester.pumpWidget(
@@ -45,14 +47,15 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // After bootstrap, StartupRouterScreen should have navigated away
-      expect(find.byType(StartupRouterScreen), findsNothing);
+      expect(find.text('Onboarding'), findsOneWidget);
     });
 
     testWidgets('navigates to dashboard when onboarding complete', (
       tester,
     ) async {
-      when(() => mockRepo.isOnboardingComplete).thenReturn(true);
+      when(
+        () => mockRepo.fetchOnboardingCompleteFromProfile(),
+      ).thenAnswer((_) async => true);
       final fakeSession = FakeSession();
 
       final routes = Map<String, WidgetBuilder>.from(appRoutes);
@@ -71,7 +74,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.byType(StartupRouterScreen), findsNothing);
+      expect(find.text('Dashboard'), findsOneWidget);
     });
   });
 }

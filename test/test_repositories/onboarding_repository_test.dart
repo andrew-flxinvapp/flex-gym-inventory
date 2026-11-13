@@ -128,6 +128,32 @@ void main() {
   );
 
   test(
+    'profile lookup failures propagate instead of meaning incomplete',
+    () async {
+      final client = await _authenticatedClient((request) async {
+        if (request.method == 'GET' && request.url.path.endsWith('/profiles')) {
+          return http.Response(
+            jsonEncode({'code': 'lookup_failed', 'message': 'lookup failed'}),
+            500,
+            headers: {'content-type': 'application/json'},
+            request: request,
+          );
+        }
+        return http.Response('[]', 200, request: request);
+      });
+
+      await expectLater(
+        OnboardingRepository(
+          client: client,
+        ).fetchOnboardingCompleteFromProfile(),
+        throwsA(isA<PostgrestException>()),
+      );
+
+      await client.dispose();
+    },
+  );
+
+  test(
     'omits empty names instead of overwriting existing profile values',
     () async {
       http.Request? upsertRequest;

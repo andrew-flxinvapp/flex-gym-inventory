@@ -7,19 +7,39 @@ import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import 'package:flex_gym_inventory/src/data/repositories/wishlist_repository.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
+import '../widgets/dialogs/confirm_dialog.dart';
+
 // import '../widgets/buttons/primary_button.dart';
 
 class WishlistScreen extends StatefulWidget {
-  const WishlistScreen({super.key});
+  const WishlistScreen({super.key, this.repository});
+
+  final WishlistRepository? repository;
 
   @override
   State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
+  WishlistRepository get _repository =>
+      widget.repository ?? WishlistRepository();
+
   Future<List<Wishlist>> _fetchData() async {
-    final repo = WishlistRepository();
-    return await repo.getAll();
+    return _repository.getAll();
+  }
+
+  void _confirmDeleteWishlist(int id) {
+    showDeleteConfirmation<Wishlist>(
+      context: context,
+      title: 'Delete Item',
+      content:
+          'Are you sure you want to delete this item? This action cannot be undone.',
+      delete: () => _repository.deleteWishlist(id),
+      onDeleted: () {
+        if (!mounted) return;
+        setState(() {});
+      },
+    );
   }
 
   @override
@@ -112,6 +132,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   for (final w in items) ...[
                     WishlistItemCard.fromWishlist(
                       w,
+                      onDeleteCallback: _confirmDeleteWishlist,
                       onTapCallback: (id) async {
                         await Navigator.of(
                           context,

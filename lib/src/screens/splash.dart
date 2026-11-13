@@ -4,26 +4,16 @@ import '../../theme/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../service/app_info_service.dart';
 import '../../routes/routes.dart';
-import '../../utilities/logging_handler.dart';
-import 'startup_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
     super.key,
-    this.resolveRoute = resolveStartupRoute,
     this.minDuration = const Duration(milliseconds: 1500),
-    this.checkTimeout = const Duration(seconds: 8),
     this.routes,
   });
 
-  /// Startup destination check; injectable for tests.
-  final Future<String> Function() resolveRoute;
-
   /// Minimum time the splash stays visible.
   final Duration minDuration;
-
-  /// Maximum time to wait for [resolveRoute] before falling back.
-  final Duration checkTimeout;
 
   /// Route table used to build the destination; defaults to [appRoutes].
   final Map<String, WidgetBuilder>? routes;
@@ -45,24 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _start() async {
-    final check = _check();
-
-    final results = await Future.wait<String?>([
-      check,
-      Future<String?>.delayed(widget.minDuration),
-    ]);
-
-    _goTo(results.first ?? AppRoutes.startupRouter);
-  }
-
-  Future<String> _check() async {
-    try {
-      return await widget.resolveRoute().timeout(widget.checkTimeout);
-    } catch (e, st) {
-      LogHandler.warning('Splash', 'Startup check failed: $e', e, st);
-      // Fall back to the StartupRouter, which re-runs the same checks.
-      return AppRoutes.startupRouter;
-    }
+    await Future<void>.delayed(widget.minDuration);
+    _goTo(AppRoutes.startupRouter);
   }
 
   void _goTo(String routeName) {
@@ -77,9 +51,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
         settings: RouteSettings(name: routeName),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
+        transitionDuration: const Duration(milliseconds: 180),
+        reverseTransitionDuration: const Duration(milliseconds: 180),
         pageBuilder: (context, _, _) => builder(context),
+        transitionsBuilder: (context, animation, _, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
       ),
     );
   }
@@ -164,9 +141,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         const SizedBox(height: 4),
                         Text(
                           'ALPHA TEST',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppTheme.darkTextPrimary),
                         ),
                       ],

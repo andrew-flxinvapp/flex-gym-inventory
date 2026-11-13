@@ -1,6 +1,7 @@
 // lib/src/repositories/wishlist_repository.dart
 import 'package:isar/isar.dart';
 import 'package:flex_gym_inventory/service/isar_service.dart';
+import 'package:flex_gym_inventory/service/ownership_context.dart';
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 
@@ -8,22 +9,55 @@ import 'package:flex_gym_inventory/enum/app_enums.dart';
 enum WishlistSort { nameAsc, nameDesc, brandAsc, brandDesc }
 
 class WishlistRepository {
+  WishlistRepository({Isar? isar, OwnershipContext? ownershipContext})
+    : _isar = isar,
+      _ownershipContext = ownershipContext ?? OwnershipContext();
+
+  final Isar? _isar;
+  final OwnershipContext _ownershipContext;
+
+  Isar get _database => _isar ?? IsarService.isar;
+
   // -------------------- Create / Update / Delete -----------------------------
 
   /// Insert or replace a wishlist item.
   Future<void> upsert(Wishlist item) async {
-    final isar = IsarService.isar;
-    await isar.writeTxn(() async {
-      await isar.wishlists.put(item);
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) {
+      throw StateError(
+        'An authenticated user is required to save a wishlist item.',
+      );
+    }
+    if (item.userId != userId) {
+      throw StateError(
+        'The wishlist item does not belong to the current user.',
+      );
+    }
+
+    await _database.writeTxn(() async {
+      final existing = await _database.wishlists.get(item.id);
+      if (existing != null && existing.userId != userId) {
+        throw StateError(
+          'The wishlist item does not belong to the current user.',
+        );
+      }
+      if (!_ownershipContext.isCurrentUser(userId)) {
+        throw StateError(
+          'Authentication changed while saving the wishlist item.',
+        );
+      }
+      await _database.wishlists.put(item);
+      if (!_ownershipContext.isCurrentUser(userId)) {
+        throw StateError(
+          'Authentication changed while saving the wishlist item.',
+        );
+      }
     });
   }
 
   /// Delete by Isar id.
   Future<void> deleteByIsarId(int isarId) async {
-    final isar = IsarService.isar;
-    await isar.writeTxn(() async {
-      await isar.wishlists.delete(isarId);
-    });
+    await deleteWishlist(isarId);
   }
 
   /// Create a new wishlist item and insert it.
@@ -38,6 +72,13 @@ class WishlistRepository {
     String? notes,
     String? price,
   }) async {
+    final currentUserId = _ownershipContext.currentUserId;
+    if (currentUserId == null || currentUserId != userId) {
+      throw StateError(
+        'An authenticated owner is required to create a wishlist item.',
+      );
+    }
+
     final item = Wishlist(
       userId: userId,
       name: name,
@@ -65,38 +106,70 @@ class WishlistRepository {
     String? notes,
     String? price,
   }) async {
-    final isar = IsarService.isar;
-    final item = await isar.wishlists.get(id);
-    if (item == null) return null;
-    if (name != null) item.name = name;
-    if (wishlistType != null) item.wishlistType = wishlistType;
-    if (category != null) item.category = category;
-    if (brand != null) item.brand = brand;
-    if (priority != null) item.priority = priority;
-    if (productUrl != null) item.productUrl = productUrl;
-    if (notes != null) item.notes = notes;
-    if (price != null) item.price = price;
-    await upsert(item);
-    return item;
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) return null;
+
+    return _database.writeTxn(() async {
+      final item = await _database.wishlists.get(id);
+      if (item == null ||
+          item.userId != userId ||
+          !_ownershipContext.isCurrentUser(userId)) {
+        return null;
+      }
+      if (name != null) item.name = name;
+      if (wishlistType != null) item.wishlistType = wishlistType;
+      if (category != null) item.category = category;
+      if (brand != null) item.brand = brand;
+      if (priority != null) item.priority = priority;
+      if (productUrl != null) item.productUrl = productUrl;
+      if (notes != null) item.notes = notes;
+      if (price != null) item.price = price;
+      await _database.wishlists.put(item);
+      if (!_ownershipContext.isCurrentUser(userId)) {
+        throw StateError(
+          'Authentication changed while updating the wishlist item.',
+        );
+      }
+      return item;
+    });
   }
 
   /// Delete a wishlist item by Isar id and return the deleted item.
   Future<Wishlist?> deleteWishlist(int id) async {
-    final isar = IsarService.isar;
-    final item = await isar.wishlists.get(id);
-    if (item == null) return null;
-    await isar.writeTxn(() async {
-      await isar.wishlists.delete(id);
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) return null;
+
+    return _database.writeTxn(() async {
+      final item = await _database.wishlists.get(id);
+      if (item == null ||
+          item.userId != userId ||
+          !_ownershipContext.isCurrentUser(userId)) {
+        return null;
+      }
+      await _database.wishlists.delete(id);
+      if (!_ownershipContext.isCurrentUser(userId)) {
+        throw StateError(
+          'Authentication changed while deleting the wishlist item.',
+        );
+      }
+      return item;
     });
-    return item;
   }
 
   // -------------------- Lookups ---------------------------------------------
 
   /// Get by Isar id.
   Future<Wishlist?> getByIsarId(int isarId) async {
-    final isar = IsarService.isar;
-    return isar.wishlists.get(isarId);
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) return null;
+
+    final item = await _database.wishlists.get(isarId);
+    if (item == null ||
+        item.userId != userId ||
+        !_ownershipContext.isCurrentUser(userId)) {
+      return null;
+    }
+    return item;
   }
 
   // -------------------- List (search / filter / sort) ------------------------
@@ -118,12 +191,15 @@ class WishlistRepository {
     WishlistSort sort = WishlistSort.nameAsc,
     List<String>? priorityOrder, // optional custom sort precedence (labels)
   }) async {
-    final isar = IsarService.isar;
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) return [];
 
     // Base fetch (indexed filters first)
     var items =
-        await isar.wishlists
+        await _database.wishlists
             .filter()
+            .userIdEqualTo(userId)
+            .and()
             .optional(
               wishlistType != null,
               (q) => q.wishlistTypeEqualTo(wishlistType!),
@@ -135,6 +211,7 @@ class WishlistRepository {
             )
             .optional(priority != null, (q) => q.priorityEqualTo(priority!))
             .findAll();
+    if (!_ownershipContext.isCurrentUser(userId)) return [];
 
     // Multi-priority filter (local)
     if (priorities != null && priorities.isNotEmpty) {
@@ -179,7 +256,7 @@ class WishlistRepository {
       });
       // If custom priorityOrder is provided, we consider that the primary sort
       // and skip the generic sort switch below.
-      return items;
+      return _ownershipContext.isCurrentUser(userId) ? items : [];
     }
 
     switch (sort) {
@@ -197,14 +274,18 @@ class WishlistRepository {
         break;
     }
 
-    return items;
+    return _ownershipContext.isCurrentUser(userId) ? items : [];
   }
 
   // -------------------- Stats ------------------------------------------------
 
-  /// Total number of wishlist items.
+  /// Total number of wishlist items owned by the current user.
   Future<int> countAll() async {
-    final isar = IsarService.isar;
-    return isar.wishlists.where().count();
+    final userId = _ownershipContext.currentUserId;
+    if (userId == null) return 0;
+
+    final count =
+        await _database.wishlists.filter().userIdEqualTo(userId).count();
+    return _ownershipContext.isCurrentUser(userId) ? count : 0;
   }
 }

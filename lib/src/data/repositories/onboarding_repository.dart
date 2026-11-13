@@ -115,27 +115,22 @@ class OnboardingRepository {
   /// Fetch whether onboarding is complete by reading the canonical
   /// `public.profiles.onboarding_completed_at` column for the current user.
   /// Returns `true` when a non-null timestamp is present, `false` otherwise.
-  /// Any errors are caught and `false` is returned so callers fall back to
-  /// onboarding flow instead of blocking the user.
+  /// Lookup errors are allowed to propagate so callers can distinguish an
+  /// incomplete profile from a failed lookup.
   Future<bool> fetchOnboardingCompleteFromProfile() async {
     final user = _client.auth.currentUser;
-    if (user == null) return false;
-
-    try {
-      final row =
-          await _client
-              .from('profiles')
-              .select('onboarding_completed_at')
-              .eq('id', user.id)
-              .maybeSingle();
-
-      if (row == null) return false;
-      if (row['onboarding_completed_at'] != null) return true;
-      return false;
-    } catch (_) {
-      // Swallow errors and treat as not complete so routing sends the user
-      // into onboarding. Calling code may surface logs / telemetry.
-      return false;
+    if (user == null) {
+      throw StateError('No authenticated user for profile lookup');
     }
+
+    final row =
+        await _client
+            .from('profiles')
+            .select('onboarding_completed_at')
+            .eq('id', user.id)
+            .maybeSingle();
+
+    if (row == null) return false;
+    return row['onboarding_completed_at'] != null;
   }
 }

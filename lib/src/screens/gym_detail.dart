@@ -21,7 +21,17 @@ import 'package:flex_gym_inventory/service/ownership_context.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GymDetailScreen extends StatefulWidget {
-  const GymDetailScreen({super.key});
+  const GymDetailScreen({
+    super.key,
+    @visibleForTesting this.equipmentRepository,
+    @visibleForTesting this.activeGymLoader,
+  });
+
+  @visibleForTesting
+  final EquipmentRepository? equipmentRepository;
+
+  @visibleForTesting
+  final Future<Gym?> Function()? activeGymLoader;
 
   @override
   State<GymDetailScreen> createState() => _GymDetailScreenState();
@@ -47,7 +57,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
       if (!mounted || userId == _activeUserId) return;
       _activeUserId = userId;
       _stopWatchingEquipment();
-      setState(() => _dataFuture = _fetchData());
+      setState(() {
+        _dataFuture = _fetchData();
+      });
     });
   }
 
@@ -76,7 +88,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                 _activeUserId != gym.userId) {
               return;
             }
-            setState(() => _dataFuture = _fetchData());
+            setState(() {
+              _dataFuture = _fetchData();
+            });
           },
           onError: (Object error, StackTrace stackTrace) {
             FlutterError.reportError(
@@ -113,7 +127,9 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
         (result == null && !refreshWhenNoResult)) {
       return;
     }
-    setState(() => _dataFuture = _fetchData());
+    setState(() {
+      _dataFuture = _fetchData();
+    });
   }
 
   Future<Map<String, dynamic>> _fetchData() async {
@@ -124,24 +140,38 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
       return {'gym': null, 'items': <Equipment>[]};
     }
 
-    final service = ActiveGymService(
-      IsarService.isar,
-      ownershipContext: ownershipContext,
-    );
-    final gym = await service.getActiveGym();
+    final gym =
+        widget.activeGymLoader != null
+            ? await widget.activeGymLoader!()
+            : await ActiveGymService(
+              IsarService.isar,
+              ownershipContext: ownershipContext,
+            ).getActiveGym();
     if (gym == null ||
         gym.userId != userId ||
         !ownershipContext.isCurrentUser(userId)) {
       _stopWatchingEquipment(ownerId: userId);
       return {'gym': null, 'items': <Equipment>[]};
     }
-    final repo = EquipmentRepository();
+    final repo = widget.equipmentRepository ?? EquipmentRepository();
     _watchEquipmentForGym(gym, repo);
     final items = await repo.getAllForGym(gym.gymId);
     if (!ownershipContext.isCurrentUser(userId)) {
       return {'gym': null, 'items': <Equipment>[]};
     }
     return {'gym': gym, 'items': items};
+  }
+
+  void _confirmDeleteEquipment(int id) {
+    showDeleteConfirmation<Equipment>(
+      context: context,
+      title: 'Delete Equipment',
+      content:
+          'Are you sure you want to delete this item? This action cannot be undone.',
+      delete:
+          () => (widget.equipmentRepository ?? EquipmentRepository())
+              .deleteEquipment(id),
+    );
   }
 
   @override
@@ -248,7 +278,10 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       SecondaryButton(
                         label: 'Add Equipment',
                         onPressed:
-                            () => _openEquipmentRoute(AppRoutes.addEquipment),
+                            () => _openEquipmentRoute(
+                              AppRoutes.addEquipment,
+                              arguments: gym.id,
+                            ),
                       ),
                     ],
                   ),
@@ -295,7 +328,10 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                         constraints: const BoxConstraints(),
                         icon: Image.asset(AppIcons.plus, height: 22, width: 22),
                         onPressed:
-                            () => _openEquipmentRoute(AppRoutes.addEquipment),
+                            () => _openEquipmentRoute(
+                              AppRoutes.addEquipment,
+                              arguments: gym.id,
+                            ),
                       ),
                     ],
                   ),
@@ -327,6 +363,7 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
                       quantity: e.quantity,
                       category: e.category,
                       isarId: e.id,
+                      onDeleteCallback: _confirmDeleteEquipment,
                       onTapCallback:
                           () => _openEquipmentRoute(
                             AppRoutes.equipmentDetail,
