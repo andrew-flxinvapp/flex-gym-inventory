@@ -14,6 +14,7 @@ import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/layouts/app_screen.dart';
 import '../widgets/snackbar.dart';
+import '../utils/wishlist_url.dart';
 
 class EditWishlistScreen extends StatefulWidget {
   const EditWishlistScreen({super.key});
@@ -205,6 +206,8 @@ class _EditWishlistScreenState extends State<EditWishlistScreen> {
                     hintText: 'Link (URL)',
                     showAsterisk: false,
                     controller: linkController,
+                    validator: validateWishlistUrl,
+                    height: 80,
                   ),
                   /*const SizedBox(height: 20),
                 CustomDropdownField<ImageSource>(

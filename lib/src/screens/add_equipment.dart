@@ -12,6 +12,7 @@ import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/inputs/text_input_field.dart';
+import '../widgets/inputs/quantity_input.dart';
 import '../widgets/inputs/multiline_text_input.dart';
 import '../widgets/inputs/date_input.dart';
 // import '../widgets/inputs/image_input.dart';
@@ -252,10 +253,11 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    CustomTextInputField(
+                    QuantityInput(
                       hintText: 'Quantity',
                       showAsterisk: true,
                       controller: quantityController,
+                      validator: QuantityInput.validateQuantity,
                     ),
                     const SizedBox(height: 20),
                     CustomTextInputField(

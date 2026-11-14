@@ -86,7 +86,7 @@ class _ProPurchaseState extends State<ObProPurchase> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   16.0,
-                                  0,
+                                  16.0,
                                   16.0,
                                   0,
                                 ),

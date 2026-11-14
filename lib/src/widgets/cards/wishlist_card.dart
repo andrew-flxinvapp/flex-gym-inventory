@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../theme/app_theme.dart';
+import '../../utils/wishlist_url.dart';
 import '../snackbar.dart';
 
 class WishlistCard extends StatelessWidget {
@@ -26,9 +27,17 @@ class WishlistCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (int i = 0; i < 5; i++) ...[
-            rows[i].key == 'Link' && rows[i].value.isNotEmpty
+            rows[i].key == 'Link' &&
+                    rows[i].value.trim().isNotEmpty &&
+                    rows[i].value.trim() != '-'
                 ? _WishlistLinkRow(url: rows[i].value)
-                : _WishlistDetailRow(label: rows[i].key, value: rows[i].value),
+                : _WishlistDetailRow(
+                  label: rows[i].key,
+                  value:
+                      rows[i].key == 'Link' && rows[i].value.trim().isEmpty
+                          ? '-'
+                          : rows[i].value,
+                ),
             if (i != 4) const SizedBox(height: 12),
           ],
         ],
@@ -44,37 +53,42 @@ class _WishlistLinkRow extends StatelessWidget {
   const _WishlistLinkRow({required this.url});
 
   Future<void> _launchUrl(BuildContext context) async {
-    final uri = Uri.tryParse(url);
+    final uri = parseWishlistUrl(url);
+    var launched = false;
+    if (uri != null) {
+      try {
+        launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } catch (_) {
+        launched = false;
+      }
+    }
+    if (!context.mounted || launched) return;
+
     final overlay = Overlay.of(context);
     final mq = MediaQuery.of(context);
     final left = mq.size.width / 2 - 193;
     final bottom = mq.padding.bottom + 32;
-
-    if (uri != null && await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      // Show custom FlexSnackbar as a warning
-      late OverlayEntry overlayEntry;
-      overlayEntry = OverlayEntry(
-        builder:
-            (ctx) => Positioned(
-              left: left,
-              bottom: bottom,
-              child: Material(
-                color: Colors.transparent,
-                child: FlexSnackbar(
-                  title: 'Could not open link.',
-                  type: SnackbarType.warning,
-                  onClose: () => overlayEntry.remove(),
-                ),
+    // Show custom FlexSnackbar as a warning
+    late OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder:
+          (ctx) => Positioned(
+            left: left,
+            bottom: bottom,
+            child: Material(
+              color: Colors.transparent,
+              child: FlexSnackbar(
+                title: 'Could not open link.',
+                type: SnackbarType.warning,
+                onClose: () => overlayEntry.remove(),
               ),
             ),
-      );
-      overlay.insert(overlayEntry);
-      Future.delayed(const Duration(seconds: 3), () {
-        if (overlayEntry.mounted) overlayEntry.remove();
-      });
-    }
+          ),
+    );
+    overlay.insert(overlayEntry);
+    Future.delayed(const Duration(seconds: 3), () {
+      if (overlayEntry.mounted) overlayEntry.remove();
+    });
   }
 
   @override

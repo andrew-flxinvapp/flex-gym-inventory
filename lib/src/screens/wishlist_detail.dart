@@ -197,7 +197,7 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                             MapEntry('Category', item?.category.label ?? '-'),
                             MapEntry('Type', item?.wishlistType.label ?? '-'),
                             MapEntry('Priority', item?.priority.label ?? '-'),
-                            MapEntry('Link', item?.productUrl ?? '-'),
+                            MapEntry('Link', item?.productUrl?.trim() ?? ''),
                             MapEntry('Price', item?.price ?? '-'),
                           ],
                         ),

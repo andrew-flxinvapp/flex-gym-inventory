@@ -14,6 +14,7 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/inputs/dropdown_field.dart';
 import '../widgets/layouts/app_screen.dart';
+import '../utils/wishlist_url.dart';
 
 class AddWishlistScreen extends StatefulWidget {
   const AddWishlistScreen({super.key});
@@ -200,6 +201,8 @@ class _AddWishlistScreenState extends State<AddWishlistScreen> {
                     hintText: 'Link (URL)',
                     showAsterisk: false,
                     controller: linkController,
+                    validator: validateWishlistUrl,
+                    height: 80,
                   ),
                   const SizedBox(height: 20),
                   CustomMultilineTextInput(

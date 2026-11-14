@@ -125,6 +125,8 @@ flutter:
     - lib/assets/icons/reset.png
     - lib/assets/icons/check.png
     - lib/assets/icons/plus.png
+    - lib/assets/icons/minus.svg
+    - lib/assets/icons/plus.svg
     - lib/assets/icons/placeholder_rectangle.png
     - lib/assets/icons/placeholder_round.png
     - lib/assets/icons/close.png
