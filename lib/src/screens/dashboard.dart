@@ -1,8 +1,5 @@
 import '../../theme/app_icons.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart';
-// import '../widgets/snackbar.dart';
-// import 'package:flex_gym_inventory/src/models/ui_message.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
@@ -12,7 +9,6 @@ import '../widgets/top_app_bar.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
 import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import '../widgets/buttons/primary_button.dart';
-//import '../widgets/dashboard_piechart.dart';
 import '../../enum/app_enums.dart';
 import '../widgets/cards/dashboard_gym_card.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
@@ -78,7 +74,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Colors.white,
+                color: AppTheme.lightCard,
                 itemBuilder:
                     (context) => [
                       PopupMenuItem(

@@ -2,6 +2,7 @@ import 'package:flex_gym_inventory/src/widgets/equipment_breakdown_header.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,12 +13,15 @@ void main() {
     String? selectedGymId,
     ValueChanged<String?>? onSelectionChanged,
     double width = 320,
+    Alignment alignment = Alignment.center,
   }) {
     return MaterialApp(
       theme: AppTheme.lightTheme,
       home: Scaffold(
-        body: Center(
+        body: Align(
+          alignment: alignment,
           child: SizedBox(
+            key: const ValueKey('header'),
             width: width,
             child: EquipmentBreakdownHeader(
               gyms: gyms,
@@ -42,12 +46,85 @@ void main() {
       title.style?.fontSize,
       AppTheme.lightTheme.textTheme.titleMedium?.fontSize,
     );
-    expect(
-      tester.getSize(
-        find.byKey(const ValueKey('equipment-breakdown-gym-selector-box')),
-      ),
-      const Size(102, 24),
+    final paragraph = tester.renderObject<RenderParagraph>(
+      find.text('All Gyms'),
     );
+    expect(paragraph.didExceedMaxLines, isFalse);
+  });
+
+  testWidgets('keeps the selector right-aligned on narrow headers', (
+    tester,
+  ) async {
+    for (final width in [320.0, 180.0, 90.0]) {
+      await tester.pumpWidget(buildHeader(width: width));
+      final header = tester.getRect(find.byKey(const ValueKey('header')));
+      final selector = tester.getRect(
+        find.byKey(const ValueKey('equipment-breakdown-gym-selector-box')),
+      );
+      expect(selector.right, header.right);
+      expect(selector.width, lessThanOrEqualTo(header.width));
+      if (width >= 180) {
+        expect(
+          tester
+              .renderObject<RenderParagraph>(find.text('All Gyms'))
+              .didExceedMaxLines,
+          isFalse,
+        );
+      }
+      expect(tester.takeException(), isNull);
+    }
+  });
+
+  testWidgets('popup matches and overlays the selector at different sizes', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    for (final (width, alignment) in [
+      (320.0, Alignment.topCenter),
+      (390.0, Alignment.center),
+      (800.0, Alignment.bottomCenter),
+    ]) {
+      tester.view.physicalSize = Size(width, 720);
+      String? selection;
+      await tester.pumpWidget(
+        buildHeader(
+          gyms: gyms,
+          width: width - 32,
+          alignment: alignment,
+          onSelectionChanged: (id) => selection = id,
+        ),
+      );
+      final selector = tester.getRect(
+        find.byKey(const ValueKey('equipment-breakdown-gym-selector-box')),
+      );
+      expect(
+        tester
+            .renderObject<RenderParagraph>(find.text('All Gyms'))
+            .didExceedMaxLines,
+        isFalse,
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey('equipment-breakdown-gym-selector')),
+      );
+      await tester.pumpAndSettle();
+      final menu = tester.getRect(_popupMenu());
+      expect(menu.width, closeTo(selector.width, 0.01));
+      expect(menu.left, closeTo(selector.left, 0.01));
+      expect(menu.right, closeTo(selector.right, 0.01));
+      expect(menu.overlaps(selector), isTrue);
+      if (alignment == Alignment.center) {
+        expect(menu.top, closeTo(selector.top, 0.01));
+      }
+
+      await tester.tap(find.text('North Gym'));
+      await tester.pumpAndSettle();
+      expect(selection, 'gym-1');
+      expect(tester.takeException(), isNull);
+    }
   });
 
   testWidgets('selecting a gym and All Gyms reports nullable IDs', (
@@ -65,6 +142,14 @@ void main() {
     expect(find.text('All Gyms'), findsNWidgets(2));
     expect(find.text('North Gym'), findsOneWidget);
     expect(find.text('South Gym'), findsOneWidget);
+
+    final menu = tester.widget<Material>(_popupMenu());
+    expect(menu.shape, isA<RoundedRectangleBorder>());
+    expect(
+      (menu.shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(16),
+    );
+    expect(menu.surfaceTintColor, Colors.transparent);
 
     await tester.tap(find.text('North Gym'));
     await tester.pumpAndSettle();
@@ -145,6 +230,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 }
+
+Finder _popupMenu() => find.ancestor(
+  of: find.text('North Gym'),
+  matching: find.byWidgetPredicate(
+    (widget) =>
+        widget is Material &&
+        widget.type == MaterialType.card &&
+        widget.color == AppTheme.lightCard,
+  ),
+);
 
 DashboardGym _gym(String id, String name) => DashboardGym(
   gymId: id,

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
@@ -17,6 +19,28 @@ class EquipmentBreakdownHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const defaultPadding = 10.0;
+    const defaultGap = 16.0;
+    const arrowSize = 16.0;
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.labelSmall?.copyWith(color: AppTheme.lightTextPrimary);
+    final allGymsPainter = TextPainter(
+      text: TextSpan(
+        text: 'All Gyms',
+        style: DefaultTextStyle.of(context).style.merge(labelStyle),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final preferredSelectorWidth = math.max(
+      120.0,
+      (allGymsPainter.width + 2 * defaultPadding + defaultGap + arrowSize + 2)
+          .ceilToDouble(),
+    );
+    allGymsPainter.dispose();
+
     var selectedLabel = 'All Gyms';
     for (final gym in gyms) {
       if (gym.gymId == selectedGymId) {
@@ -27,11 +51,14 @@ class EquipmentBreakdownHeader extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final selectorWidth =
-            constraints.maxWidth < 110 ? constraints.maxWidth : 102.0;
-        final titleToSelectorGap = constraints.maxWidth < 110 ? 0.0 : 8.0;
-        final horizontalPadding = selectorWidth < 72 ? 4.0 : 10.0;
-        final selectorGap = selectorWidth < 80 ? 4.0 : 16.0;
+        final selectorWidth = math.min(
+          constraints.maxWidth,
+          preferredSelectorWidth,
+        );
+        final titleToSelectorGap =
+            constraints.maxWidth - selectorWidth < 8 ? 0.0 : 8.0;
+        final horizontalPadding = selectorWidth < 72 ? 4.0 : defaultPadding;
+        final selectorGap = selectorWidth < 80 ? 4.0 : defaultGap;
 
         return Row(
           children: [
@@ -54,6 +81,13 @@ class EquipmentBreakdownHeader extends StatelessWidget {
                 enabled: gyms.isNotEmpty,
                 tooltip: 'Select gym',
                 padding: EdgeInsets.zero,
+                position: PopupMenuPosition.over,
+                constraints: BoxConstraints.tightFor(width: selectorWidth),
+                color: AppTheme.lightCard,
+                surfaceTintColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 onSelected: (selection) => onSelectionChanged(selection.gymId),
                 itemBuilder:
                     (context) => [
@@ -95,14 +129,13 @@ class EquipmentBreakdownHeader extends StatelessWidget {
                           selectedLabel,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(color: AppTheme.lightTextPrimary),
+                          style: labelStyle,
                         ),
                       ),
                       SizedBox(width: selectorGap),
                       const Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        size: 16,
+                        size: arrowSize,
                         color: AppTheme.lightTextPrimary,
                       ),
                     ],

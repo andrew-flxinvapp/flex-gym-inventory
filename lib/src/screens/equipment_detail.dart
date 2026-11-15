@@ -21,7 +21,10 @@ import '../widgets/dialogs/confirm_dialog.dart';
 import '../widgets/layouts/app_screen.dart';
 
 class EquipmentDetailScreen extends StatefulWidget {
-  const EquipmentDetailScreen({super.key});
+  const EquipmentDetailScreen({super.key, @visibleForTesting this.repository});
+
+  @visibleForTesting
+  final EquipmentRepository? repository;
 
   @override
   State<EquipmentDetailScreen> createState() => _EquipmentDetailScreenState();
@@ -80,12 +83,13 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
     }
 
     try {
-      final repo = EquipmentRepository();
+      final repo = widget.repository ?? EquipmentRepository();
       final e = await repo.getByIsarId(isarId);
       if (!mounted || generation != _loadGeneration) return;
       setState(() {
         equipment = e;
         _imageFileFuture = _resolveImageFile(e?.imageId);
+        error = null;
         isLoading = false;
       });
     } catch (e) {
@@ -134,10 +138,28 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
 
   Future<void> _deleteEquipment() async {
     if (equipment == null) return;
-    final repo = EquipmentRepository();
+    final repo = widget.repository ?? EquipmentRepository();
     final deleted = await repo.deleteEquipment(equipment!.id);
     if (!mounted) return;
     if (deleted != null) Navigator.of(context).pop();
+  }
+
+  Future<void> _openEditEquipment() async {
+    final id = equipment?.id;
+    if (id == null) return;
+    final userId = _activeUserId;
+    final generation = _loadGeneration;
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(AppRoutes.editEquipment, arguments: id);
+    if (!mounted ||
+        result == null ||
+        userId != _activeUserId ||
+        userId != Supabase.instance.client.auth.currentUser?.id ||
+        generation != _loadGeneration) {
+      return;
+    }
+    await _loadEquipment();
   }
 
   @override
@@ -151,13 +173,7 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
           showBackArrow: true,
           showRightIcon: true,
           rightIcon: AppIcons.edit,
-          onRightIconPressed: () {
-            if (equipment?.id != null) {
-              Navigator.of(
-                context,
-              ).pushNamed(AppRoutes.editEquipment, arguments: equipment!.id);
-            }
-          },
+          onRightIconPressed: _openEditEquipment,
         ),
       ),
       body: AppScreen(
