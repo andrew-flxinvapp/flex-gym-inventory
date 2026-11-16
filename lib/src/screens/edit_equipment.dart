@@ -362,8 +362,9 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
                     PrimaryButton(
                       label: 'Save',
                       onPressed: () async {
-                        if (!(_formKey.currentState?.validate() ?? false))
+                        if (!(_formKey.currentState?.validate() ?? false)) {
                           return;
+                        }
                         final ctx = context;
                         try {
                           final repo = EquipmentRepository();

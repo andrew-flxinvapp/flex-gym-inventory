@@ -304,8 +304,9 @@ class _AddEquipmentScreenState extends ConsumerState<AddEquipmentScreen> {
                     PrimaryButton(
                       label: 'Save',
                       onPressed: () async {
-                        if (!(_formKey.currentState?.validate() ?? false))
+                        if (!(_formKey.currentState?.validate() ?? false)) {
                           return;
+                        }
                         try {
                           final repo = EquipmentRepository();
                           final qty =
