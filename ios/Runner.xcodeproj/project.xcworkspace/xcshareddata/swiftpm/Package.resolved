@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-hybrid-common.git",
       "state" : {
-        "revision" : "6af96ad29738d8f46120aa14705737d5b90d7c19",
-        "version" : "19.17.0"
+        "revision" : "04a340be61255b0415392afedf8f8e6fd6490e40",
+        "version" : "19.17.2"
       }
     },
     {
