@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:flex_gym_inventory/constant/subscription_constants.dart';
 
 part 'account_model.g.dart';
 
@@ -46,5 +47,7 @@ class AccountEntity {
 /// Helper extension with convenience methods for `AccountEntity`.
 extension AccountEntityHelpers on AccountEntity {
   /// True when the user's subscription plan is `pro`.
-  bool get isPro => (subscriptionPlan ?? '').toLowerCase() == 'pro';
+  bool get isPro =>
+      (subscriptionPlan ?? '').toLowerCase() ==
+      SubscriptionConstants.proPlanIdentifier;
 }

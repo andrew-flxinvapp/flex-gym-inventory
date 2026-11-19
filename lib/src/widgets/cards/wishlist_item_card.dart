@@ -12,6 +12,7 @@ class WishlistItemCard extends StatelessWidget {
   final String brand;
   final double price;
   final String priority;
+  final EquipmentCategory category;
   final int? isarId;
   final ValueChanged<int?>? onTapCallback;
   final ValueChanged<int>? onDeleteCallback;
@@ -22,6 +23,7 @@ class WishlistItemCard extends StatelessWidget {
     required this.brand,
     required this.price,
     required this.priority,
+    required this.category,
     this.isarId,
     this.onTapCallback,
     this.onDeleteCallback,
@@ -40,6 +42,7 @@ class WishlistItemCard extends StatelessWidget {
            ) ??
            0.0,
        priority = item.priority.label,
+       category = item.category,
        isarId = item.id;
 
   @override
@@ -106,6 +109,25 @@ class WishlistItemCard extends StatelessWidget {
                 color: AppTheme.lightBackground,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppTheme.dividers),
+              ),
+              child: Center(
+                child: Image.asset(
+                  category.placeholderIconAsset,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.contain,
+                  color: AppTheme.lightTextPrimary,
+                  errorBuilder: (context, error, stackTrace) {
+                    FlutterError.reportError(
+                      FlutterErrorDetails(
+                        exception: error,
+                        stack: stackTrace,
+                        library: 'wishlist item card placeholder icon',
+                      ),
+                    );
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ),
             const SizedBox(width: 12),

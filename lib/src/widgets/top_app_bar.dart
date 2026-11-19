@@ -71,8 +71,8 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
                       padding: const EdgeInsets.only(right: 12.0),
                       child: IconButton(
                         icon: SizedBox(
-                          width: 24,
-                          height: 24,
+                          width: 22,
+                          height: 22,
                           child: Image.asset(
                             rightIcon!,
                             color: AppTheme.darkTextPrimary,

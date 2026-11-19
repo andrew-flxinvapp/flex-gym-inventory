@@ -95,6 +95,25 @@ class EquipmentCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppTheme.dividers),
               ),
+              child: Center(
+                child: Image.asset(
+                  category.placeholderIconAsset,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.contain,
+                  color: AppTheme.lightTextPrimary,
+                  errorBuilder: (context, error, stackTrace) {
+                    FlutterError.reportError(
+                      FlutterErrorDetails(
+                        exception: error,
+                        stack: stackTrace,
+                        library: 'equipment card placeholder icon',
+                      ),
+                    );
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
             ),
             const SizedBox(width: 12),
 

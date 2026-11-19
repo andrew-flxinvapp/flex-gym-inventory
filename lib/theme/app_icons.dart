@@ -55,7 +55,7 @@ class AppIcons {
 
   // New Placeholder Icons
   static const String accessories = 'lib/assets/icons/accessories_blue.png';
-  static const String attachments = 'lib/assets/icons/attachments_blue.png';
+  static const String attachments = 'lib/assets/icons/attachment_blue.png';
   static const String benches = 'lib/assets/icons/bench_blue.png';
   static const String racks = 'lib/assets/icons/rack_blue.png';
   static const String weights = 'lib/assets/icons/weights_blue.png';

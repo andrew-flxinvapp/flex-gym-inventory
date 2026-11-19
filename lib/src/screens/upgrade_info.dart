@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constant/subscription_constants.dart';
 import '../../routes/routes.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
@@ -30,7 +31,7 @@ class UpgradeInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Pro Overview',
+                      '${SubscriptionConstants.proPlanName} Overview',
                       style: Theme.of(context).textTheme.displayMedium
                           ?.copyWith(color: AppTheme.darkTextPrimary),
                     ),
@@ -68,7 +69,7 @@ class UpgradeInfo extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Unlock unlimited everything, plus powerful tools to manage your gym with ease.',
+                          SubscriptionConstants.proOverviewDescription,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: AppTheme.darkTextPrimary),
                           textAlign: TextAlign.center,

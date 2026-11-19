@@ -1,5 +1,6 @@
 // Generated scaffold for Account DTO used by account screen and data layer
 import 'dart:convert';
+import 'package:flex_gym_inventory/constant/subscription_constants.dart';
 class AccountDto {
   final String id;
   final String email;
@@ -166,5 +167,7 @@ class AccountDto {
   }
 
   /// Convenience: true when the user's subscription plan is `pro`.
-  bool get isPro => (subscriptionPlan ?? '').toLowerCase() == 'pro';
+  bool get isPro =>
+      (subscriptionPlan ?? '').toLowerCase() ==
+      SubscriptionConstants.proPlanIdentifier;
 }

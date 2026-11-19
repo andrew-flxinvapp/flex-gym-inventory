@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flex_gym_inventory/constant/subscription_constants.dart';
 import '../../../theme/app_theme.dart';
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 
@@ -29,7 +30,7 @@ class DisplayFieldUpgrade extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Upgrade to PRO',
+                    'Upgrade to ${SubscriptionConstants.proPlanName.toUpperCase()}',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppTheme.darkTextPrimary,
                       fontWeight: FontWeight.w500,

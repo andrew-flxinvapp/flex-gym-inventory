@@ -2,6 +2,7 @@
 // Enum definitions used across the Flex Gym Inventory app.
 import 'package:flutter/material.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
+import 'package:flex_gym_inventory/theme/app_icons.dart';
 
 // Upgrade priorities for planned upgrades
 enum WishlistPriority { low, medium, high }
@@ -56,6 +57,33 @@ extension EquipmentCategoryLabel on EquipmentCategory {
         return 'Safety';
       case EquipmentCategory.other:
         return 'Other';
+    }
+  }
+}
+
+extension EquipmentCategoryPlaceholderIcon on EquipmentCategory {
+  String get placeholderIconAsset {
+    switch (this) {
+      case EquipmentCategory.weights:
+        return AppIcons.weights;
+      case EquipmentCategory.specialty:
+        return AppIcons.specialty;
+      case EquipmentCategory.machines:
+        return AppIcons.machines;
+      case EquipmentCategory.storage:
+        return AppIcons.storage;
+      case EquipmentCategory.racks:
+        return AppIcons.racks;
+      case EquipmentCategory.attachments:
+        return AppIcons.attachments;
+      case EquipmentCategory.benches:
+        return AppIcons.benches;
+      case EquipmentCategory.accessories:
+        return AppIcons.accessories;
+      case EquipmentCategory.safety:
+        return AppIcons.safety;
+      case EquipmentCategory.other:
+        return AppIcons.other;
     }
   }
 }

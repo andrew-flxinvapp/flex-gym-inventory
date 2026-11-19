@@ -2,6 +2,7 @@ import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flex_gym_inventory/src/widgets/cards/base_card.dart';
 import 'package:flex_gym_inventory/src/widgets/dashboard_equipment_breakdown.dart';
 import 'package:flex_gym_inventory/src/widgets/equipment_category_details.dart';
+import 'package:flex_gym_inventory/src/widgets/equipment_breakdown_header.dart';
 import 'package:flex_gym_inventory/src/widgets/equipment_distribution_chart.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
@@ -133,6 +134,73 @@ void main() {
     expect(find.text('Weights'), findsOneWidget);
     expect(find.text('Machines'), findsOneWidget);
     expect(find.byType(EquipmentCategoryDetails), findsNWidgets(2));
+  });
+
+  testWidgets('gym switches and equipment updates interpolate from the chart', (
+    tester,
+  ) async {
+    final viewModel = _TestDashboardViewModel(
+      _populatedState(gyms: [northGym, southGym]),
+    );
+    await tester.pumpWidget(_buildApp(viewModel));
+    await tester.pumpAndSettle();
+
+    viewModel.update(
+      _populatedState(
+        gyms: [northGym, southGym],
+        categoryCounts: const {
+          EquipmentCategory.machines: 8,
+          EquipmentCategory.weights: 2,
+        },
+      ),
+    );
+    await tester.pump();
+    expect(find.text('10 Items'), findsOneWidget);
+    expect(find.text('Machines'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 150));
+    Finder segment(EquipmentCategory category) =>
+        find.byKey(ValueKey('equipment-distribution-segment-${category.name}'));
+    final machines = segment(EquipmentCategory.machines);
+    final weights = segment(EquipmentCategory.weights);
+    final racks = segment(EquipmentCategory.racks);
+    expect(machines, findsOneWidget);
+    expect(weights, findsOneWidget);
+    expect(racks, findsOneWidget);
+    expect(
+      tester.getTopLeft(machines).dx,
+      lessThan(tester.getTopLeft(weights).dx),
+    );
+    final width =
+        tester
+            .getSize(find.byKey(const ValueKey('equipment-distribution-bar')))
+            .width;
+    expect(
+      tester.getSize(machines).width +
+          tester.getSize(weights).width +
+          tester.getSize(racks).width +
+          4,
+      closeTo(width, 0.01),
+    );
+    final weightsBeforeSwitch = tester.getSize(weights).width;
+
+    tester
+        .widget<EquipmentBreakdownHeader>(find.byType(EquipmentBreakdownHeader))
+        .onSelectionChanged('north');
+    await tester.pump();
+    expect(find.text('2 Items'), findsOneWidget);
+    expect(tester.getSize(weights).width, closeTo(weightsBeforeSwitch, 0.01));
+    await tester.pump(const Duration(milliseconds: 150));
+    expect(tester.getSize(weights).width, greaterThan(weightsBeforeSwitch));
+    tester
+        .widget<EquipmentBreakdownHeader>(find.byType(EquipmentBreakdownHeader))
+        .onSelectionChanged('south');
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(find.text('3 Items'), findsOneWidget);
+    expect(racks, findsOneWidget);
+    expect(weights, findsNothing);
+    expect(machines, findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('uses a single-column fallback at scaled text sizes', (

@@ -15,7 +15,9 @@ import 'package:flex_gym_inventory/routes/routes.dart';
 import '../widgets/dashboard_equipment_breakdown.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({super.key});
+  const DashboardScreen({super.key, this.isVisible = true});
+
+  final bool isVisible;
 
   @override
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
@@ -143,7 +145,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const DashboardEquipmentBreakdown(),
+                  DashboardEquipmentBreakdown(isVisible: widget.isVisible),
                   const SizedBox(height: 24),
                   Align(
                     alignment: Alignment.centerLeft,

@@ -1,6 +1,7 @@
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import 'package:flex_gym_inventory/providers/account_data_provider.dart';
+import 'package:flex_gym_inventory/constant/subscription_constants.dart';
 import '../widgets/displays/display_field.dart';
 import '../widgets/displays/display_field_upgrade.dart';
 import '../widgets/displays/display_field_nav.dart';
@@ -98,7 +99,7 @@ class AccountScreen extends ConsumerWidget {
                 const DisplayField(
                   iconPath: AppIcons.upgrade,
                   label: 'Plan',
-                  value: 'Free',
+                  value: SubscriptionConstants.freePlanName,
                 ),
                 const SizedBox(height: 16),
                 DisplayFieldUpgrade(

@@ -10,7 +10,9 @@ import 'equipment_category_details.dart';
 import 'equipment_distribution_chart.dart';
 
 class DashboardEquipmentBreakdown extends ConsumerStatefulWidget {
-  const DashboardEquipmentBreakdown({super.key});
+  const DashboardEquipmentBreakdown({super.key, this.isVisible = true});
+
+  final bool isVisible;
 
   @override
   ConsumerState<DashboardEquipmentBreakdown> createState() =>
@@ -70,7 +72,11 @@ class _DashboardEquipmentBreakdownState
             },
           ),
           const SizedBox(height: 12),
-          EquipmentDistributionChart(categoryCounts: orderedCategoryCounts),
+          EquipmentDistributionChart(
+            categoryCounts: orderedCategoryCounts,
+            isVisible: widget.isVisible,
+            isDataReady: !dashboard.loading && dashboard.error == null,
+          ),
           const SizedBox(height: 22),
           if (populatedCategoryCounts.isEmpty)
             Center(

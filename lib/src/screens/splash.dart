@@ -138,12 +138,12 @@ class _SplashScreenState extends State<SplashScreen> {
                             color: AppTheme.darkTextPrimary,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        /*const SizedBox(height: 4),
                         Text(
                           'ALPHA TEST',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppTheme.darkTextPrimary),
-                        ),
+                        ),*/
                       ],
                     );
                   },

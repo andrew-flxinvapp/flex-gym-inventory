@@ -1,7 +1,10 @@
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import 'package:flex_gym_inventory/src/screens/dashboard.dart';
+import 'package:flex_gym_inventory/src/screens/home_screen.dart';
+import 'package:flex_gym_inventory/src/widgets/bottom_navigation.dart';
 import 'package:flex_gym_inventory/src/widgets/dashboard_equipment_breakdown.dart';
 import 'package:flex_gym_inventory/src/widgets/equipment_category_details.dart';
+import 'package:flex_gym_inventory/src/widgets/equipment_distribution_chart.dart';
 import 'package:flex_gym_inventory/theme/app_theme.dart';
 import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +12,68 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('HomeScreen starts entrance only when Dashboard is selected', (
+    tester,
+  ) async {
+    final viewModel = _TestDashboardViewModel(
+      const DashboardState(
+        categoryCounts: {EquipmentCategory.weights: 4},
+        gyms: [],
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [dashboardProvider.overrideWith((ref) => viewModel)],
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          builder:
+              (context, child) => MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: const TextScaler.linear(0.5)),
+                child: child!,
+              ),
+          home: const HomeScreen(initialIndex: 2),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 2));
+    final chart = find.byType(EquipmentDistributionChart, skipOffstage: false);
+    expect(tester.widget<EquipmentDistributionChart>(chart).isVisible, isFalse);
+    final weights = find.byKey(
+      const ValueKey('equipment-distribution-segment-weights'),
+      skipOffstage: false,
+    );
+    expect(weights, findsNothing);
+
+    tester
+        .widget<BottomNavigationBarModern>(
+          find.byType(BottomNavigationBarModern),
+        )
+        .onTap(0);
+    await tester.pump();
+    expect(tester.widget<EquipmentDistributionChart>(chart).isVisible, isTrue);
+    expect(weights, findsNothing);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(weights, findsOneWidget);
+    await tester.pumpAndSettle();
+    final completed = tester.getSize(weights).width;
+    tester
+        .widget<BottomNavigationBarModern>(
+          find.byType(BottomNavigationBarModern),
+        )
+        .onTap(2);
+    await tester.pump();
+    tester
+        .widget<BottomNavigationBarModern>(
+          find.byType(BottomNavigationBarModern),
+        )
+        .onTap(0);
+    await tester.pump();
+    expect(tester.getSize(weights).width, completed);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'shows only populated categories sorted by count and enum order',
     (tester) async {
