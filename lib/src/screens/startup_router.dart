@@ -109,18 +109,25 @@ class _StartupRouterScreenState extends State<StartupRouterScreen> {
     if (target == AppRoutes.authLanding) {
       // No session right now — listen for an auth state change so that when
       // the magic link flow restores a session we can navigate into the app.
-      _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((
-        event,
-      ) {
-        final newSession = event.session;
-        if (newSession != null && !_authRedirectScheduled && mounted) {
-          _authRedirectScheduled = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) return;
-            Navigator.of(context).pushReplacementNamed(AppRoutes.startupRouter);
-          });
-        }
-      });
+      _authSub = Supabase.instance.client.auth.onAuthStateChange.listen(
+        (event) {
+          final newSession = event.session;
+          if (newSession != null &&
+              Supabase.instance.client.auth.currentSession?.user.id ==
+                  newSession.user.id &&
+              !_authRedirectScheduled &&
+              mounted) {
+            _authRedirectScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              Navigator.of(context).pushReplacementNamed(AppRoutes.startupRouter);
+            });
+          }
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          LogHandler.warning('StartupRouter', 'Authentication state failed');
+        },
+      );
     }
 
     _navigationScheduled = true;

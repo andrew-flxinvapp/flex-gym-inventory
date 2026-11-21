@@ -1,8 +1,23 @@
-/// Simple price provider stub. Replace with RevenueCat integration later.
-class PriceProvider {
-  // Currently returns hard-coded display strings. Integrate RevenueCat SDK
-  // and replace these getters with dynamic values when ready.
-  static String get monthlyPrice => '\$4.99/mo';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
-  static String get yearlyPrice => '\$49.99/yr';
+class PriceProvider {
+  static String monthlyPrice(StoreProduct? product) =>
+      product == null ? 'Price unavailable' : '${product.priceString}/month';
+
+  static String yearlyPrice(StoreProduct? product) =>
+      product == null ? 'Price unavailable' : '${product.priceString}/year';
+
+  static int? annualSavings(StoreProduct? monthly, StoreProduct? annual) {
+    if (monthly == null ||
+        annual == null ||
+        monthly.currencyCode != annual.currencyCode ||
+        monthly.subscriptionPeriod != 'P1M' ||
+        annual.subscriptionPeriod != 'P1Y' ||
+        monthly.price <= 0 ||
+        annual.price <= 0) {
+      return null;
+    }
+    final savings = ((1 - annual.price / (monthly.price * 12)) * 100).floor();
+    return savings > 0 ? savings : null;
+  }
 }

@@ -28,8 +28,7 @@ Purpose: a concise, printable analysis of the current login / signup / onboardin
 - Route map and screens for the full onboarding flow are implemented and wired in `routes/routes.dart`.
 - `AuthRepository` wraps Supabase auth flows (magic link, signUp, signOut) and maps errors to `AuthException` for cleaner handling.
 - `OnboardingRepository` writes `user_metadata` fields (`onboardingComplete`, `notificationsOn`) to Supabase.
-- Deeplink handling exists in `main.dart`. It calls `Supabase.instance.client.auth.getSessionFromUrl(uri)` and navigates to verify-email when appropriate.
-- Deeplink handling exists in `main.dart`. It calls `Supabase.instance.client.auth.getSessionFromUrl(uri)` and navigates to verify-email when appropriate.
+- Supabase Flutter processes standard authentication callbacks automatically. The app handles token-hash and other links separately, and routes after authentication.
 - Platform registration for a custom deep-link scheme has been added in this repo (custom-scheme approach):
   - Android: `android/app/src/main/AndroidManifest.xml` includes an `intent-filter` for `flexgyminventory://auth-callback`.
   - iOS: `ios/Runner/Info.plist` includes `CFBundleURLTypes` registering the `flexgyminventory` scheme.
@@ -121,7 +120,7 @@ xcrun simctl openurl booted "flexgyminventory://auth-callback#access_token=TEST&
 
 End-to-end (recommended):
  - In Supabase Auth settings set the redirect/site URL to `flexgyminventory://auth-callback`.
-- Send a magic link to an email that you can open on the same device. Clicking the magic link should open the app and your `main.dart` deeplink handler should call `getSessionFromUrl` and then navigate to the startup router.
+- Send a magic link to an email that you can open on the same device. Supabase Flutter should process the callback and authenticated state should lead to the startup router.
 
 
 **Commands / How to run tests**

@@ -1,11 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../../view_models/auth_view_model.dart';
 import '../widgets/snackbar.dart';
-import '../../routes/routes.dart';
 // import 'package:flex_gym_inventory/src/models/ui_message.dart';
 
 // Verify Email Screen
@@ -20,7 +17,6 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
-  StreamSubscription<AuthState>? _authSub;
   final AuthViewModel _authViewModel = AuthViewModel();
 
   @override
@@ -39,24 +35,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         _authViewModel.emailController.text = args['user_email']!;
       }
     }
-
-    // If a session already exists (for example the deeplink restored a session),
-    // navigate into the app so the user continues onboarding or the main flow.
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.startupRouter,
-          (_) => false,
-        );
-      });
-    }
   }
 
   @override
   void dispose() {
-    _authSub?.cancel();
     _authViewModel.dispose();
     super.dispose();
   }
@@ -64,14 +46,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   void initState() {
     super.initState();
-    // Continue into the app as soon as the magic link restores a session.
-    _authSub = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
-      if (event.session == null || !mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        AppRoutes.startupRouter,
-        (_) => false,
-      );
-    });
     _authViewModel.addListener(() {
       if (!mounted) return;
       final msg = _authViewModel.message;

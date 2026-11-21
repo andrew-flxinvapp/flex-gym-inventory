@@ -1,5 +1,6 @@
 import 'package:flex_gym_inventory/src/screens/pro_purchase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,13 +13,15 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: MediaQuery(
-          data: MediaQueryData(
-            size: Size(400, 900),
-            padding: EdgeInsets.only(top: 30),
+      const ProviderScope(
+        child: MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(
+              size: Size(400, 900),
+              padding: EdgeInsets.only(top: 30),
+            ),
+            child: ProPurchase(),
           ),
-          child: ProPurchase(),
         ),
       ),
     );

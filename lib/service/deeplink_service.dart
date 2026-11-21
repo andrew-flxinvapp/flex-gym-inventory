@@ -29,14 +29,8 @@ class DeeplinkService {
       if (initial != null) {
         _handleUri(initial);
       }
-    } catch (e, st) {
-      // swallow errors but allow higher-level logging if needed
-      LogHandler.warning(
-        'DeeplinkService',
-        'error getting initial uri: $e',
-        e,
-        st,
-      );
+    } catch (_) {
+      LogHandler.warning('DeeplinkService', 'Error getting initial link');
     }
 
     // Listen for subsequent incoming links while the app is running.
@@ -44,14 +38,8 @@ class DeeplinkService {
       (uri) {
         _handleUri(uri);
       },
-      onError: (err, st) {
-        // ignore errors here, but log for diagnostics
-        LogHandler.warning(
-          'DeeplinkService',
-          'uri link stream error: $err',
-          err,
-          st,
-        );
+      onError: (Object error, StackTrace stackTrace) {
+        LogHandler.warning('DeeplinkService', 'Link stream error');
       },
     );
   }
@@ -88,14 +76,14 @@ class DeeplinkService {
     if (_handler != null) {
       try {
         await _handler!(uri, merged);
-      } catch (e, st) {
-        LogHandler.error('DeeplinkService', 'handler threw', e, st);
+      } catch (_) {
+        LogHandler.error('DeeplinkService', 'Link handler failed');
       }
     } else {
       // No handler registered — log for debugging
       LogHandler.info(
         'DeeplinkService',
-        'received uri but no handler registered: $uri',
+        'Received link but no handler registered',
       );
     }
   }

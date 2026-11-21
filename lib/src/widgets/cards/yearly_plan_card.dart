@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/app_theme.dart';
-import '../../providers/price_provider.dart';
 import 'base_card.dart';
 
 class YearlyPlanCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
+  final String description;
+  final int? savings;
 
   const YearlyPlanCard({
     super.key,
     required this.isSelected,
     required this.onTap,
+    required this.description,
+    this.savings,
   });
 
   @override
   Widget build(BuildContext context) {
-    final description = '${PriceProvider.yearlyPrice} with 7-day trial';
-
     return Semantics(
       button: true,
       selected: isSelected,
-      label: 'Yearly, $description, Save 25%',
+      label: 'Yearly, $description${savings == null ? '' : ', Save $savings%'}',
       child: BaseCard(
         color: AppTheme.lightTextPrimary,
         border: Border.all(
@@ -76,26 +77,27 @@ class YearlyPlanCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.successColor.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(color: AppTheme.successColor),
-                        ),
-                        child: Text(
-                          'Save 25%',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelSmall?.copyWith(
-                            color: AppTheme.successColor,
-                            fontWeight: FontWeight.bold,
+                      if (savings != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.successColor.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(999),
+                            border: Border.all(color: AppTheme.successColor),
+                          ),
+                          child: Text(
+                            'Save $savings%',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: AppTheme.successColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 4),

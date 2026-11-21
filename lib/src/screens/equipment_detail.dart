@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/service/image_service.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/top_app_bar.dart';
 import '../widgets/equipment/equipment_image.dart';
@@ -57,6 +58,8 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
         isLoading = true;
       });
       _loadEquipment();
+    }, onError: (Object error, StackTrace stackTrace) {
+      LogHandler.warning('EquipmentDetail', 'Authentication state failed');
     });
     // Delay to allow ModalRoute to be available
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadEquipment());

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously
 import 'package:flex_gym_inventory/src/data/repositories/equipment_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -77,6 +78,8 @@ class _EditEquipmentScreenState extends State<EditEquipmentScreen> {
         selectedPurchaseDate = null;
       });
       _loadCurrentUserData();
+    }, onError: (Object error, StackTrace stackTrace) {
+      LogHandler.warning('EditEquipment', 'Authentication state failed');
     });
     _loadCurrentUserData();
   }

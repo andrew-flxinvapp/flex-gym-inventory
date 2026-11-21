@@ -14,7 +14,8 @@ This document summarizes what is ready and what still needs work to manually or 
 - Supabase initialization: `lib/main.dart` initializes Supabase using `flutter_dotenv` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`).
 - Login UI (magic link): `lib/src/screens/login.dart` calls `Supabase.instance.client.auth.signInWithOtp(email: email)` and shows status messages — good for sending magic links.
 - Deeplink listener: `lib/service/deeplink_service.dart` listens for initial/incoming links using `app_links` and forwards URIs to a registered handler.
-- Deeplink handler + session restore: `main.dart` registers a handler that calls `Supabase.instance.client.auth.getSessionFromUrl(uri)` and navigates on successful sign-in (this is the correct flow to complete magic-link sign-in).
+- Supabase Flutter automatically exchanges standard magic-link callbacks. The app's deep-link handler retains token-hash verification and other link handling; navigation follows authenticated state.
+- The SDK may still process the same PKCE callback more than once if the platform delivers it repeatedly. Validate repeated delivery on devices; the app does not add a separate SDK-exchange deduplication layer.
 - Auth layer: `lib/src/repositories/auth_repository.dart` and `lib/view_models/auth_view_model.dart` exist and implement signInWithMagicLink/signUp/resendMagicLink/signOut and small error mapping logic — good for testability.
 - Low-level wrapper: `lib/service/supabase_service.dart` exposes `sendMagicLink`, `signOut`, and `currentUser`.
 
@@ -47,7 +48,7 @@ flutter run
 ```
 
 4. In the app, open the Sign In screen, enter a reachable email on that device, and tap "Sign In".
-5. Open the email on the device and tap the magic link. The app's `DeeplinkService` should capture the URI; `main.dart` will call `getSessionFromUrl(uri)` and, on success, navigate into the app. Verify that `Supabase.instance.client.auth.currentUser` is non-null.
+5. Open the email on the device and tap the magic link. Supabase Flutter should process the callback and the app should navigate after authentication. Verify that `Supabase.instance.client.auth.currentUser` is non-null.
 
 ### Quick, low-risk fixes I can implement now
 

@@ -19,6 +19,8 @@ class LogHandler {
     hierarchicalLoggingEnabled = true;
     // Suppress very verbose Supabase auth logs unless explicitly debugging.
     Logger('supabase.auth').level = Level.INFO;
+    // The SDK logs complete callback URLs at FINEST.
+    Logger('supabase.supabase_flutter').level = Level.INFO;
   }
 
   static void debug(

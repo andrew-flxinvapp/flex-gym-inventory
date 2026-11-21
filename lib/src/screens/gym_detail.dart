@@ -18,6 +18,7 @@ import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/equipment_model.dart';
 import 'package:flex_gym_inventory/src/models/gym_model.dart';
 import 'package:flex_gym_inventory/service/ownership_context.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GymDetailScreen extends StatefulWidget {
@@ -60,6 +61,8 @@ class _GymDetailScreenState extends State<GymDetailScreen> {
       setState(() {
         _dataFuture = _fetchData();
       });
+    }, onError: (Object error, StackTrace stackTrace) {
+      LogHandler.warning('GymDetail', 'Authentication state failed');
     });
   }
 

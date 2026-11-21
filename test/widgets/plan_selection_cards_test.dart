@@ -1,4 +1,3 @@
-import 'package:flex_gym_inventory/src/providers/price_provider.dart';
 import 'package:flex_gym_inventory/src/widgets/cards/monthly_plan_card.dart';
 import 'package:flex_gym_inventory/src/widgets/cards/yearly_plan_card.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +22,13 @@ void main() {
                 return Column(
                   children: [
                     MonthlyPlanCard(
+                      description: '€4,99/month',
                       isSelected: monthlySelected,
                       onTap: () => setState(() => monthlySelected = true),
                     ),
                     YearlyPlanCard(
+                      description: '€44,99/year',
+                      savings: 24,
                       isSelected: !monthlySelected,
                       onTap: () => setState(() => monthlySelected = false),
                     ),
@@ -48,15 +50,9 @@ void main() {
         );
       }
 
-      expect(
-        find.text('${PriceProvider.monthlyPrice} with 7-day trial'),
-        findsOneWidget,
-      );
-      expect(
-        find.text('${PriceProvider.yearlyPrice} with 7-day trial'),
-        findsOneWidget,
-      );
-      expect(find.text('Save 25%'), findsOneWidget);
+      expect(find.text('€4,99/month'), findsOneWidget);
+      expect(find.text('€44,99/year'), findsOneWidget);
+      expect(find.text('Save 24%'), findsOneWidget);
       expect(planSemantics('Monthly').properties.selected, isTrue);
       expect(planSemantics('Yearly').properties.selected, isFalse);
 

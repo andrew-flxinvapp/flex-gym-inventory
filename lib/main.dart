@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_theme.dart';
@@ -11,9 +12,14 @@ import 'service/isar_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import 'service/revenuecat_service.dart';
+import 'service/auth_callback_handler.dart';
+import 'service/auth_navigation_coordinator.dart';
+
 // import 'package:flex_gym_inventory/src/data/repositories/auth_repository.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> messengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,78 +30,23 @@ void main() async {
     publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
+  final supabase = Supabase.instance.client;
+  final authNavigation = AuthNavigationCoordinator(
+    navigatorKey: navigatorKey,
+    messengerKey: messengerKey,
+    currentUserId: () => supabase.auth.currentUser?.id,
+    authChanges: supabase.auth.onAuthStateChange,
+  );
+
   // Initialize Isar via the central service so repositories can use IsarService.isar
   await IsarService.openIsar();
 
-  // Initialize deeplink handling and register a simple handler that
-  // navigates to the verify-email screen and forwards parsed params.
-  DeeplinkService.instance.registerHandler((uri, params) async {
-    LogHandler.info('Deeplink', 'Deeplink received: $uri params: $params');
-    try {
-      // If the link contains Supabase auth tokens (fragment) or an auth code
-      // (query param `code`), ask the Supabase client to parse & restore the
-      // session. `getSessionFromUrl` will extract tokens and set the session.
-      final hasToken =
-          params.containsKey('access_token') ||
-          params.containsKey('refresh_token');
-      final hasCode = uri.queryParameters.containsKey('code');
-
-      // Email templates that use {{ .TokenHash }} (common for the "Confirm
-      // signup" email sent to new users) deliver token_hash + type instead of
-      // a code, so verify those directly.
-      final tokenHash = params['token_hash'];
-      if (tokenHash != null && tokenHash.isNotEmpty) {
-        try {
-          final type = switch (params['type']) {
-            'signup' => OtpType.signup,
-            'invite' => OtpType.invite,
-            'recovery' => OtpType.recovery,
-            'email_change' => OtpType.emailChange,
-            'email' => OtpType.email,
-            _ => OtpType.magiclink,
-          };
-          await Supabase.instance.client.auth.verifyOTP(
-            tokenHash: tokenHash,
-            type: type,
-          );
-        } catch (e, st) {
-          LogHandler.warning('Deeplink', 'verifyOTP failed: $e', e, st);
-        }
-      }
-
-      if (hasToken || hasCode || tokenHash != null) {
-        try {
-          await Supabase.instance.client.auth.getSessionFromUrl(uri);
-        } catch (e, st) {
-          // Log and fall through to show verify screen
-          LogHandler.warning('Deeplink', 'getSessionFromUrl failed: $e', e, st);
-        }
-
-        var user = Supabase.instance.client.auth.currentUser;
-        // supabase_flutter also consumes the link on its own, so our call can
-        // fail (code already used) while the session is still being set.
-        // Wait briefly for it instead of falling through to verify-email.
-        if (user == null) {
-          try {
-            await Supabase.instance.client.auth.onAuthStateChange
-                .firstWhere((e) => e.session != null)
-                .timeout(const Duration(seconds: 5));
-          } catch (_) {}
-          user = Supabase.instance.client.auth.currentUser;
-        }
-        if (user != null) {
-          // Successful sign-in — navigate into the app (startup router will
-          // decide whether to show onboarding or main flow).
-          navigatorKey.currentState?.pushNamedAndRemoveUntil(
-            AppRoutes.startupRouter,
-            (_) => false,
-          );
-          return;
-        }
-      }
-
-      // No tokens/code or session restore failed — show verify email, but
-      // don't stack a second copy if it's already the current screen.
+  final callbackHandler = AuthCallbackHandler(
+    verifyToken: (tokenHash, type) async {
+      await supabase.auth.verifyOTP(tokenHash: tokenHash, type: type);
+    },
+    onAuthenticationError: authNavigation.reportAuthenticationError,
+    onOtherLink: (params) async {
       var alreadyOnVerify = false;
       navigatorKey.currentState?.popUntil((route) {
         alreadyOnVerify = route.settings.name == AppRoutes.verifyEmail;
@@ -106,43 +57,36 @@ void main() async {
         AppRoutes.verifyEmail,
         arguments: params,
       );
-    } catch (e) {
-      LogHandler.error('Deeplink', 'Error handling deeplink: $e', e, null);
-      try {
-        navigatorKey.currentState?.pushNamed(
-          AppRoutes.verifyEmail,
-          arguments: params,
-        );
-      } catch (_) {}
-    }
-  });
+    },
+  );
+  DeeplinkService.instance.registerHandler(callbackHandler.handle);
   await DeeplinkService.instance.init();
 
-  // Configure RevenueCat if an API key is present in .env
-  try {
-    final rcKey = dotenv.env['REVENUECAT_API_KEY'];
-    if (rcKey != null && rcKey.isNotEmpty) {
-      final rc = RevenueCatService();
-      final enableDebug = dotenv.env['REVENUECAT_DEBUG'] == 'true';
-      await rc.configure(
-        apiKey: rcKey,
-        appUserId: Supabase.instance.client.auth.currentUser?.id,
-        enableDebugLogs: enableDebug,
-      );
-      LogHandler.info('Main', 'RevenueCat configured');
-    } else {
-      LogHandler.info('Main', 'REVENUECAT_API_KEY not set; skipping RevenueCat configuration');
-    }
-  } catch (e, st) {
-    LogHandler.warning('Main', 'RevenueCat configuration failed', e, st);
-  }
+  final revenueCat = RevenueCatService.instance;
+  revenueCat.startIdentitySynchronization(
+    authUserIds: supabase.auth.onAuthStateChange.map(
+      (event) => event.session?.user.id,
+    ),
+    currentUserId: () => supabase.auth.currentUser?.id,
+  );
 
-  runApp(ProviderScope(child: MyApp(isar: IsarService.isar)));
+  runApp(
+    ProviderScope(
+      child: MyApp(isar: IsarService.isar, authNavigation: authNavigation),
+    ),
+  );
+
+  revenueCat.startConfiguration(
+    apiKey: dotenv.env['REVENUECAT_API_KEY'] ?? '',
+    appUserId: supabase.auth.currentUser?.id,
+    enableDebugLogs: kDebugMode && dotenv.env['REVENUECAT_DEBUG'] == 'true',
+  );
 }
 
 class MyApp extends StatelessWidget {
   final Isar isar;
-  const MyApp({super.key, required this.isar});
+  final AuthNavigationCoordinator authNavigation;
+  const MyApp({super.key, required this.isar, required this.authNavigation});
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +95,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flex Gym Inventory',
       navigatorKey: navigatorKey,
+      scaffoldMessengerKey: messengerKey,
+      navigatorObservers: [authNavigation],
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,

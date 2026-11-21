@@ -59,6 +59,12 @@ FGI is built with Flutter and Dart for iOS and Android. Its intended v1.0 produc
 
 Subscription access is determined by RevenueCat entitlements. Supabase account records and locally stored Isar data are not the authority for whether an account has PRO access.
 
+The shared `subscriptionProvider` reports loading, signed-out, Free, PRO, or unavailable for the current Supabase session. Call its notifier's `refresh()` to request customer information again; RevenueCat may return its cached data rather than contact the network. A failed refresh reports unavailable and retains the same session's last known status separately, not as a current confirmation. Account changes clear that status. Listener updates are re-read for the synchronized identity because the Flutter SDK can replay an older customer's listener value.
+
+RevenueCat's informational entitlement verification is enabled; results without successful server or on-device verification are unavailable, including older unverified cache entries. RevenueCat's cache and offline grace behavior affect entitlement freshness and expiration; external changes are not pushed immediately to the app. A verified SDK response may be cached, and its request date is not a guarantee of a fresh server check. No feature enforcement is implemented by this provider. The existing account DTO and Isar subscription fields and `isPro` helpers are legacy metadata, not entitlement authority; review them before future subscription UI or enforcement work.
+
+The purchase screens request the `fgi_pro` offering explicitly and display store-localized prices. They use neutral trial wording because eligibility is not established by the app. Purchases and explicit restores require a synchronized authenticated identity; completion is confirmed only when the shared subscription provider verifies PRO. Review RevenueCat restore/transfer settings before testing multiple accounts: transfers can also affect purchases with an existing receipt. Identity reconciliation waits for an in-flight native transaction, so a stalled store operation can delay it. Deferred transactions may complete after that operation or an app restart; their eventual attribution requires native StoreKit validation.
+
 ## Free and PRO
 
 The v1.0 plan structure is:

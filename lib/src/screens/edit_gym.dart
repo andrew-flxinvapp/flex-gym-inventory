@@ -7,6 +7,7 @@ import 'package:flex_gym_inventory/view_models/dashboard_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flex_gym_inventory/src/data/repositories/gym_repository.dart';
 import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import '../widgets/snackbar.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/top_app_bar.dart';
@@ -55,6 +56,8 @@ class _EditGymScreenState extends ConsumerState<EditGymScreen> {
         gymId = 'GYM-0001';
       });
       _loadExistingGym();
+    }, onError: (Object error, StackTrace stackTrace) {
+      LogHandler.warning('EditGym', 'Authentication state failed');
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadExistingGym());
   }

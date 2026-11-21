@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../providers/purchase_flow_provider.dart';
+import '../../providers/subscription_provider.dart';
 import '../../routes/routes.dart';
 import '../../theme/app_theme.dart';
+import '../providers/price_provider.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/cards/monthly_plan_card.dart';
@@ -10,29 +14,50 @@ import '../widgets/cards/yearly_plan_card.dart';
 import '../widgets/displays/purchase_info_item.dart';
 import '../widgets/layouts/app_screen.dart';
 
-enum _SubscriptionPlan { monthly, yearly }
-
-class ProPurchase extends StatefulWidget {
+class ProPurchase extends ConsumerStatefulWidget {
   final bool isOnboarding;
 
   const ProPurchase({super.key, this.isOnboarding = false});
 
   @override
-  State<ProPurchase> createState() => _ProPurchaseState();
+  ConsumerState<ProPurchase> createState() => _ProPurchaseState();
 }
 
-class _ProPurchaseState extends State<ProPurchase> {
-  _SubscriptionPlan _selectedPlan = _SubscriptionPlan.monthly;
+class _ProPurchaseState extends ConsumerState<ProPurchase> {
+  SubscriptionPlan _selectedPlan = SubscriptionPlan.monthly;
 
-  void _handlePurchase() {
-    switch (_selectedPlan) {
-      case _SubscriptionPlan.monthly:
-        // TODO: Start the selected monthly subscription with RevenueCat.
-        break;
-      case _SubscriptionPlan.yearly:
-        // TODO: Start the selected yearly subscription with RevenueCat.
-        break;
-    }
+  Future<void> _handlePurchase() async {
+    final outcome = await ref
+        .read(purchaseFlowProvider.notifier)
+        .purchase(_selectedPlan);
+    if (!mounted || outcome == TransactionOutcome.cancelled) return;
+    _showOutcome(outcome, restore: false);
+  }
+
+  Future<void> _handleRestore() async {
+    final outcome = await ref.read(purchaseFlowProvider.notifier).restore();
+    if (!mounted) return;
+    _showOutcome(outcome, restore: true);
+  }
+
+  void _showOutcome(TransactionOutcome outcome, {required bool restore}) {
+    final message = switch (outcome) {
+      TransactionOutcome.confirmed => 'PRO subscription is active.',
+      TransactionOutcome.pending =>
+        'The transaction or subscription verification is pending. Please check again later.',
+      TransactionOutcome.noEntitlement =>
+        'No active PRO subscription was found.',
+      TransactionOutcome.identityChanged =>
+        'Your account changed. The transaction may have completed; check the original account.',
+      TransactionOutcome.failed =>
+        restore
+            ? 'Could not restore purchases. Please try again.'
+            : 'Could not confirm the purchase. Check your subscription before trying again.',
+      TransactionOutcome.cancelled => '',
+    };
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _handleNotNow() {
@@ -48,6 +73,13 @@ class _ProPurchaseState extends State<ProPurchase> {
 
   @override
   Widget build(BuildContext context) {
+    final flow = ref.watch(purchaseFlowProvider);
+    ref.watch(subscriptionProvider);
+    final canRestore =
+        ref.read(revenueCatServiceProvider).isCurrentSupabaseUserSynchronized &&
+        !flow.isBusy;
+    final monthly = flow.monthly?.storeProduct;
+    final annual = flow.annual?.storeProduct;
     return Scaffold(
       backgroundColor: AppTheme.darkBackground,
       extendBody: true,
@@ -85,25 +117,24 @@ class _ProPurchaseState extends State<ProPurchase> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: IntrinsicHeight(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 430),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                          maxWidth: 430,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 24.0),
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 24.0),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  16.0,
-                                  16.0,
-                                  16.0,
-                                  0,
-                                ),
-                                child: Column(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                16.0,
+                                16.0,
+                                0,
+                              ),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Center(
@@ -127,36 +158,85 @@ class _ProPurchaseState extends State<ProPurchase> {
                                   _buildReassurance(context),
                                   const SizedBox(height: 16),
                                   MonthlyPlanCard(
+                                    description:
+                                        flow.status == OfferingStatus.loading
+                                            ? 'Loading price...'
+                                            : PriceProvider.monthlyPrice(
+                                              monthly,
+                                            ),
                                     isSelected:
                                         _selectedPlan ==
-                                        _SubscriptionPlan.monthly,
+                                        SubscriptionPlan.monthly,
                                     onTap: () {
                                       setState(
                                         () =>
                                             _selectedPlan =
-                                                _SubscriptionPlan.monthly,
+                                                SubscriptionPlan.monthly,
                                       );
                                     },
                                   ),
                                   const SizedBox(height: 16),
                                   YearlyPlanCard(
+                                    description:
+                                        flow.status == OfferingStatus.loading
+                                            ? 'Loading price...'
+                                            : PriceProvider.yearlyPrice(annual),
+                                    savings: PriceProvider.annualSavings(
+                                      monthly,
+                                      annual,
+                                    ),
                                     isSelected:
                                         _selectedPlan ==
-                                        _SubscriptionPlan.yearly,
+                                        SubscriptionPlan.annual,
                                     onTap: () {
                                       setState(
                                         () =>
                                             _selectedPlan =
-                                                _SubscriptionPlan.yearly,
+                                                SubscriptionPlan.annual,
                                       );
                                     },
                                   ),
                                   const SizedBox(height: 16),
                                   PrimaryButton(
-                                    label: 'Start 7-day Free Trial',
-                                    onPressed: _handlePurchase,
+                                    label:
+                                        flow.isBusy
+                                            ? 'Please wait...'
+                                            : 'Subscribe',
+                                    onPressed:
+                                        !flow.isBusy &&
+                                                flow.status ==
+                                                    OfferingStatus.ready &&
+                                                flow.packageFor(
+                                                      _selectedPlan,
+                                                    ) !=
+                                                    null
+                                            ? _handlePurchase
+                                            : null,
                                     variant: PrimaryButtonVariant.dark,
                                   ),
+                                  if (flow.status ==
+                                      OfferingStatus.unavailable) ...[
+                                    Text(
+                                      flow.message ??
+                                          'Subscriptions are unavailable.',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: AppTheme.darkTextPrimary,
+                                      ),
+                                    ),
+                                    if (canRestore)
+                                      TextButton(
+                                        onPressed:
+                                            () =>
+                                                ref
+                                                    .read(
+                                                      purchaseFlowProvider
+                                                          .notifier,
+                                                    )
+                                                    .retry(),
+                                        child: const Text('Try again'),
+                                      ),
+                                  ],
                                   const SizedBox(height: 16),
                                   SecondaryButton(
                                     label: 'Not Now',
@@ -164,14 +244,13 @@ class _ProPurchaseState extends State<ProPurchase> {
                                     foregroundColor: AppTheme.darkTextPrimary,
                                   ),
                                   const SizedBox(height: 16),
-                                  _buildFooterLinks(context),
+                                  _buildFooterLinks(context, canRestore),
                                 ],
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                     ),
                   );
                 },
@@ -192,7 +271,7 @@ class _ProPurchaseState extends State<ProPurchase> {
       children: [
         Expanded(
           child: PurchaseInfoItem(
-            label: '7-day free trial',
+            label: 'App Store billing',
             style: style,
             textAlign: TextAlign.center,
           ),
@@ -215,7 +294,7 @@ class _ProPurchaseState extends State<ProPurchase> {
     );
   }
 
-  Widget _buildFooterLinks(BuildContext context) {
+  Widget _buildFooterLinks(BuildContext context, bool canRestore) {
     final style = Theme.of(context).textTheme.labelSmall?.copyWith(
       color: AppTheme.darkTextPrimary,
       fontSize: 10,
@@ -244,15 +323,7 @@ class _ProPurchaseState extends State<ProPurchase> {
             label: 'Restore Purchases',
             style: style,
             textAlign: TextAlign.center,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Restore Purchases will be available in a future update.',
-                  ),
-                ),
-              );
-            },
+            onTap: canRestore ? _handleRestore : null,
           ),
         ),
         _buildFooterDivider(),

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/app_theme.dart';
-import '../../providers/price_provider.dart';
 import 'base_card.dart';
 
 class MonthlyPlanCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
+  final String description;
 
   const MonthlyPlanCard({
     super.key,
     required this.isSelected,
     required this.onTap,
+    required this.description,
   });
 
   @override
   Widget build(BuildContext context) {
-    final description = '${PriceProvider.monthlyPrice} with 7-day trial';
-
     return Semantics(
       button: true,
       selected: isSelected,
@@ -41,10 +40,7 @@ class MonthlyPlanCard extends StatelessWidget {
                 height: 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppTheme.lightBackground,
-                    width: 2,
-                  ),
+                  border: Border.all(color: AppTheme.lightBackground, width: 2),
                 ),
                 child:
                     isSelected
