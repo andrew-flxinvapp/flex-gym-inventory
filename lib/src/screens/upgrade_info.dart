@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../constant/subscription_constants.dart';
 import '../../routes/routes.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
 import '../widgets/layouts/app_screen.dart';
-import '../widgets/cards/plan_comparison_card.dart';
-import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/pro_overview_layout.dart';
 
 class UpgradeInfo extends StatelessWidget {
   const UpgradeInfo({super.key});
@@ -19,79 +17,24 @@ class UpgradeInfo extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: AppScreen(
           useGradient: true,
+          safeArea: true,
           lightSystemUi: true,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${SubscriptionConstants.proPlanName} Overview',
-                      style: Theme.of(context).textTheme.displayMedium
-                          ?.copyWith(color: AppTheme.darkTextPrimary),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Image.asset(
-                        AppIcons.close,
-                        width: 20,
-                        height: 20,
-                        color: AppTheme.darkTextPrimary,
-                      ),
-                      tooltip: 'Back',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Center(
-                          child: Image.asset(
-                            'lib/assets/images/flex_pro.png',
-                            height: 300,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Get more out of Flex Gym Inventory',
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(color: AppTheme.darkTextPrimary),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          SubscriptionConstants.proOverviewDescription,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AppTheme.darkTextPrimary),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        const PlanComparisonCard(),
-                        const SizedBox(height: 20),
-                        PrimaryButton(
-                          label: 'View Plans',
-                          onPressed:
-                              () => Navigator.pushNamed(
-                                context,
-                                AppRoutes.proPurchase,
-                              ),
-                          variant: PrimaryButtonVariant.dark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          child: ProOverviewLayout(
+            headerAction: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: Image.asset(
+                AppIcons.close,
+                width: 20,
+                height: 20,
+                color: AppTheme.darkTextPrimary,
+              ),
+              tooltip: 'Back',
             ),
+            onViewPlans:
+                () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.proPurchase,
+                ),
           ),
         ),
       ),

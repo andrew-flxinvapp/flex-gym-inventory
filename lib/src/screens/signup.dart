@@ -133,103 +133,103 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
-      resizeToAvoidBottomInset: false,
       appBar: const OnboardingLogoAppBar(),
       body: AppScreen(
         unfocusOnTap: true,
         safeArea: true,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 16), // Add vertical space to bump the form down
-              // Title
-              Text(
-                'Sign Up',
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: AppTheme.lightTextPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // First Name TextField
-                    SizedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          CustomTextInputField(
-                            hintText: 'First Name',
-                            showAsterisk: true,
-                            controller: _firstNameController,
-                            height: 50,
-                          ),
-                          if (_signUpViewModel.firstNameError != null) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              _signUpViewModel.firstNameError!,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+        lightSystemUi: false,
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
                     ),
-                    const SizedBox(height: 16),
-                    // Last Name TextField
-                    SizedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          CustomTextInputField(
-                            hintText: 'Last Name',
-                            showAsterisk: true,
-                            controller: _lastNameController,
-                            height: 50,
-                          ),
-                          if (_signUpViewModel.lastNameError != null) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              _signUpViewModel.lastNameError!,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    // Email TextField with VM-driven inline error
-                    const SizedBox(height: 16),
-                    Column(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        CustomTextInputField(
-                          hintText: 'Email',
-                          showAsterisk: true,
-                          controller: _signUpViewModel.emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          height: 50,
-                        ),
-                        if (_signUpViewModel.emailError != null) ...[
-                          const SizedBox(height: 6),
-                          Text(
-                            _signUpViewModel.emailError!,
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
+                        Text(
+                          'Sign Up',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
                           ),
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 32),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            CustomTextInputField(
+                              hintText: 'First Name',
+                              showAsterisk: true,
+                              controller: _firstNameController,
+                              height: 50,
+                            ),
+                            if (_signUpViewModel.firstNameError != null) ...[
+                              const SizedBox(height: 6),
+                              Text(
+                                _signUpViewModel.firstNameError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            CustomTextInputField(
+                              hintText: 'Last Name',
+                              showAsterisk: true,
+                              controller: _lastNameController,
+                              height: 50,
+                            ),
+                            if (_signUpViewModel.lastNameError != null) ...[
+                              const SizedBox(height: 6),
+                              Text(
+                                _signUpViewModel.lastNameError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            CustomTextInputField(
+                              hintText: 'Email',
+                              showAsterisk: true,
+                              controller: _signUpViewModel.emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              height: 50,
+                            ),
+                            if (_signUpViewModel.emailError != null) ...[
+                              const SizedBox(height: 6),
+                              Text(
+                                _signUpViewModel.emailError!,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         Align(
                           alignment: Alignment.centerRight,
@@ -257,109 +257,120 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 24),
+                        Text.rich(
+                          TextSpan(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontFamily: 'Roboto',
+                            ),
+                            children: [
+                              const TextSpan(
+                                text:
+                                    "By continuing, you agree to Flex Gym Inventory's ",
+                              ),
+                              TextSpan(
+                                text: 'Terms',
+                                style: TextStyle(
+                                  color: AppTheme.lightPrimary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: _termsTapRecognizer,
+                              ),
+                              const TextSpan(text: ' and '),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(
+                                  color: AppTheme.lightPrimary,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: _privacyTapRecognizer,
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        PrimaryButton(
+                          label:
+                              _signUpViewModel.loading
+                                  ? 'Signing up...'
+                                  : 'Sign Up',
+                          onPressed:
+                              _signUpViewModel.loading
+                                  ? null
+                                  : () {
+                                    final firstOk = _signUpViewModel
+                                        .validateFirstName(
+                                          _firstNameController.text,
+                                        );
+                                    final lastOk = _signUpViewModel
+                                        .validateLastName(
+                                          _lastNameController.text,
+                                        );
+                                    final emailOk =
+                                        _signUpViewModel.validateEmail();
+                                    if (firstOk && lastOk && emailOk) {
+                                      // Store names in the in-memory onboarding provider.
+                                      ref
+                                          .read(profileDataProvider.notifier)
+                                          .setSignupDetails(
+                                            email:
+                                                _signUpViewModel
+                                                    .emailController
+                                                    .text,
+                                            firstName:
+                                                _firstNameController.text,
+                                            lastName: _lastNameController.text,
+                                          );
+                                      _performSignUp();
+                                    }
+                                  },
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Already have an account? ",
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.lightTextPrimary,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.login);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: const Size(0, 0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Sign In',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
+                                  color: AppTheme.lightPrimary,
+                                  decoration: TextDecoration.underline,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text.rich(
-                  TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                      fontFamily: 'Roboto',
-                    ),
-                    children: [
-                      const TextSpan(
-                        text:
-                            "By continuing, you agree to Flex Gym Inventory's ",
-                      ),
-                      TextSpan(
-                        text: 'Terms',
-                        style: TextStyle(
-                          color: AppTheme.lightTextSecondary,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: _termsTapRecognizer,
-                      ),
-                      const TextSpan(text: ' and '),
-                      TextSpan(
-                        text: 'Privacy Policy',
-                        style: TextStyle(
-                          color: AppTheme.lightTextSecondary,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: _privacyTapRecognizer,
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Sign Up Button (always enabled, disabled while submitting)
-              PrimaryButton(
-                label: _signUpViewModel.loading ? 'Signing up...' : 'Sign Up',
-                onPressed:
-                    _signUpViewModel.loading
-                        ? null
-                        : () {
-                          final firstOk = _signUpViewModel.validateFirstName(
-                            _firstNameController.text,
-                          );
-                          final lastOk = _signUpViewModel.validateLastName(
-                            _lastNameController.text,
-                          );
-                          final emailOk = _signUpViewModel.validateEmail();
-                          if (firstOk && lastOk && emailOk) {
-                            // Store names in the in-memory onboarding provider.
-                            ref
-                                .read(profileDataProvider.notifier)
-                                .setSignupDetails(
-                                  email: _signUpViewModel.emailController.text,
-                                  firstName: _firstNameController.text,
-                                  lastName: _lastNameController.text,
-                                );
-                            _performSignUp();
-                          }
-                        },
-              ),
-              const SizedBox(height: 16),
-              // Already have an account? Sign In link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account? ",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.login);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      'Sign In',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.lightTextSecondary,
-                        decoration: TextDecoration.underline,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

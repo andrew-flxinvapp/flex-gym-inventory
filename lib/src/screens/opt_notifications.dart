@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,7 +76,7 @@ class _OptNotificationsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.transparent,
+      backgroundColor: AppTheme.lightBackground,
       extendBodyBehindAppBar: true,
       appBar: const OnboardingLogoAppBar(
         showBackArrow: false,
@@ -83,6 +84,7 @@ class _OptNotificationsScreenState
       ),
       body: AppScreen(
         useGradient: false,
+        backgroundColor: AppTheme.lightBackground,
         safeArea: true,
         lightSystemUi: true,
         child: LayoutBuilder(
@@ -90,64 +92,66 @@ class _OptNotificationsScreenState
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 32),
-                        Text(
-                          'Enable Notifications?',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.displayMedium?.copyWith(
-                            color: AppTheme.lightTextPrimary,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Roboto',
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        Image.asset(
-                          'lib/assets/images/new_notifications.png',
-                          height: 350,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          AppIcons.notifications,
+                          height: 128,
+                          width: 128,
                           fit: BoxFit.contain,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Would you like to enable notifications for future features and reminders?',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Enable Notifications?',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.displayMedium?.copyWith(
+                          color: AppTheme.lightTextPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Would you like to enable push notifications for future features and reminders?',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          height: 1.2,
+                          color: AppTheme.lightTextPrimary,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      PrimaryButton(
+                        label: 'Enable Notifications',
+                        onPressed: () async {
+                          await _handleEnablePress();
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      SecondaryButton(
+                        label: 'Not Now',
+                        onPressed: () async {
+                          // Store the user's choice in the in-memory provider only.
+                          ref
+                              .read(profileDataProvider.notifier)
+                              .setNotificationsOn(false);
+                          Navigator.of(
                             context,
-                          ).textTheme.bodyMedium?.copyWith(
-                            height: 1.2,
-                            color: AppTheme.lightTextPrimary,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                        const Spacer(),
-                        PrimaryButton(
-                          label: 'Enable Notifications',
-                          onPressed: () async {
-                            await _handleEnablePress();
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        SecondaryButton(
-                          label: 'Not Now',
-                          onPressed: () async {
-                            // Store the user's choice in the in-memory provider only.
-                            ref
-                                .read(profileDataProvider.notifier)
-                                .setNotificationsOn(false);
-                            Navigator.of(
-                              context,
-                            ).pushNamed(AppRoutes.onboardingFeatureOne);
-                          },
-                        ),
-                      ],
-                    ),
+                          ).pushNamed(AppRoutes.onboardingFeatureOne);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),

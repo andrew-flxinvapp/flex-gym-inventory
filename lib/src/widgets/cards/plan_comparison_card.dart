@@ -35,10 +35,13 @@ class PlanComparisonCard extends StatelessWidget {
           border: Border.all(width: 1, color: AppTheme.darkDividers),
         ),
         child: Table(
+          border: const TableBorder(
+            verticalInside: BorderSide(color: AppTheme.darkDividers),
+          ),
           columnWidths: const {
-            0: FlexColumnWidth(3),
-            1: FlexColumnWidth(0.99),
-            2: FlexColumnWidth(0.99),
+            0: FlexColumnWidth(2.8),
+            1: FlexColumnWidth(1),
+            2: FlexColumnWidth(1.5),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
@@ -51,35 +54,34 @@ class PlanComparisonCard extends StatelessWidget {
               ),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 12,
+                  ),
                   child: Text('FEATURES', style: headerStyleFeatures),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      right: BorderSide(width: 1, color: AppTheme.darkDividers),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 12,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      SubscriptionConstants.freePlanName.toUpperCase(),
-                      style: headerStyleFree,
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Text(
+                    SubscriptionConstants.freePlanName.toUpperCase(),
+                    style: headerStyleFree,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 Container(
                   color: AppTheme.lightTextPrimary.withValues(alpha: 0.4),
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        SubscriptionConstants.proPlanName.toUpperCase(),
-                        style: headerStylePro,
-                        textAlign: TextAlign.center,
-                      ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      SubscriptionConstants.proPlanName.toUpperCase(),
+                      style: headerStylePro,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -109,7 +111,7 @@ class PlanComparisonCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 8.0,
-                      horizontal: 12.0,
+                      horizontal: 6.0,
                     ),
                     child: Text(
                       SubscriptionConstants.planComparisons[i].label,
@@ -120,30 +122,16 @@ class PlanComparisonCard extends StatelessWidget {
                   ),
 
                   // FREE column (with left and right strokes)
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        left: BorderSide(
-                          width: 1,
-                          color: AppTheme.darkDividers,
-                        ),
-                        right: BorderSide(
-                          width: 1,
-                          color: AppTheme.darkDividers,
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 6.0,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 12.0,
-                      ),
-                      child: Center(
-                        child: Text(
-                          SubscriptionConstants.planComparisons[i].freeValue,
-                          style: textTheme.labelSmall?.copyWith(
-                            color: AppTheme.darkTextPrimary,
-                          ),
+                    child: Center(
+                      child: Text(
+                        SubscriptionConstants.planComparisons[i].freeValue,
+                        style: textTheme.labelSmall?.copyWith(
+                          color: AppTheme.darkTextPrimary,
                         ),
                       ),
                     ),
@@ -155,7 +143,7 @@ class PlanComparisonCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 8.0,
-                        horizontal: 12.0,
+                        horizontal: 6.0,
                       ),
                       child: Center(
                         child: _buildProValue(
@@ -180,17 +168,14 @@ class PlanComparisonCard extends StatelessWidget {
         width: 18,
         height: 18,
         color: AppTheme.updateColor,
+        semanticLabel: 'Included',
       );
     }
 
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Text(
-        value,
-        style: textTheme.labelSmall?.copyWith(color: AppTheme.updateColor),
-        maxLines: 1,
-        softWrap: false,
-      ),
+    return Text(
+      value,
+      style: textTheme.labelSmall?.copyWith(color: AppTheme.updateColor),
+      textAlign: TextAlign.center,
     );
   }
 }

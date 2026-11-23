@@ -2,20 +2,26 @@ PODS:
   - Flutter (1.0.0)
   - isar_flutter_libs (1.0.0):
     - Flutter
+  - open_mail (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
+  - open_mail (from `.symlinks/plugins/open_mail/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   isar_flutter_libs:
     :path: ".symlinks/plugins/isar_flutter_libs/ios"
+  open_mail:
+    :path: ".symlinks/plugins/open_mail/ios"
 
 SPEC CHECKSUMS:
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   isar_flutter_libs: 9fc2cfb928c539e1b76c481ba5d143d556d94920
+  open_mail: b6b41374f5000a2ea1edc09ffe39d9e434e2747a
 
 PODFILE CHECKSUM: 9c792660efb2dd096f2d29037dd63a502e7f74b7
 

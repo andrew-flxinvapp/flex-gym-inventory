@@ -71,134 +71,142 @@ class _LoginScreenState extends State<LoginScreen> {
       body: AppScreen(
         safeArea: true,
         unfocusOnTap: true,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 24),
-                  Text(
-                    'Sign In',
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: Image.asset(
-                      'lib/assets/images/new_waiting.png',
-                      height: 350,
-                      width: 350,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Your gym is waiting!',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.lightTextPrimary,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Roboto',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
+        lightSystemUi: false,
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        CustomTextInputField(
-                          hintText: 'flex@flxinv.com',
-                          controller: _loginViewModel.emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          width: double.infinity,
-                          height: 56,
+                        const SizedBox(height: 24),
+                        Text(
+                          'Sign In',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        if (_loginViewModel.emailError != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 6.0),
-                            child: Text(
-                              _loginViewModel.emailError!,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
+                        const SizedBox(height: 8),
+                        Text(
+                          'Your gym is waiting!',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Roboto',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 40),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextInputField(
+                                hintText: 'flex@flxinv.com',
+                                controller: _loginViewModel.emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                width: double.infinity,
+                                height: 50,
+                              ),
+                              if (_loginViewModel.emailError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 8.0,
+                                    left: 6.0,
+                                  ),
+                                  child: Text(
+                                    _loginViewModel.emailError!,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        PrimaryButton(
+                          label:
+                              _loginViewModel.loading
+                                  ? 'Sending...'
+                                  : 'Sign In',
+                          onPressed: () async {
+                            if (_loginViewModel.loading) return;
+
+                            // Trim whitespace and update controller
+                            final trimmed =
+                                _loginViewModel.emailController.text.trim();
+                            _loginViewModel.emailController.text = trimmed;
+
+                            // Dismiss keyboard
+                            FocusScope.of(context).unfocus();
+
+                            if (_loginViewModel.validateEmail()) {
+                              // Start sending magic link (don't await so navigation isn't blocked)
+                              _sendMagicLink();
+
+                              // Navigate to verify email screen and pass the trimmed email
+                              Navigator.of(context).pushNamed(
+                                AppRoutes.verifyEmail,
+                                arguments: {'email': trimmed},
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                color: AppTheme.lightTextPrimary,
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
                               ),
                             ),
-                          ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.signup);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(0, 0),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: const Color(0xFF278094),
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  fontFamily: 'Roboto',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  PrimaryButton(
-                    label: _loginViewModel.loading ? 'Sending...' : 'Sign In',
-                    onPressed: () async {
-                      if (_loginViewModel.loading) return;
-
-                      // Trim whitespace and update controller
-                      final trimmed = _loginViewModel.emailController.text.trim();
-                      _loginViewModel.emailController.text = trimmed;
-
-                      // Dismiss keyboard
-                      FocusScope.of(context).unfocus();
-
-                      if (_loginViewModel.validateEmail()) {
-                        // Start sending magic link (don't await so navigation isn't blocked)
-                        _sendMagicLink();
-
-                        // Navigate to verify email screen and pass the trimmed email
-                        Navigator.of(context).pushNamed(
-                          AppRoutes.verifyEmail,
-                          arguments: {'email': trimmed},
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don’t have an account? ",
-                        style: TextStyle(
-                          color: AppTheme.lightTextPrimary,
-                          fontSize: 16,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(AppRoutes.signup);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: AppTheme.lightTextSecondary,
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
-            ),
-          ),
         ),
       ),
     );

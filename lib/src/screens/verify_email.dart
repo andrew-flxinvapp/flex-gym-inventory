@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:open_mail/open_mail.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/onboarding_topappbar.dart';
 import '../../view_models/auth_view_model.dart';
 import '../widgets/snackbar.dart';
-// import 'package:flex_gym_inventory/src/models/ui_message.dart';
+import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/app_screen.dart';
 
 // Verify Email Screen
 // This screen instructs users to check their email for a magic link to continue sign in or sign up.
@@ -61,6 +65,91 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     await _authViewModel.resendMagicLink();
   }
 
+  Future<void> _openMailApp() async {
+    try {
+      final result = await OpenMail.openMailApp();
+      if (!mounted || result.didOpen) return;
+
+      if (result.canOpen) {
+        final selectedApp = await _selectMailApp(result.options);
+        if (!mounted || selectedApp == null) return;
+
+        final selectedResult = await OpenMail.openSpecificMailApp(
+          selectedApp.name,
+        );
+        if (!mounted || selectedResult.didOpen) return;
+      }
+
+      _showMailAppError('Please open your email app to find the sign-in link.');
+    } on PlatformException catch (error) {
+      if (!mounted) return;
+      _showMailAppError(
+        error.message ?? 'Please open your email app manually.',
+      );
+    } on MissingPluginException {
+      if (!mounted) return;
+      _showMailAppError('Please open your email app manually.');
+    } on UnsupportedError {
+      if (!mounted) return;
+      _showMailAppError('Opening a mail app is not supported on this device.');
+    }
+  }
+
+  Future<MailApp?> _selectMailApp(List<MailApp> apps) {
+    return showDialog<MailApp>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: AppTheme.lightCard,
+            title: Text(
+              'Choose an email app',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: AppTheme.lightTextPrimary,
+              ),
+            ),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 320),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: apps.length,
+                itemBuilder: (context, index) {
+                  final app = apps[index];
+                  return ListTile(
+                    title: Text(
+                      app.name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppTheme.lightTextPrimary,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).pop(app),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Cancel',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _showMailAppError(String message) {
+    showFlexSnackbar(
+      context,
+      title: 'Unable to open mail app',
+      subtitle: message,
+      type: SnackbarType.stop,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final enteredEmail = _authViewModel.emailController.text.trim();
@@ -69,76 +158,110 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     return Scaffold(
       backgroundColor: AppTheme.lightBackground,
       appBar: const OnboardingLogoAppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 24),
-                // Title
-                Text(
-                  'Verify Email',
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                // Mascot image
-                Center(
-                  child: Image.asset(
-                    'lib/assets/images/new_email.png',
-                    height: 350,
-                    width: 350,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Subtitle
-                Text(
-                  'We just emailed a magic link to $emailLabel. Check your email on this device to continue',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-                // Didn't receive a link text
-                Text(
-                  "Didn't receive a link?",
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.lightTextPrimary,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Roboto',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                // Resend magic link button at the bottom
-                TextButton(
-                  onPressed: _authViewModel.loading ? null : _resend,
-                  child: Text(
-                    _authViewModel.loading
-                        ? 'Resending...'
-                        : 'Resend magic link',
-                    style: TextStyle(
-                      color: AppTheme.lightTextPrimary,
-                      fontWeight: FontWeight.bold,
+      body: AppScreen(
+        safeArea: true,
+        lightSystemUi: false,
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            AppIcons.email,
+                            height: 128,
+                            width: 128,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Check your email',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        Text.rich(
+                          TextSpan(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyLarge?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Roboto',
+                            ),
+                            children: [
+                              const TextSpan(text: 'We sent an email to '),
+                              TextSpan(
+                                text: emailLabel,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const TextSpan(
+                                text: '.\nIt has a link that will sign you in.',
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 32),
+                        PrimaryButton(
+                          label: 'Open Mail App',
+                          onPressed: _openMailApp,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          "Can't find our email? Check your spam folder!",
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color: AppTheme.lightTextPrimary,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Roboto',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 4),
+                        TextButton(
+                          onPressed: _authViewModel.loading ? null : _resend,
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(0, 48),
+                            tapTargetSize: MaterialTapTargetSize.padded,
+                          ),
+                          child: Text(
+                            _authViewModel.loading
+                                ? 'Resending...'
+                                : 'Resend magic link',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: AppTheme.lightTextPrimary,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
         ),
       ),
     );

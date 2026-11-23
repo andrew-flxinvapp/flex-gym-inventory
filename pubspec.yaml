@@ -60,6 +60,7 @@ dependencies:
   cupertino_ui: ^1.0.0
   purchases_flutter: ^10.14.0
   purchases_ui_flutter: ^10.14.0
+  open_mail: ^1.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -159,6 +160,9 @@ flutter:
     - lib/assets/icons/sparkles_blue.png
     - lib/assets/icons/specialty_blue.png
     - lib/assets/icons/storage_blue.png
+    - lib/assets/icons/complete.png
+    - lib/assets/icons/notifications.png
+    - lib/assets/icons/upgrade.png
 
 
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import '../widgets/buttons/primary_button.dart';
+import '../widgets/layouts/app_screen.dart';
 import '../widgets/layouts/onboarding_bottom_action_layout.dart';
 import '../widgets/onboarding_topappbar.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
@@ -22,23 +22,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         showBackArrow: true,
         theme: OnboardingAppBarTheme.dark,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0.9, -0.62),
-            radius: 1.6,
-            focal: Alignment(0.9, -0.7),
-            focalRadius: 0.001,
-            colors: [
-              Color(0xFF1F4F66), // 0%
-              Color(0xFF023246), // 28%
-              Color(0xFF010D1B), // 64%
-              Color(0xFF000000), // 100%
-            ],
-            stops: [0.0, 0.3, 0.8, 1.0],
-            transform: GradientRotation(0.25),
-          ),
-        ),
+      body: AppScreen(
+        useGradient: true,
+        safeArea: true,
+        lightSystemUi: true,
         child: OnboardingBottomActionLayout(
           content: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -46,6 +33,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 32),
+                Image.asset(
+                  'lib/assets/images/new_welcome.png',
+                  height: 325,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 16),
                 Text(
                   'Meet Flex Rackley!',
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
@@ -57,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Your gym's strongest sidekick!",
+                  "Your gym's behind-the-scenes MVP!",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.darkTextPrimary,
                     fontFamily: 'Roboto',
@@ -66,14 +59,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
-                Image.asset(
-                  'lib/assets/images/new_welcome.png',
-                  height: 325,
-                  fit: BoxFit.contain,
+                Text(
+                  'Every gym needs someone keeping things running smoothly. From managing equipment to keeping an eye on security, Flex Rackley wears a few hats around here.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.2,
+                    color: AppTheme.darkTextPrimary,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'While you focus on the gains, Flex handles the gear. He keeps your equipment organized, tracks upgrades, and remembers what you need so you dont have to.',
+                  "You handle the heavy lifting. He's got the rest covered.",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     height: 1.2,
@@ -84,12 +81,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ],
             ),
           ),
-          action: PrimaryButton(
-            label: 'Continue',
-            variant: PrimaryButtonVariant.dark,
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.socialProof);
-            },
+          action: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.lightBackground,
+                foregroundColor: AppTheme.lightTextPrimary,
+                minimumSize: const Size(0, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: const BorderSide(color: AppTheme.darkBackground),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.socialProof);
+              },
+              child: Text(
+                'Continue',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.lightTextPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ),
       ),

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../constant/subscription_constants.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/layouts/app_screen.dart';
-import '../widgets/layouts/onboarding_bottom_action_layout.dart';
+import '../widgets/layouts/pro_overview_layout.dart';
 import '../../routes/routes.dart';
-import '../widgets/cards/plan_comparison_card.dart';
-import '../widgets/buttons/primary_button.dart';
 
 class OnboardingUpgradeInfo extends StatelessWidget {
   const OnboardingUpgradeInfo({super.key});
@@ -19,76 +16,30 @@ class OnboardingUpgradeInfo extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: AppScreen(
           useGradient: true,
-          safeArea: false,
+          safeArea: true,
           lightSystemUi: true,
-          child: OnboardingBottomActionLayout(
-            content: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${SubscriptionConstants.proPlanName} Overview',
-                        style: Theme.of(context).textTheme.displayMedium
-                            ?.copyWith(color: AppTheme.darkTextPrimary),
-                      ),
-                      TextButton(
-                        onPressed:
-                            () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.complete,
-                            ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: AppTheme.darkTextPrimary,
-                          textStyle: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        child: const Text('Skip'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: Image.asset(
-                      'lib/assets/images/flex_pro.png',
-                      height: 300,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Get more out of Flex Gym Inventory',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: AppTheme.darkTextPrimary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    SubscriptionConstants.proOverviewDescription,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.darkTextPrimary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  const PlanComparisonCard(),
-                ],
-              ),
-            ),
-            action: PrimaryButton(
-              label: 'View Plans',
+          child: ProOverviewLayout(
+            headerAction: TextButton(
               onPressed:
                   () => Navigator.pushNamed(
                     context,
-                    AppRoutes.obProPurchase,
-                    arguments: true,
+                    AppRoutes.complete,
                   ),
-              variant: PrimaryButtonVariant.dark,
+              style: TextButton.styleFrom(
+                foregroundColor: AppTheme.darkTextPrimary,
+                textStyle: Theme.of(context).textTheme.bodySmall,
+              ),
+              child: const Text(
+                'Skip',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
             ),
+            onViewPlans:
+                () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.obProPurchase,
+                  arguments: true,
+                ),
           ),
         ),
       ),

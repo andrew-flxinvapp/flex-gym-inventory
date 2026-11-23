@@ -29,7 +29,7 @@ class AppIcons {
   static const String back = 'lib/assets/icons/arrow_small_left.png';
   static const String forward = 'lib/assets/icons/arrow_small_right.png';
   static const String reset = 'lib/assets/icons/reset.png';
-  static const String upgrade = 'lib/assets/icons/upgrade_account.png';
+  static const String upgradeAccount = 'lib/assets/icons/upgrade_account.png';
   static const String upload = 'lib/assets/icons/upload.png';
   static const String more = 'lib/assets/icons/more.png';
 
@@ -65,4 +65,9 @@ class AppIcons {
   static const String sparkles = 'lib/assets/icons/sparkles_blue.png';
   static const String specialty = 'lib/assets/icons/specialty_blue.png';
   static const String storage = 'lib/assets/icons/storage_blue.png';
+
+  // Onboarding
+  static const String complete = 'lib/assets/icons/complete.png';
+  static const String notifications = 'lib/assets/icons/notifications.png';
+  static const String upgrade = 'lib/assets/icons/upgrade.png';
 }
