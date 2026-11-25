@@ -184,6 +184,8 @@ flutter:
     - lib/assets/images/new_waiting.png
     - lib/assets/images/new_welcome.png
     - lib/assets/images/flex_pro.png
+    - lib/assets/images/gym_detail_mock.png
+    - lib/assets/images/wishlist_mock.png
     
 flutter_icons:
     android: true

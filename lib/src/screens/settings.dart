@@ -84,13 +84,6 @@ class SettingsScreen extends StatelessWidget {
                     Navigator.of(context).pushNamed(AppRoutes.notifications);
                   },
                 ),
-                const SizedBox(height: 12),
-                SettingsItem(
-                  title: 'About Flex Rackley',
-                  onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.aboutFlexRackley);
-                  },
-                ),
                 const SizedBox(height: 32),
                 Text(
                   'App Info & Support',

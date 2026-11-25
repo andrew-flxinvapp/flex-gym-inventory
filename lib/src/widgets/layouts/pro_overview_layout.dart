@@ -64,7 +64,7 @@ class ProOverviewLayout extends StatelessWidget {
                             constraints: const BoxConstraints(maxWidth: 370),
                             child: Text(
                               'Get more out of Flex Gym Inventory',
-                              style: textTheme.titleSmall?.copyWith(
+                              style: textTheme.titleMedium?.copyWith(
                                 color: AppTheme.darkTextPrimary,
                                 fontWeight: FontWeight.bold,
                               ),

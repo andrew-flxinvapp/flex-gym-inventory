@@ -34,7 +34,6 @@ import '../src/screens/notifications.dart';
 import '../src/screens/onboarding_feature_one.dart';
 import '../src/screens/onboarding_feature_two.dart';
 import '../src/screens/social_proof.dart';
-import '../src/screens/about_flex_rackley.dart';
 import '../src/screens/startup_router.dart';
 // import '../src/screens/onboarding_upgrade.dart';
 import '../src/screens/onboarding_complete.dart';
@@ -95,7 +94,6 @@ class AppRoutes {
   static const String proPurchase = '/pro-purchase';
   static const String deleteAccount = '/delete-account';
   static const String notifications = '/notifications';
-  static const String aboutFlexRackley = '/about-flex-rackley';
   static const String debugDeviceToken = '/debug-device-token';
   static const String export = '/export';
 
@@ -155,7 +153,6 @@ final Map<String, WidgetBuilder> appRoutes = {
       ),
   AppRoutes.deleteAccount: (context) => const DeleteAccountScreen(),
   AppRoutes.notifications: (context) => const NotificationsScreen(),
-  AppRoutes.aboutFlexRackley: (context) => const AboutFlexRackleyScreen(),
   AppRoutes.export: (context) => const ExportScreen(),
   // Debug / dev routes
   AppRoutes.debugDeviceToken: (context) => const DebugDeviceTokenScreen(),
