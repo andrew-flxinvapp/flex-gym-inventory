@@ -55,7 +55,7 @@ class DashboardGymCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  AppIcons.round,
+                  AppIcons.gymIcon,
                   width: 40,
                   height: 40,
                   fit: BoxFit.cover,

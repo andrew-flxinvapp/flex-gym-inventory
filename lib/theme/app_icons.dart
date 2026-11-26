@@ -52,6 +52,7 @@ class AppIcons {
   static const String user = 'lib/assets/icons/user.png';
   static const String email = 'lib/assets/icons/email.png';
   static const String phone = 'lib/assets/icons/phone.png';
+  static const String gymIcon = 'lib/assets/icons/gym_icon.png';
 
   // New Placeholder Icons
   static const String accessories = 'lib/assets/icons/accessories_blue.png';

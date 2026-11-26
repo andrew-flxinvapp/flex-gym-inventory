@@ -163,6 +163,7 @@ flutter:
     - lib/assets/icons/complete.png
     - lib/assets/icons/notifications.png
     - lib/assets/icons/upgrade.png
+    - lib/assets/icons/gym_icon.png
 
 
 
