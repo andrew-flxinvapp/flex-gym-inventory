@@ -17,6 +17,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/cards/details_card.dart';
 import '../widgets/cards/purchase_card.dart';
 import '../widgets/cards/notes_card.dart';
+import '../widgets/cards/item_overview_card.dart';
 import '../widgets/buttons/warning_button.dart';
 import '../widgets/dialogs/confirm_dialog.dart';
 import '../widgets/layouts/app_screen.dart';
@@ -44,23 +45,24 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
   void initState() {
     super.initState();
     _activeUserId = Supabase.instance.client.auth.currentUser?.id;
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
-      authState,
-    ) {
-      final userId = authState.session?.user.id;
-      if (!mounted || userId == _activeUserId) return;
-      _activeUserId = userId;
-      _loadGeneration++;
-      setState(() {
-        equipment = null;
-        _imageFileFuture = null;
-        error = null;
-        isLoading = true;
-      });
-      _loadEquipment();
-    }, onError: (Object error, StackTrace stackTrace) {
-      LogHandler.warning('EquipmentDetail', 'Authentication state failed');
-    });
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
+      (authState) {
+        final userId = authState.session?.user.id;
+        if (!mounted || userId == _activeUserId) return;
+        _activeUserId = userId;
+        _loadGeneration++;
+        setState(() {
+          equipment = null;
+          _imageFileFuture = null;
+          error = null;
+          isLoading = true;
+        });
+        _loadEquipment();
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        LogHandler.warning('EquipmentDetail', 'Authentication state failed');
+      },
+    );
     // Delay to allow ModalRoute to be available
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadEquipment());
   }
@@ -199,45 +201,34 @@ class _EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      if (imageFileFuture != null)
-                        FutureBuilder<File?>(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: FutureBuilder<File?>(
                           future: imageFileFuture,
                           builder: (context, snapshot) {
-                            final file = snapshot.data;
-                            if (snapshot.connectionState !=
-                                    ConnectionState.done ||
-                                snapshot.hasError ||
-                                file == null) {
-                              return const SizedBox.shrink();
-                            }
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16.0,
-                                    0,
-                                    16.0,
-                                    0,
-                                  ),
-                                  child: Center(
-                                    child: EquipmentImage(
-                                      imageId: equipment?.imageId,
-                                      resolvedFile: file,
-                                      width: double.infinity,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
+                            final file =
+                                snapshot.connectionState ==
+                                            ConnectionState.done &&
+                                        !snapshot.hasError
+                                    ? snapshot.data
+                                    : null;
+                            return ItemOverviewCard(
+                              name: equipment?.name ?? '-',
+                              placeholderIconAsset:
+                                  (equipment?.category ??
+                                          EquipmentCategory.other)
+                                      .placeholderIconAsset,
+                              image:
+                                  file == null
+                                      ? null
+                                      : EquipmentImage(
+                                        imageId: equipment?.imageId,
+                                        resolvedFile: file,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                      ),
                             );
                           },
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                        child: Text(
-                          equipment?.name ?? '-',
-                          style: Theme.of(context).textTheme.displaySmall
-                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
                       ),
                       const SizedBox(height: 16),

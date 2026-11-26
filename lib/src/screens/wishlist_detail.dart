@@ -10,6 +10,7 @@ import 'package:flex_gym_inventory/src/data/repositories/wishlist_repository.dar
 import 'package:flex_gym_inventory/src/models/wishlist_model.dart';
 import 'package:flex_gym_inventory/enum/app_enums.dart';
 import '../../theme/app_theme.dart';
+import '../widgets/cards/item_overview_card.dart';
 import '../widgets/cards/wishlist_card.dart';
 import '../widgets/cards/notes_card.dart';
 import '../widgets/buttons/warning_button.dart';
@@ -137,46 +138,33 @@ class _WishlistDetailScreenState extends State<WishlistDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      if (imageFileFuture != null)
-                        FutureBuilder<File?>(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: FutureBuilder<File?>(
                           future: imageFileFuture,
                           builder: (context, snapshot) {
-                            final file = snapshot.data;
-                            if (snapshot.connectionState !=
-                                    ConnectionState.done ||
-                                snapshot.hasError ||
-                                file == null) {
-                              return const SizedBox.shrink();
-                            }
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16.0,
-                                    0,
-                                    16.0,
-                                    0,
-                                  ),
-                                  child: Center(
-                                    child: EquipmentImage(
-                                      imageId: item?.imagePath,
-                                      resolvedFile: file,
-                                      width: double.infinity,
-                                      height: 208,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
+                            final file =
+                                snapshot.connectionState ==
+                                            ConnectionState.done &&
+                                        !snapshot.hasError
+                                    ? snapshot.data
+                                    : null;
+                            return ItemOverviewCard(
+                              name: item?.name ?? '-',
+                              placeholderIconAsset:
+                                  (item?.category ?? EquipmentCategory.other)
+                                      .placeholderIconAsset,
+                              image:
+                                  file == null
+                                      ? null
+                                      : EquipmentImage(
+                                        imageId: item?.imagePath,
+                                        resolvedFile: file,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                      ),
                             );
                           },
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                        child: Text(
-                          item?.name ?? '-',
-                          style: Theme.of(context).textTheme.displaySmall
-                              ?.copyWith(color: AppTheme.lightTextPrimary),
                         ),
                       ),
                       const SizedBox(height: 16),
