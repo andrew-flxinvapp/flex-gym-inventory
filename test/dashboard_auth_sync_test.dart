@@ -289,6 +289,70 @@ void main() {
       await equipmentChanges.close();
     },
   );
+
+  test('dashboard keeps gyms in creation order across refreshes', () async {
+    final oldGym =
+        _gym('account-a', 'old')
+          ..name = 'Zulu'
+          ..createdDate = DateTime(2023);
+    final newerGym =
+        _gym('account-a', 'newer')
+          ..name = 'Alpha'
+          ..createdDate = DateTime(2024);
+    final gymChanges = StreamController<void>.broadcast(sync: true);
+    final equipmentChanges = StreamController<void>.broadcast(sync: true);
+    final gymRepository = _OrderingGymRepository([
+      newerGym,
+      oldGym,
+    ], gymChanges.stream);
+    final viewModel = _createViewModel(
+      () => 'account-a',
+      gymRepository,
+      _StubEquipmentRepository(
+        (_) async => [],
+        watch: () => equipmentChanges.stream,
+      ),
+    );
+
+    List<String> gymIds() => viewModel.state.gyms.map((g) => g.gymId).toList();
+
+    await viewModel.onAuthChanged('account-a');
+    expect(gymIds(), ['old', 'newer']);
+
+    oldGym.name = 'Edited';
+    await viewModel.refresh();
+    expect(gymIds(), ['old', 'newer']);
+    expect(viewModel.state.gyms.first.gymName, 'Edited');
+
+    gymRepository.gyms.insert(
+      0,
+      _gym('account-a', 'newest')
+        ..name = 'Aardvark'
+        ..createdDate = DateTime(2025),
+    );
+    final gymRefresh = Completer<void>();
+    final removeGymListener = viewModel.addListener((state) {
+      if (!state.loading && state.gyms.length == 3) gymRefresh.complete();
+    }, fireImmediately: false);
+    gymChanges.add(null);
+    await gymRefresh.future.timeout(const Duration(seconds: 2));
+    removeGymListener();
+    expect(gymIds(), ['old', 'newer', 'newest']);
+
+    final equipmentRefresh = Completer<void>();
+    final removeEquipmentListener = viewModel.addListener((state) {
+      if (!state.loading) equipmentRefresh.complete();
+    }, fireImmediately: false);
+    equipmentChanges.add(null);
+    await equipmentRefresh.future.timeout(const Duration(seconds: 2));
+    removeEquipmentListener();
+    expect(gymIds(), ['old', 'newer', 'newest']);
+    expect(gymRepository.requestedSorts, everyElement(GymSort.oldest));
+
+    viewModel.dispose();
+    await gymChanges.close();
+    await equipmentChanges.close();
+  });
 }
 
 DashboardViewModel _createViewModel(
@@ -347,6 +411,33 @@ class _StubGymRepository extends GymRepository {
   @override
   Stream<void> watchForUser(String userId) =>
       watch?.call(userId) ?? const Stream<void>.empty();
+}
+
+class _OrderingGymRepository extends GymRepository {
+  _OrderingGymRepository(this.gyms, this.changes);
+
+  final List<Gym> gyms;
+  final Stream<void> changes;
+  final List<GymSort> requestedSorts = [];
+
+  @override
+  Future<List<Gym>> getAllForUser(
+    String userId, {
+    String? search,
+    GymSort sort = GymSort.nameAsc,
+  }) async {
+    requestedSorts.add(sort);
+    final result = List<Gym>.of(gyms);
+    if (sort == GymSort.oldest) {
+      result.sort((a, b) => a.createdDate.compareTo(b.createdDate));
+    } else {
+      result.sort((a, b) => a.name.compareTo(b.name));
+    }
+    return result;
+  }
+
+  @override
+  Stream<void> watchForUser(String userId) => changes;
 }
 
 class _StubEquipmentRepository extends EquipmentRepository {

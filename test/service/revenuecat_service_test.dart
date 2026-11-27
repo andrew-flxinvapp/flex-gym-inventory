@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flex_gym_inventory/service/revenuecat_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,10 +13,10 @@ void main() {
       'configures SDK with informational entitlement verification',
       () async {
         const channel = MethodChannel('purchases_flutter');
-        MethodCall? setup;
+        final calls = <MethodCall>[];
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(channel, (call) async {
-              setup = call;
+              calls.add(call);
               return null;
             });
         addTearDown(() {
@@ -26,9 +27,13 @@ void main() {
         final service = RevenueCatService();
         await service.configure(apiKey: 'appl_test_key');
 
-        expect(setup?.method, 'setupPurchases');
+        expect(calls.map((call) => call.method), [
+          'setLogLevel',
+          'setupPurchases',
+        ]);
+        expect((calls.first.arguments as Map)['level'], 'WARN');
         expect(
-          (setup?.arguments as Map)['entitlementVerificationMode'],
+          (calls.last.arguments as Map)['entitlementVerificationMode'],
           'INFORMATIONAL',
         );
       },
@@ -78,6 +83,46 @@ void main() {
         service.initializationState.value.errorMessage,
         isNot(contains(apiKey)),
       );
+    });
+
+    test('configuration failures never log raw SDK exception data', () async {
+      const signedData = 'eyJhbGciOiJFUzI1Ni.fake-signature';
+      const account = 'private-account-marker';
+      final previousLevel = Logger.root.level;
+      Logger.root.level = Level.ALL;
+      final records = <LogRecord>[];
+      final subscription = Logger.root.onRecord.listen(records.add);
+      addTearDown(() async {
+        await subscription.cancel();
+        Logger.root.level = previousLevel;
+      });
+      final service = RevenueCatService(
+        configureSdk: ({required apiKey, appUserId}) async {
+          throw PlatformException(
+            code: 'error',
+            message: '$signedData $account $apiKey',
+            details: signedData,
+          );
+        },
+      );
+
+      service.startConfiguration(apiKey: 'appl_test_key');
+      await service.initializationTask;
+
+      expect(
+        service.initializationState.value.status,
+        RevenueCatInitializationStatus.failed,
+      );
+      expect(
+        service.initializationState.value.errorMessage,
+        'RevenueCat SDK configuration error.',
+      );
+      final output =
+          records.map((record) => '${record.message} ${record.error}').join();
+      expect(output, contains('RevenueCat SDK configuration error.'));
+      expect(output, isNot(contains(signedData)));
+      expect(output, isNot(contains(account)));
+      expect(output, isNot(contains('appl_test_key')));
     });
 
     test('missing key is unavailable and does not call the SDK', () async {

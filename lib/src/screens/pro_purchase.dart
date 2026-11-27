@@ -11,8 +11,10 @@ import '../widgets/buttons/primary_button.dart';
 import '../widgets/buttons/secondary_button.dart';
 import '../widgets/cards/monthly_plan_card.dart';
 import '../widgets/cards/yearly_plan_card.dart';
+import '../widgets/dialogs/confirm_dialog.dart';
 import '../widgets/displays/purchase_info_item.dart';
 import '../widgets/layouts/app_screen.dart';
+import '../widgets/snackbar.dart';
 
 class ProPurchase extends ConsumerStatefulWidget {
   final bool isOnboarding;
@@ -25,12 +27,87 @@ class ProPurchase extends ConsumerStatefulWidget {
 
 class _ProPurchaseState extends ConsumerState<ProPurchase> {
   SubscriptionPlan _selectedPlan = SubscriptionPlan.monthly;
+  VoidCallback? _dismissPurchaseSnackbar;
+
+  @override
+  void dispose() {
+    _dismissPurchaseSnackbar?.call();
+    super.dispose();
+  }
 
   Future<void> _handlePurchase() async {
+    final service = ref.read(revenueCatServiceProvider);
+    final revision = service.identityRevision;
     final outcome = await ref
         .read(purchaseFlowProvider.notifier)
         .purchase(_selectedPlan);
     if (!mounted || outcome == TransactionOutcome.cancelled) return;
+    if (outcome == TransactionOutcome.confirmed) {
+      if (revision != service.identityRevision ||
+          !service.isCurrentSupabaseUserSynchronized) {
+        _showOutcome(TransactionOutcome.identityChanged, restore: false);
+        return;
+      }
+      if (ref.read(subscriptionProvider).status != SubscriptionStatus.pro) {
+        _showOutcome(TransactionOutcome.pending, restore: false);
+        return;
+      }
+      if (ModalRoute.of(context)?.isCurrent != true) return;
+      _dismissPurchaseSnackbar?.call();
+      _dismissPurchaseSnackbar = null;
+      var acknowledged = false;
+      final navigator = Navigator.of(context, rootNavigator: true);
+      final dialogRoute = DialogRoute<void>(
+        context: context,
+        barrierDismissible: false,
+        themes: InheritedTheme.capture(from: context, to: navigator.context),
+        builder:
+            (_) => PopScope(
+              canPop: false,
+              child: ConfirmDialog(
+                variant: ConfirmDialogVariant.success,
+                title: 'Welcome to FGI PRO!',
+                content:
+                    'Your subscription is active. You now have access to all FGI PRO features.',
+                confirmText: 'Continue',
+                onConfirm: () => acknowledged = true,
+              ),
+            ),
+      );
+      void dismissForIdentityChange() {
+        if (acknowledged ||
+            (revision == service.identityRevision &&
+                service.isCurrentSupabaseUserSynchronized)) {
+          return;
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (navigator.mounted && dialogRoute.isActive && !acknowledged) {
+            navigator.removeRoute(dialogRoute);
+          }
+        });
+        WidgetsBinding.instance.ensureVisualUpdate();
+      }
+
+      service.identityState.addListener(dismissForIdentityChange);
+      try {
+        await navigator.push(dialogRoute);
+      } finally {
+        service.identityState.removeListener(dismissForIdentityChange);
+      }
+      if (!mounted) return;
+      if (revision != service.identityRevision ||
+          !service.isCurrentSupabaseUserSynchronized) {
+        _showOutcome(TransactionOutcome.identityChanged, restore: false);
+        return;
+      }
+      if (!acknowledged) return;
+      if (ref.read(subscriptionProvider).status != SubscriptionStatus.pro) {
+        _showOutcome(TransactionOutcome.pending, restore: false);
+        return;
+      }
+      if (ModalRoute.of(context)?.isCurrent == true) _handleNotNow();
+      return;
+    }
     _showOutcome(outcome, restore: false);
   }
 
@@ -41,12 +118,17 @@ class _ProPurchaseState extends ConsumerState<ProPurchase> {
   }
 
   void _showOutcome(TransactionOutcome outcome, {required bool restore}) {
+    if (outcome == TransactionOutcome.cancelled) return;
     final message = switch (outcome) {
       TransactionOutcome.confirmed => 'PRO subscription is active.',
       TransactionOutcome.pending =>
         'The transaction or subscription verification is pending. Please check again later.',
       TransactionOutcome.noEntitlement =>
         'No active PRO subscription was found.',
+      TransactionOutcome.alreadyPro =>
+        'This account already has an active PRO subscription.',
+      TransactionOutcome.subscriptionUnavailable =>
+        'Subscription status could not be verified. Please try again.',
       TransactionOutcome.identityChanged =>
         'Your account changed. The transaction may have completed; check the original account.',
       TransactionOutcome.failed =>
@@ -55,9 +137,18 @@ class _ProPurchaseState extends ConsumerState<ProPurchase> {
             : 'Could not confirm the purchase. Check your subscription before trying again.',
       TransactionOutcome.cancelled => '',
     };
-    ScaffoldMessenger.of(
+    final type = switch (outcome) {
+      TransactionOutcome.confirmed => SnackbarType.success,
+      TransactionOutcome.failed => SnackbarType.stop,
+      _ => SnackbarType.update,
+    };
+    _dismissPurchaseSnackbar?.call();
+    _dismissPurchaseSnackbar = showFlexSnackbar(
       context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+      title: message,
+      type: type,
+      multiline: true,
+    );
   }
 
   void _handleNotNow() {
@@ -213,6 +304,7 @@ class _ProPurchaseState extends ConsumerState<ProPurchase> {
                                             ? _handlePurchase
                                             : null,
                                     variant: PrimaryButtonVariant.dark,
+                                    keepEnabledStyleWhenDisabled: flow.isBusy,
                                   ),
                                   if (flow.status ==
                                       OfferingStatus.unavailable) ...[

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme/app_theme.dart';
@@ -79,7 +78,6 @@ void main() async {
   revenueCat.startConfiguration(
     apiKey: dotenv.env['REVENUECAT_API_KEY'] ?? '',
     appUserId: supabase.auth.currentUser?.id,
-    enableDebugLogs: kDebugMode && dotenv.env['REVENUECAT_DEBUG'] == 'true',
   );
 }
 

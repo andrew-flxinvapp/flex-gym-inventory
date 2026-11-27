@@ -59,6 +59,11 @@ class RevenueCatService {
   static final RevenueCatService instance = RevenueCatService();
 
   static const String proEntitlementId = 'flex_gym_inventory_pro';
+  static const String proOfferingId = 'fgi_pro';
+  static const String monthlyPackageId = r'$rc_monthly';
+  static const String annualPackageId = r'$rc_annual';
+  static const String monthlyProductId = 'fgi.pro.monthly';
+  static const String annualProductId = 'fgi.pro.annual';
 
   static const Duration defaultConfigurationTimeout = Duration(seconds: 10);
 
@@ -133,7 +138,6 @@ class RevenueCatService {
   void startConfiguration({
     required String apiKey,
     String? appUserId,
-    bool enableDebugLogs = false,
     Duration timeout = defaultConfigurationTimeout,
   }) {
     if (_configurationAttempted) return;
@@ -156,15 +160,10 @@ class RevenueCatService {
       status: RevenueCatInitializationStatus.pending,
     );
 
-    final nativeAttempt = _configure(
-      apiKey: apiKey,
-      appUserId: appUserId,
-      enableDebugLogs: enableDebugLogs,
-    );
+    final nativeAttempt = _configure(apiKey: apiKey, appUserId: appUserId);
     _initializationTask = _observeConfiguration(
       nativeAttempt,
       timeout: timeout,
-      apiKey: apiKey,
     );
   }
 
@@ -234,15 +233,9 @@ class RevenueCatService {
     required String apiKey,
     bool observerMode = false,
     String? appUserId,
-    bool enableDebugLogs = false,
     Duration timeout = defaultConfigurationTimeout,
   }) async {
-    startConfiguration(
-      apiKey: apiKey,
-      appUserId: appUserId,
-      enableDebugLogs: enableDebugLogs,
-      timeout: timeout,
-    );
+    startConfiguration(apiKey: apiKey, appUserId: appUserId, timeout: timeout);
     await initializationTask;
 
     final state = initializationState.value;
@@ -256,14 +249,16 @@ class RevenueCatService {
   static Future<void> _configurePurchases({
     required String apiKey,
     String? appUserId,
-  }) {
+  }) async {
+    // SDK debug logs include signed receipts; info logs can include account IDs.
+    await Purchases.setLogLevel(LogLevel.warn);
     final config = PurchasesConfiguration(apiKey);
     config.entitlementVerificationMode =
         EntitlementVerificationMode.informational;
     if (appUserId != null && appUserId.isNotEmpty) {
       config.appUserID = appUserId;
     }
-    return Purchases.configure(config);
+    await Purchases.configure(config);
   }
 
   static Future<String> _readCurrentAppUserId() => Purchases.appUserID;
@@ -281,22 +276,14 @@ class RevenueCatService {
     return Purchases.getCustomerInfo();
   }
 
-  Future<void> _configure({
-    required String apiKey,
-    String? appUserId,
-    required bool enableDebugLogs,
-  }) async {
+  Future<void> _configure({required String apiKey, String? appUserId}) async {
     app_log.LogHandler.info('RevenueCatService', 'Configuring RevenueCat');
     await _configureSdk(apiKey: apiKey, appUserId: appUserId);
-    if (enableDebugLogs) {
-      await Purchases.setLogLevel(LogLevel.debug);
-    }
   }
 
   Future<void> _observeConfiguration(
     Future<void> nativeAttempt, {
     required Duration timeout,
-    required String apiKey,
   }) async {
     try {
       await nativeAttempt.timeout(timeout);
@@ -314,9 +301,9 @@ class RevenueCatService {
       );
       _setIdentityUnavailable();
       app_log.LogHandler.warning('RevenueCatService', message);
-      unawaited(_observeLateConfiguration(nativeAttempt, apiKey));
+      unawaited(_observeLateConfiguration(nativeAttempt));
     } catch (e) {
-      final message = _safeErrorMessage(e, apiKey);
+      final message = _safeConfigurationError(e);
       initializationState.value = RevenueCatInitializationState(
         status: RevenueCatInitializationStatus.failed,
         errorMessage: message,
@@ -329,10 +316,7 @@ class RevenueCatService {
     }
   }
 
-  Future<void> _observeLateConfiguration(
-    Future<void> nativeAttempt,
-    String apiKey,
-  ) async {
+  Future<void> _observeLateConfiguration(Future<void> nativeAttempt) async {
     try {
       await nativeAttempt;
       initializationState.value = const RevenueCatInitializationState(
@@ -347,7 +331,7 @@ class RevenueCatService {
       app_log.LogHandler.warning(
         'RevenueCatService',
         'RevenueCat initialization failed after its startup timeout: '
-            '${_safeErrorMessage(e, apiKey)}',
+            '${_safeConfigurationError(e)}',
       );
     }
   }
@@ -670,10 +654,10 @@ class RevenueCatService {
     );
   }
 
-  String _safeErrorMessage(Object error, String apiKey) {
-    final message = error.toString();
-    return apiKey.isEmpty ? message : message.replaceAll(apiKey, '[redacted]');
-  }
+  String _safeConfigurationError(Object error) =>
+      error is PlatformException
+          ? 'RevenueCat SDK configuration error.'
+          : 'Unexpected RevenueCat configuration error.';
 
   /// Fetch the current CustomerInfo from RevenueCat.
   Future<CustomerInfo?> getCustomerInfo() async {
@@ -707,15 +691,54 @@ class RevenueCatService {
 
   /// Return the current Offerings (may be null).
   Future<Offerings?> getCurrentOffering() async {
+    if (initializationState.value.status !=
+            RevenueCatInitializationStatus.configured ||
+        !isCurrentSupabaseUserSynchronized) {
+      app_log.LogHandler.warning(
+        'RevenueCatService',
+        'Offering retrieval skipped because RevenueCat initialization or identity is not ready.',
+      );
+      throw StateError('RevenueCat offering retrieval is not ready.');
+    }
     try {
       final offerings = await _offeringsReader();
+      final offering = offerings.all[proOfferingId];
+      if (offering == null) {
+        app_log.LogHandler.warning(
+          'RevenueCatService',
+          "Offering 'fgi_pro' is unavailable or missing.",
+        );
+        throw StateError('Offering fgi_pro is unavailable.');
+      }
+      final monthly = offering.getPackage(monthlyPackageId);
+      final annual = offering.getPackage(annualPackageId);
+      if (monthly == null || annual == null) {
+        app_log.LogHandler.warning(
+          'RevenueCatService',
+          'Monthly or annual package is missing.',
+        );
+        throw StateError('Required RevenueCat packages are missing.');
+      }
+      if (monthly.storeProduct.identifier != monthlyProductId ||
+          annual.storeProduct.identifier != annualProductId) {
+        app_log.LogHandler.warning(
+          'RevenueCatService',
+          'Monthly or annual App Store product ID is mismatched.',
+        );
+        throw StateError('Required App Store products are mismatched.');
+      }
       return offerings;
-    } catch (e, st) {
+    } on PlatformException catch (_) {
       app_log.LogHandler.error(
         'RevenueCatService',
-        'getCurrentOffering failed',
-        e,
-        st,
+        'Offering retrieval failed because of a StoreKit or SDK configuration error.',
+      );
+      rethrow;
+    } catch (e) {
+      if (e is StateError) rethrow;
+      app_log.LogHandler.error(
+        'RevenueCatService',
+        'Offering retrieval failed unexpectedly.',
       );
       rethrow;
     }
@@ -765,7 +788,19 @@ class RevenueCatService {
       if (code == PurchasesErrorCode.paymentPendingError.index) {
         return RevenueCatPurchaseResult.pending();
       }
-      app_log.LogHandler.warning('RevenueCatService', 'Purchase failed.');
+      if (code == PurchasesErrorCode.productAlreadyPurchasedError.index) {
+        return RevenueCatPurchaseResult.alreadyPurchased();
+      }
+      final category =
+          code == PurchasesErrorCode.networkError.index
+              ? 'network error'
+              : code == PurchasesErrorCode.storeProblemError.index
+              ? 'store error'
+              : 'SDK error';
+      app_log.LogHandler.warning(
+        'RevenueCatService',
+        'Purchase failed: $category.',
+      );
       return RevenueCatPurchaseResult.failure(
         'Purchase could not be completed.',
       );
@@ -859,6 +894,7 @@ class RevenueCatPurchaseResult {
   final bool success;
   final bool cancelled;
   final bool pending;
+  final bool alreadyPurchased;
   final bool identityChanged;
   final CustomerInfo? customerInfo;
   final String? errorMessage;
@@ -867,6 +903,7 @@ class RevenueCatPurchaseResult {
     required bool success,
     required bool cancelled,
     bool pending = false,
+    bool alreadyPurchased = false,
     bool identityChanged = false,
     CustomerInfo? customerInfo,
     String? errorMessage,
@@ -874,6 +911,7 @@ class RevenueCatPurchaseResult {
     success: success,
     cancelled: cancelled,
     pending: pending,
+    alreadyPurchased: alreadyPurchased,
     identityChanged: identityChanged,
     customerInfo: customerInfo,
     errorMessage: errorMessage,
@@ -883,6 +921,7 @@ class RevenueCatPurchaseResult {
     required this.success,
     required this.cancelled,
     this.pending = false,
+    this.alreadyPurchased = false,
     this.identityChanged = false,
     this.customerInfo,
     this.errorMessage,
@@ -903,6 +942,13 @@ class RevenueCatPurchaseResult {
     cancelled: false,
     pending: true,
   );
+
+  factory RevenueCatPurchaseResult.alreadyPurchased() =>
+      RevenueCatPurchaseResult._from(
+        success: false,
+        cancelled: false,
+        alreadyPurchased: true,
+      );
 
   factory RevenueCatPurchaseResult.identityChanged() =>
       RevenueCatPurchaseResult._from(

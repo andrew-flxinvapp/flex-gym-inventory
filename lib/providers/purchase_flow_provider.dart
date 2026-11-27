@@ -16,6 +16,8 @@ enum TransactionOutcome {
   cancelled,
   pending,
   noEntitlement,
+  alreadyPro,
+  subscriptionUnavailable,
   failed,
   identityChanged,
 }
@@ -65,6 +67,7 @@ class PurchaseFlowNotifier extends StateNotifier<PurchaseFlowState> {
   bool _requested = false;
   bool _busy = false;
   bool _disposed = false;
+  String? _loggedOfferingSignature;
 
   void _reconcile() {
     if (_disposed) return;
@@ -137,6 +140,20 @@ class PurchaseFlowNotifier extends StateNotifier<PurchaseFlowState> {
           annual!.storeProduct.priceString.isEmpty) {
         throw StateError('Expected subscription packages are unavailable.');
       }
+      final signature =
+          '${monthly.storeProduct.identifier}|${annual.storeProduct.identifier}|'
+          '${monthly.storeProduct.priceString}|${annual.storeProduct.priceString}';
+      if (_loggedOfferingSignature != signature) {
+        app_log.LogHandler.info(
+          'RevenueCatService',
+          "Offering 'fgi_pro' loaded successfully.",
+        );
+        app_log.LogHandler.info(
+          'RevenueCatService',
+          'Monthly and annual packages verified.',
+        );
+        _loggedOfferingSignature = signature;
+      }
       state = PurchaseFlowState(
         status: OfferingStatus.ready,
         monthly: monthly,
@@ -170,6 +187,18 @@ class PurchaseFlowNotifier extends StateNotifier<PurchaseFlowState> {
   }
 
   Future<TransactionOutcome> purchase(SubscriptionPlan plan) async {
+    app_log.LogHandler.debug('PurchaseFlow', 'Purchase requested.');
+    final outcome = await _purchase(plan);
+    app_log.LogHandler.debug(
+      'PurchaseFlow',
+      outcome == TransactionOutcome.confirmed
+          ? 'Purchase completed and PRO entitlement verified.'
+          : 'Purchase outcome: ${outcome.name}.',
+    );
+    return outcome;
+  }
+
+  Future<TransactionOutcome> _purchase(SubscriptionPlan plan) async {
     final package = state.packageFor(plan);
     if (_busy ||
         state.status != OfferingStatus.ready ||
@@ -180,6 +209,20 @@ class PurchaseFlowNotifier extends StateNotifier<PurchaseFlowState> {
     final revision = _service.identityRevision;
     _setBusy(true);
     try {
+      final subscription = _ref.read(subscriptionProvider.notifier);
+      await subscription.refresh();
+      if (_disposed ||
+          revision != _service.identityRevision ||
+          !_service.isCurrentSupabaseUserSynchronized) {
+        return TransactionOutcome.identityChanged;
+      }
+      final status = _ref.read(subscriptionProvider).status;
+      if (status == SubscriptionStatus.pro) {
+        return TransactionOutcome.alreadyPro;
+      }
+      if (status != SubscriptionStatus.free) {
+        return TransactionOutcome.subscriptionUnavailable;
+      }
       final result = await _service.purchasePackage(package);
       if (_disposed ||
           revision != _service.identityRevision ||
@@ -189,22 +232,39 @@ class PurchaseFlowNotifier extends StateNotifier<PurchaseFlowState> {
       }
       if (result.cancelled) return TransactionOutcome.cancelled;
       if (result.pending) return TransactionOutcome.pending;
-      if (!result.success) return TransactionOutcome.failed;
-      await _ref.read(subscriptionProvider.notifier).refresh();
+      if (!result.success && !result.alreadyPurchased) {
+        return TransactionOutcome.failed;
+      }
+      await subscription.refresh();
       if (_disposed ||
           revision != _service.identityRevision ||
           !_service.isCurrentSupabaseUserSynchronized) {
         return TransactionOutcome.identityChanged;
       }
-      return _ref.read(subscriptionProvider).status == SubscriptionStatus.pro
-          ? TransactionOutcome.confirmed
-          : TransactionOutcome.pending;
+      if (_ref.read(subscriptionProvider).status != SubscriptionStatus.pro) {
+        return TransactionOutcome.pending;
+      }
+      return result.alreadyPurchased
+          ? TransactionOutcome.alreadyPro
+          : TransactionOutcome.confirmed;
     } finally {
       _setBusy(false);
     }
   }
 
   Future<TransactionOutcome> restore() async {
+    app_log.LogHandler.debug('PurchaseFlow', 'Restore requested.');
+    final outcome = await _restore();
+    app_log.LogHandler.debug(
+      'PurchaseFlow',
+      outcome == TransactionOutcome.confirmed
+          ? 'Restore completed and PRO entitlement verified.'
+          : 'Restore outcome: ${outcome.name}.',
+    );
+    return outcome;
+  }
+
+  Future<TransactionOutcome> _restore() async {
     if (_busy || !_service.isCurrentSupabaseUserSynchronized) {
       return TransactionOutcome.failed;
     }

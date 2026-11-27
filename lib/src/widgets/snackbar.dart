@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_icons.dart';
@@ -6,13 +8,15 @@ import '../models/ui_message.dart';
 // Track active snackbar overlay entries and their vertical offsets
 final List<ValueNotifier<double>> _snackbarOffsets = [];
 final List<OverlayEntry> _snackbarEntries = [];
+final List<double> _snackbarHeights = [];
 
-void showFlexSnackbar(
+VoidCallback showFlexSnackbar(
   BuildContext context, {
   required String title,
   String? subtitle,
   required SnackbarType type,
   Duration duration = const Duration(seconds: 3),
+  bool multiline = false,
 }) {
   // Stacked snackbars support: maintain a list of active overlay entries
   final overlay = Overlay.of(context);
@@ -23,12 +27,49 @@ void showFlexSnackbar(
 
   // Lists to track active entries and their top offsets (declared at file scope)
 
-  final index = _snackbarEntries.length;
-  final topNotifier = ValueNotifier<double>(baseTop + index * (itemHeight + gap));
+  final topNotifier = ValueNotifier<double>(
+    baseTop +
+        _snackbarHeights.fold<double>(0, (sum, height) => sum + height + gap),
+  );
 
   late OverlayEntry overlayEntry;
+  final snackbarKey = GlobalKey();
+  void updateOffsets() {
+    var top = baseTop;
+    for (var i = 0; i < _snackbarOffsets.length; i++) {
+      _snackbarOffsets[i].value = top;
+      top += _snackbarHeights[i] + gap;
+    }
+  }
+
+  void updateHeight() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final entryIndex = _snackbarEntries.indexOf(overlayEntry);
+      final height = snackbarKey.currentContext?.size?.height;
+      if (entryIndex == -1 ||
+          height == null ||
+          _snackbarHeights[entryIndex] == height) {
+        return;
+      }
+      _snackbarHeights[entryIndex] = height;
+      updateOffsets();
+    });
+  }
+
+  void dismiss() {
+    final removedIndex = _snackbarEntries.indexOf(overlayEntry);
+    if (removedIndex == -1) return;
+    _snackbarEntries.removeAt(removedIndex);
+    final removedNotifier = _snackbarOffsets.removeAt(removedIndex);
+    _snackbarHeights.removeAt(removedIndex);
+    updateOffsets();
+    removedNotifier.dispose();
+    overlayEntry.remove();
+  }
+
   overlayEntry = OverlayEntry(
     builder: (context) {
+      if (multiline) updateHeight();
       return ValueListenableBuilder<double>(
         valueListenable: topNotifier,
         builder: (context, topValue, _) {
@@ -36,28 +77,24 @@ void showFlexSnackbar(
             top: topValue,
             left: 24,
             right: 24,
-            child: Material(
-              color: Colors.transparent,
-              child: AnimatedFlexSnackbar(
-                title: title,
-                subtitle: subtitle,
-                type: type,
-                duration: duration,
-                onDismissed: () {
-                  // When dismissed, remove this entry and shift remaining
-                  final removedIndex = _snackbarEntries.indexOf(overlayEntry);
-                  if (removedIndex != -1) {
-                    _snackbarEntries.removeAt(removedIndex);
-                    final removedNotifier = _snackbarOffsets.removeAt(removedIndex);
-                    // shift up remaining notifiers
-                    for (var i = removedIndex; i < _snackbarOffsets.length; i++) {
-                      _snackbarOffsets[i].value = baseTop + i * (itemHeight + gap);
-                    }
-                    // dispose removed notifier and remove overlay
-                    removedNotifier.dispose();
-                  }
-                  if (overlayEntry.mounted) overlayEntry.remove();
-                },
+            child: NotificationListener<SizeChangedLayoutNotification>(
+              onNotification: (_) {
+                if (multiline) updateHeight();
+                return false;
+              },
+              child: SizeChangedLayoutNotifier(
+                child: Material(
+                  key: snackbarKey,
+                  color: Colors.transparent,
+                  child: AnimatedFlexSnackbar(
+                    title: title,
+                    subtitle: subtitle,
+                    type: type,
+                    duration: duration,
+                    multiline: multiline,
+                    onDismissed: dismiss,
+                  ),
+                ),
               ),
             ),
           );
@@ -69,7 +106,9 @@ void showFlexSnackbar(
   // register and insert
   _snackbarOffsets.add(topNotifier);
   _snackbarEntries.add(overlayEntry);
+  _snackbarHeights.add(itemHeight);
   overlay.insert(overlayEntry);
+  return dismiss;
 }
 
 void showFlexSnackbarFromUiMessage(
@@ -110,6 +149,7 @@ class FlexSnackbar extends StatelessWidget {
   final String? subtitle;
   final SnackbarType type;
   final VoidCallback? onClose;
+  final bool multiline;
 
   const FlexSnackbar({
     super.key,
@@ -117,6 +157,7 @@ class FlexSnackbar extends StatelessWidget {
     this.subtitle,
     required this.type,
     this.onClose,
+    this.multiline = false,
   });
 
   String get _iconAsset {
@@ -149,7 +190,8 @@ class FlexSnackbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 386,
-      height: 58,
+      height: multiline ? null : 58,
+      constraints: multiline ? const BoxConstraints(minHeight: 58) : null,
       decoration: BoxDecoration(
         color: AppTheme.lightCard,
         borderRadius: BorderRadius.circular(12),
@@ -161,54 +203,61 @@ class FlexSnackbar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          const SizedBox(width: 16),
-          // Icon
-          SizedBox(
-            width: 32,
-            height: 32,
-            child: Image.asset(_iconAsset, color: _iconColor),
-          ),
-          const SizedBox(width: 16),
-          // Texts
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: AppTheme.lightTextPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (subtitle != null)
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: multiline ? 8 : 0),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            // Icon
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: Image.asset(_iconAsset, color: _iconColor),
+            ),
+            const SizedBox(width: 16),
+            // Texts
+            Expanded(
+              child: Column(
+                mainAxisSize: multiline ? MainAxisSize.min : MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    subtitle!,
+                    title,
                     style: const TextStyle(
                       color: AppTheme.lightTextPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: multiline ? null : 1,
+                    overflow:
+                        multiline
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
                   ),
-              ],
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: const TextStyle(
+                        color: AppTheme.lightTextPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
             ),
-          ),
-          // Close icon
-          IconButton(
-            icon: const Icon(Icons.close, color: AppTheme.lightTextPrimary),
-            onPressed: onClose,
-            tooltip: 'Close',
-          ),
-          const SizedBox(width: 8),
-        ],
+            // Close icon
+            IconButton(
+              icon: const Icon(Icons.close, color: AppTheme.lightTextPrimary),
+              onPressed: onClose,
+              tooltip: 'Close',
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
       ),
     );
   }
@@ -220,6 +269,7 @@ class AnimatedFlexSnackbar extends StatefulWidget {
   final SnackbarType type;
   final Duration duration;
   final VoidCallback? onDismissed;
+  final bool multiline;
 
   const AnimatedFlexSnackbar({
     super.key,
@@ -228,6 +278,7 @@ class AnimatedFlexSnackbar extends StatefulWidget {
     required this.type,
     this.duration = const Duration(seconds: 3),
     this.onDismissed,
+    this.multiline = false,
   });
 
   @override
@@ -244,22 +295,25 @@ class _AnimatedFlexSnackbarState extends State<AnimatedFlexSnackbar>
     begin: const Offset(0, -1),
     end: Offset.zero,
   ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+  late final Timer _dismissTimer;
 
   @override
   void initState() {
     super.initState();
     _controller.forward();
-    Future.delayed(widget.duration, () => _hide());
+    _dismissTimer = Timer(widget.duration, _hide);
   }
 
   void _hide() async {
     if (!mounted) return;
+    _dismissTimer.cancel();
     await _controller.reverse();
     widget.onDismissed?.call();
   }
 
   @override
   void dispose() {
+    _dismissTimer.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -272,6 +326,7 @@ class _AnimatedFlexSnackbarState extends State<AnimatedFlexSnackbar>
         title: widget.title,
         subtitle: widget.subtitle,
         type: widget.type,
+        multiline: widget.multiline,
         onClose: _hide,
       ),
     );

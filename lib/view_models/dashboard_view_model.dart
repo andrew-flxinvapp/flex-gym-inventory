@@ -149,7 +149,10 @@ class DashboardViewModel extends StateNotifier<DashboardState> {
     final generation = ++_requestGeneration;
     state = state.copyWith(loading: true, error: null);
     try {
-      final gyms = await _gymRepository.getAllForUser(userId);
+      final gyms = await _gymRepository.getAllForUser(
+        userId,
+        sort: GymSort.oldest,
+      );
       if (!_canApplyResult(userId, generation)) return;
 
       // Initialize category counts with zero for every enum value

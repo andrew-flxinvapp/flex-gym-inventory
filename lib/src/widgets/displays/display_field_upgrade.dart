@@ -12,7 +12,7 @@ class DisplayFieldUpgrade extends StatelessWidget {
     return SizedBox(
       height: 64,
       child: Material(
-        color: AppTheme.darkBackground,
+        color: AppTheme.lightTextPrimary,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),

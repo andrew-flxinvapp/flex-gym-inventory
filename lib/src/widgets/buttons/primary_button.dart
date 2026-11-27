@@ -9,6 +9,7 @@ class PrimaryButton extends StatelessWidget {
   final double? width;
   final double? height;
   final PrimaryButtonVariant variant;
+  final bool keepEnabledStyleWhenDisabled;
 
   const PrimaryButton({
     super.key,
@@ -17,6 +18,7 @@ class PrimaryButton extends StatelessWidget {
     this.width,
     this.height,
     this.variant = PrimaryButtonVariant.light,
+    this.keepEnabledStyleWhenDisabled = false,
   });
 
   @override
@@ -37,6 +39,10 @@ class PrimaryButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
+          disabledBackgroundColor:
+              keepEnabledStyleWhenDisabled ? backgroundColor : null,
+          disabledForegroundColor:
+              keepEnabledStyleWhenDisabled ? foregroundColor : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: AppTheme.darkBackground, width: 1),

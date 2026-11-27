@@ -4,7 +4,15 @@ import 'package:flex_gym_inventory/theme/app_icons.dart';
 
 class DisplayFieldNav extends StatelessWidget {
   final VoidCallback? onPressed;
-  const DisplayFieldNav({super.key, this.onPressed});
+  final String title;
+  final String iconPath;
+
+  const DisplayFieldNav({
+    super.key,
+    this.onPressed,
+    this.title = 'Wishlist',
+    this.iconPath = AppIcons.sparkle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +29,7 @@ class DisplayFieldNav extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  AppIcons.sparkle,
+                  iconPath,
                   width: 22,
                   height: 22,
                   color: AppTheme.lightTextPrimary,
@@ -29,7 +37,7 @@ class DisplayFieldNav extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Wishlist',
+                    title,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppTheme.lightTextPrimary,
                       fontWeight: FontWeight.w500,

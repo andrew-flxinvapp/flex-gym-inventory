@@ -65,6 +65,12 @@ RevenueCat's informational entitlement verification is enabled; results without 
 
 The purchase screens request the `fgi_pro` offering explicitly and display store-localized prices. They use neutral trial wording because eligibility is not established by the app. Purchases and explicit restores require a synchronized authenticated identity; completion is confirmed only when the shared subscription provider verifies PRO. Review RevenueCat restore/transfer settings before testing multiple accounts: transfers can also affect purchases with an existing receipt. Identity reconciliation waits for an in-flight native transaction, so a stalled store operation can delay it. Deferred transactions may complete after that operation or an app restart; their eventual attribution requires native StoreKit validation.
 
+Before purchase, the app refreshes subscription state and proceeds only when Free is confirmed. An active PRO status or RevenueCat's already-purchased error does not trigger the purchase welcome. The SDK's successful purchase result has transaction metadata but no definitive new-versus-existing flag; a stale cached Free result followed by a successful replay of an existing transaction can still be indistinguishable from a new purchase.
+
+RevenueCat SDK logging is set to warning before configuration in all build modes: its debug logs can contain signed transaction records, and its info logs can contain account identifiers. The app emits concise purchase and restore outcome diagnostics in debug builds; SDK warnings and errors remain enabled. `REVENUECAT_DEBUG` no longer enables SDK debug logging.
+
+The Account screen displays the verified subscription state and opens Apple's native subscription-management sheet for PRO accounts on iOS. After the sheet closes, it refreshes the shared subscription provider using RevenueCat's normal cache policy; turning off renewal does not itself revoke an active entitlement.
+
 ## Free and PRO
 
 The v1.0 plan structure is:

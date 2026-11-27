@@ -1,11 +1,14 @@
 import 'package:flex_gym_inventory/theme/app_icons.dart';
 import 'package:flex_gym_inventory/routes/routes.dart';
 import 'package:flex_gym_inventory/providers/account_data_provider.dart';
+import 'package:flex_gym_inventory/providers/subscription_provider.dart';
 import 'package:flex_gym_inventory/constant/subscription_constants.dart';
+import 'package:flex_gym_inventory/utilities/logging_handler.dart';
 import '../widgets/displays/display_field.dart';
 import '../widgets/displays/display_field_upgrade.dart';
 import '../widgets/displays/display_field_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/snackbar.dart';
@@ -15,12 +18,81 @@ import '../widgets/cards/settings_item.dart';
 import '../widgets/buttons/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AccountScreen extends ConsumerWidget {
+class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends ConsumerState<AccountScreen> {
+  static const _managementChannel = MethodChannel(
+    'flex_gym_inventory/subscription_management',
+  );
+  bool _managingSubscription = false;
+  VoidCallback? _dismissManagementMessage;
+
+  @override
+  void dispose() {
+    _dismissManagementMessage?.call();
+    super.dispose();
+  }
+
+  Future<void> _manageSubscription() async {
+    final service = ref.read(revenueCatServiceProvider);
+    if (_managingSubscription ||
+        ref.read(subscriptionProvider).status != SubscriptionStatus.pro ||
+        !service.isCurrentSupabaseUserSynchronized) {
+      return;
+    }
+    final revision = service.identityRevision;
+    _dismissManagementMessage?.call();
+    _dismissManagementMessage = null;
+    setState(() => _managingSubscription = true);
+    try {
+      await _managementChannel.invokeMethod<void>('showManageSubscriptions');
+      if (!mounted ||
+          revision != service.identityRevision ||
+          !service.isCurrentSupabaseUserSynchronized) {
+        return;
+      }
+      await ref.read(subscriptionProvider.notifier).refresh();
+    } catch (_) {
+      LogHandler.warning('Account', 'Could not open subscription management.');
+      if (!mounted ||
+          revision != service.identityRevision ||
+          !service.isCurrentSupabaseUserSynchronized) {
+        return;
+      }
+      _dismissManagementMessage = showFlexSnackbar(
+        context,
+        title: 'Could not open subscription management.',
+        type: SnackbarType.stop,
+        multiline: true,
+      );
+    } finally {
+      if (mounted) setState(() => _managingSubscription = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final account = ref.watch(accountDataProvider);
+    final subscription = ref.watch(subscriptionProvider);
+    final service = ref.watch(revenueCatServiceProvider);
+    final status =
+        (subscription.status == SubscriptionStatus.free ||
+                    subscription.status == SubscriptionStatus.pro) &&
+                !service.isCurrentSupabaseUserSynchronized
+            ? SubscriptionStatus.loading
+            : subscription.status;
+    final plan = switch (status) {
+      SubscriptionStatus.free => SubscriptionConstants.freePlanName,
+      SubscriptionStatus.pro => 'FGI PRO',
+      SubscriptionStatus.loading => 'Checking plan…',
+      SubscriptionStatus.unavailable || SubscriptionStatus.signedOut =>
+        'Unable to verify',
+    };
     final name =
         account.isLoading
             ? 'Loading...'
@@ -96,17 +168,46 @@ class AccountScreen extends ConsumerWidget {
                   },
                 ),
                 const SizedBox(height: 16),
-                const DisplayField(
+                DisplayField(
                   iconPath: AppIcons.upgrade,
                   label: 'Plan',
-                  value: SubscriptionConstants.freePlanName,
+                  value: plan,
                 ),
                 const SizedBox(height: 16),
-                DisplayFieldUpgrade(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.newUpgrade);
-                  },
-                ),
+                if (status == SubscriptionStatus.free)
+                  DisplayFieldUpgrade(
+                    onPressed: () {
+                      if (service.isCurrentSupabaseUserSynchronized &&
+                          ref.read(subscriptionProvider).status ==
+                              SubscriptionStatus.free) {
+                        Navigator.of(context).pushNamed(AppRoutes.upgradeInfo);
+                      }
+                    },
+                  )
+                else
+                  Opacity(
+                    opacity:
+                        status == SubscriptionStatus.pro &&
+                                !_managingSubscription
+                            ? 1
+                            : 0.6,
+                    child: DisplayFieldNav(
+                      title: switch (status) {
+                        SubscriptionStatus.pro =>
+                          _managingSubscription
+                              ? 'Opening subscription…'
+                              : 'Manage Subscription',
+                        SubscriptionStatus.loading => 'Checking plan…',
+                        _ => 'Plan unavailable',
+                      },
+                      iconPath: AppIcons.settings,
+                      onPressed:
+                          status == SubscriptionStatus.pro &&
+                                  !_managingSubscription
+                              ? _manageSubscription
+                              : null,
+                    ),
+                  ),
                 const SizedBox(height: 16),
                 Text(
                   'Legal',

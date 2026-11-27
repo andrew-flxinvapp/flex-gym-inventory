@@ -38,7 +38,7 @@ class ItemOverviewCard extends StatelessWidget {
                         placeholderIconAsset,
                         width: 48,
                         height: 48,
-                        color: AppTheme.lightPrimary,
+                        color: AppTheme.lightTextPrimary,
                       ),
                     ),
                   ),
